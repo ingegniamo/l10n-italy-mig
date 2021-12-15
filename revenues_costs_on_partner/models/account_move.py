@@ -4,6 +4,25 @@ from odoo import models, fields, api
 class AccountMove(models.Model):
     _inherit = 'account.move'
 
+    def write(self, vals):
+        ctx_move_type = self.env.context.get('default_move_type')
+        for move in self:
+            if 'partner_id' in vals:
+                partner = self.env['res.partner'].browse(vals['partner_id'])
+                for move_line in move.invoice_line_ids:
+                    if ctx_move_type and ctx_move_type == 'in_invoice':
+                        if partner and partner.costs_account_id:
+                            move_line.account_id = partner.costs_account_id
+                        else:
+                            move_line.account_id = move_line._get_computed_account()
+                    elif ctx_move_type and ctx_move_type == 'out_invoice':
+                        if partner and partner.revenues_account_id:
+                            move_line.account_id = partner.revenues_account_id
+                        else:
+                            move_line.account_id = move_line._get_computed_account()
+        result = super(AccountMove, self).write(vals)
+        return result
+
 
 class AccountMoveLine(models.Model):
     _inherit = 'account.move.line'
@@ -40,4 +59,23 @@ class AccountMoveLine(models.Model):
                         })
         return values
 
+    @api.onchange('product_id')
+    def _onchange_product_id(self):
+        for line in self:
+            if not line.product_id or line.display_type in ('line_section', 'line_note'):
+                continue
 
+            line.name = line._get_computed_name()
+            move_type = self.env.context.get('default_move_type')
+            if move_type == 'in_invoice' and line.partner_id.costs_account_id:
+                line.account_id = line.partner_id.costs_account_id
+            elif move_type == 'out_invoice' and line.partner_id.revenues_account_id:
+                line.account_id = line.partner_id.revenues_account_id
+            else:
+                line.account_id = line._get_computed_account()
+            taxes = line._get_computed_taxes()
+            if taxes and line.move_id.fiscal_position_id:
+                taxes = line.move_id.fiscal_position_id.map_tax(taxes, partner=line.partner_id)
+            line.tax_ids = taxes
+            line.product_uom_id = line._get_computed_uom()
+            line.price_unit = line._get_computed_price_unit()
