@@ -23,6 +23,21 @@ class AccountMove(models.Model):
         result = super(AccountMove, self).write(vals)
         return result
 
+    @api.model
+    def create(self, vals):
+        result = super(AccountMove, self).create(vals)
+        for line in result.invoice_line_ids:
+            partner = result.partner_id
+            if result.move_type == 'in_invoice':
+                if partner and partner.costs_account_id:
+                    line.account_id = partner.costs_account_id
+                # else:
+                #     line.account_id = line._get_computed_account()
+            elif result.move_type == 'out_invoice':
+                if partner and partner.revenues_account_id:
+                    line.account_id = partner.revenues_account_id
+        return result
+
 
 class AccountMoveLine(models.Model):
     _inherit = 'account.move.line'
