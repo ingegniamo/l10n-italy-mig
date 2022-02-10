@@ -23,21 +23,6 @@ class AccountMove(models.Model):
         result = super(AccountMove, self).write(vals)
         return result
 
-    @api.model
-    def create(self, vals):
-        result = super(AccountMove, self).create(vals)
-        for line in result.invoice_line_ids:
-            partner = result.partner_id
-            if result.move_type == 'in_invoice':
-                if partner and partner.costs_account_id:
-                    line.account_id = partner.costs_account_id
-                # else:
-                #     line.account_id = line._get_computed_account()
-            elif result.move_type == 'out_invoice':
-                if partner and partner.revenues_account_id:
-                    line.account_id = partner.revenues_account_id
-        return result
-
 
 class AccountMoveLine(models.Model):
     _inherit = 'account.move.line'
@@ -94,3 +79,20 @@ class AccountMoveLine(models.Model):
             line.tax_ids = taxes
             line.product_uom_id = line._get_computed_uom()
             line.price_unit = line._get_computed_price_unit()
+
+    # required for import with xml
+    @api.model
+    def create(self, vals):
+        result = super(AccountMoveLine, self).create(vals)
+        invoice = result.move_id
+        partner = invoice.partner_id
+        if invoice:
+            move_type = invoice.move_type
+            if move_type == 'in_invoice':
+                if partner.costs_account_id:
+                    if result.account_id.cost:
+                        result.account_id = partner.costs_account_id
+            elif move_type == 'out_invoice':
+                if partner.revenues_account_id:
+                    result.account_id = partner.revenues_account_id
+        return result

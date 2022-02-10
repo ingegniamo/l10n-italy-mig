@@ -6,7 +6,8 @@
     'website': 'https://www.stesi.srl',
     'depends': ['contacts', 'account'],
     'data': [
-        'views/res_partner.xml'
+        'views/res_partner.xml',
+        'views/account_type.xml',
     ],
 
 }
