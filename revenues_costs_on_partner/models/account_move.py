@@ -81,18 +81,22 @@ class AccountMoveLine(models.Model):
             line.price_unit = line._get_computed_price_unit()
 
     # required for import with xml
-    @api.model
+    # @api.model
+    @api.model_create_multi
     def create(self, vals):
         result = super(AccountMoveLine, self).create(vals)
         invoice = result.move_id
         partner = invoice.partner_id
         if invoice:
-            move_type = invoice.move_type
-            if move_type == 'in_invoice':
-                if partner.costs_account_id:
-                    if result.account_id.cost:
+            if result in invoice.invoice_line_ids:
+                move_type = invoice.move_type
+                if move_type == 'in_invoice':
+                    default_account = invoice.journal_id.default_account_id
+                    if partner.costs_account_id and result.account_id == default_account:
+                        # if result.account_id.cost:
                         result.account_id = partner.costs_account_id
-            elif move_type == 'out_invoice':
-                if partner.revenues_account_id:
-                    result.account_id = partner.revenues_account_id
+                elif move_type == 'out_invoice':
+                    default_account = invoice.journal_id.default_account_id
+                    if partner.revenues_account_id and result.account_id == default_account:
+                        result.account_id = partner.revenues_account_id
         return result

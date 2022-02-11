@@ -22,4 +22,8 @@
             </field>
         </field>
     </record>
+
+    <!-- menuitem for account type -->
+    <menuitem id="account_type_menuitem" name="Account Type" parent="account.account_account_menu"
+              action="account.action_account_type_form"/>
 </odoo>
