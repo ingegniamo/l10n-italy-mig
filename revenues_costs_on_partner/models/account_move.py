@@ -1,27 +1,27 @@
 from odoo import models, fields, api
 
 
-class AccountMove(models.Model):
-    _inherit = 'account.move'
+# class AccountMove(models.Model):
+#     _inherit = 'account.move'
 
-    def write(self, vals):
-        ctx_move_type = self.env.context.get('default_move_type')
-        for move in self:
-            if 'partner_id' in vals:
-                partner = self.env['res.partner'].browse(vals['partner_id'])
-                for move_line in move.invoice_line_ids:
-                    if ctx_move_type and ctx_move_type == 'in_invoice':
-                        if partner and partner.costs_account_id:
-                            move_line.account_id = partner.costs_account_id
-                        else:
-                            move_line.account_id = move_line._get_computed_account()
-                    elif ctx_move_type and ctx_move_type == 'out_invoice':
-                        if partner and partner.revenues_account_id:
-                            move_line.account_id = partner.revenues_account_id
-                        else:
-                            move_line.account_id = move_line._get_computed_account()
-        result = super(AccountMove, self).write(vals)
-        return result
+    # def write(self, vals):
+    #     ctx_move_type = self.env.context.get('default_move_type')
+    #     for move in self:
+    #         if 'partner_id' in vals:
+    #             partner = self.env['res.partner'].browse(vals['partner_id'])
+    #             for move_line in move.invoice_line_ids:
+    #                 if ctx_move_type and ctx_move_type == 'in_invoice':
+    #                     if partner and partner.costs_account_id:
+    #                         move_line.account_id = partner.costs_account_id
+    #                     # else:
+    #                     #     move_line.account_id = move_line._get_computed_account()
+    #                 elif ctx_move_type and ctx_move_type == 'out_invoice':
+    #                     if partner and partner.revenues_account_id:
+    #                         move_line.account_id = partner.revenues_account_id
+    #                     # else:
+    #                     #     move_line.account_id = move_line._get_computed_account()
+    #     result = super(AccountMove, self).write(vals)
+    #     return result
 
 
 class AccountMoveLine(models.Model):
