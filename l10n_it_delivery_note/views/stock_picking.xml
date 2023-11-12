@@ -1,8 +1,3 @@
-<?xml version="1.0" encoding="utf-8" ?>
-<!--
-    Copyright (c) 2019, Link IT Europe Srl
-    @author: Matteo Bilotta <mbilotta@linkeurope.it>
-  -->
 <odoo>
 
     <record id="stock_picking_form_view" model="ir.ui.view">
@@ -11,37 +6,14 @@
         <field name="inherit_id" ref="stock.view_picking_form" />
         <field name="arch" type="xml">
             <data>
-                <xpath
-                    expr="//form/sheet/group/group/div[hasclass('o_td_label')]"
-                    position="attributes"
-                >
-                    <attribute
-                        name="attrs"
-                    >{'required': [('picking_type_code', '!=', 'internal')], 'invisible': [('picking_type_code', '=', 'internal')]}</attribute>
-                </xpath>
-                <xpath
-                    expr="//form/sheet/group/group/field[@name='partner_id']"
-                    position="attributes"
-                >
-                    <attribute
-                        name="attrs"
-                    >{'required': [('picking_type_code', '!=', 'internal')], 'invisible': [('picking_type_code', '=', 'internal')]}</attribute>
-                </xpath>
-                <xpath
-                    expr="//button[@name='%(stock.action_report_delivery)d']"
-                    position="attributes"
-                >
-                    <attribute
-                        name="attrs"
-                    >{'invisible': ['|', ('state', '!=', 'done'), ('delivery_note_state', '!=', 'draft')]}</attribute>
-                </xpath>
+                <xpath expr="//form/sheet/group/group/div[hasclass('o_td_label')]" position="attributes">
+                    <attribute name="required">[('picking_type_code', '!=', 'internal')]</attribute><attribute name="invisible">[('picking_type_code', '=', 'internal')]</attribute></xpath>
+                <xpath expr="//form/sheet/group/group/field[@name='partner_id']" position="attributes">
+                    <attribute name="required">[('picking_type_code', '!=', 'internal')]</attribute><attribute name="invisible">[('picking_type_code', '=', 'internal')]</attribute></xpath>
+                <xpath expr="//button[@name='%(stock.action_report_delivery)d']" position="attributes">
+                    <attribute name="invisible">['|', ('state', '!=', 'done'), ('delivery_note_state', '!=', 'draft')]</attribute></xpath>
                 <xpath expr="//page[1]" position="before">
-                    <page
-                        name="delivery_note"
-                        string="Delivery Note"
-                        attrs="{'invisible': [('use_delivery_note', '=', False)]}"
-                        autofocus="autofocus"
-                    >
+                    <page name="delivery_note" string="Delivery Note" autofocus="autofocus" invisible="[('use_delivery_note', '=', False)]">
                         <field name="delivery_note_sequence_id" invisible="True" />
                         <field name="delivery_note_type_code" invisible="True" />
                         <field name="use_delivery_note" invisible="True" />
@@ -54,120 +26,39 @@
                         <field name="can_be_invoiced" invisible="True" />
                         <div class="no-margin-page-content">
                             <div class="header">
-                                <div
-                                    attrs="{'invisible': [('delivery_note_exists', '=', True)]}"
-                                >
-                                    <button
-                                        name="action_delivery_note_create"
-                                        type="object"
-                                        class="oe_highlight"
-                                        string="Create new"
-                                    />
-                                    <button
-                                        name="action_delivery_note_select"
-                                        type="object"
-                                        groups="l10n_it_delivery_note.use_advanced_delivery_notes"
-                                        string="Select existing"
-                                    />
+                                <div invisible="[('delivery_note_exists', '=', True)]">
+                                    <button name="action_delivery_note_create" type="object" class="oe_highlight" string="Create new" />
+                                    <button name="action_delivery_note_select" type="object" groups="l10n_it_delivery_note.use_advanced_delivery_notes" string="Select existing" />
                                 </div>
-                                <div
-                                    attrs="{'invisible': [('delivery_note_exists', '=', False)]}"
-                                >
-                                    <button
-                                        name="action_delivery_note_draft"
-                                        type="object"
-                                        class="oe_highlight"
-                                        attrs="{'invisible': [('delivery_note_state', '!=', 'cancel')]}"
-                                        string="Reset to draft"
-                                    />
-                                    <button
-                                        name="action_delivery_note_confirm"
-                                        type="object"
-                                        class="oe_highlight"
-                                        attrs="{'invisible': [('delivery_note_state', '!=', 'draft')]}"
-                                        string="Validate"
-                                    />
-                                    <button
-                                        name="action_delivery_note_invoice"
-                                        type="object"
-                                        class="oe_highlight"
-                                        attrs="{'invisible': ['|', ('delivery_note_state', '!=', 'confirm'),
-                                                                       ('can_be_invoiced', '=', False)]}"
-                                        groups="account.group_account_invoice"
-                                        string="Create invoice"
-                                    />
-                                    <button
-                                        name="action_delivery_note_done"
-                                        type="object"
-                                        class="oe_highlight"
-                                        attrs="{'invisible': ['&amp;', ('delivery_note_state', '!=', 'invoiced'),
-                                                                  '|', ('delivery_note_state', '!=', 'confirm'),
-                                                                       ('can_be_invoiced', '=', True)]}"
-                                        string="Set done"
-                                    />
-                                    <button
-                                        name="action_delivery_note_print"
-                                        attrs="{'invisible': ['|', ('delivery_note_state', '=', 'done'),
-                                                                       ('delivery_note_state', '=', 'cancel')]}"
-                                        type="object"
-                                        string="Print"
-                                    />
-                                    <button
-                                        name="action_delivery_note_print"
-                                        class="oe_highlight"
-                                        attrs="{'invisible': [('delivery_note_state', '!=', 'done')]}"
-                                        type="object"
-                                        string="Print"
-                                    />
-                                    <button
-                                        name="action_delivery_note_cancel"
-                                        type="object"
-                                        attrs="{'invisible': ['|', ('delivery_note_state', '=', 'draft'),
-                                                                       ('delivery_note_state', '=', 'cancel')]}"
-                                        string="Cancel"
-                                    />
+                                <div invisible="[('delivery_note_exists', '=', False)]">
+                                    <button name="action_delivery_note_draft" type="object" class="oe_highlight" string="Reset to draft" invisible="[('delivery_note_state', '!=', 'cancel')]" />
+                                    <button name="action_delivery_note_confirm" type="object" class="oe_highlight" string="Validate" invisible="[('delivery_note_state', '!=', 'draft')]" />
+                                    <button name="action_delivery_note_invoice" type="object" class="oe_highlight" groups="account.group_account_invoice" string="Create invoice" invisible="['|', ('delivery_note_state', '!=', 'confirm'), ('can_be_invoiced', '=', False)]" />
+                                    <button name="action_delivery_note_done" type="object" class="oe_highlight" string="Set done" invisible="['&amp;', ('delivery_note_state', '!=', 'invoiced'), '|', ('delivery_note_state', '!=', 'confirm'), ('can_be_invoiced', '=', True)]" />
+                                    <button name="action_delivery_note_print" type="object" string="Print" invisible="['|', ('delivery_note_state', '=', 'done'), ('delivery_note_state', '=', 'cancel')]" />
+                                    <button name="action_delivery_note_print" class="oe_highlight" type="object" string="Print" invisible="[('delivery_note_state', '!=', 'done')]" />
+                                    <button name="action_delivery_note_cancel" type="object" string="Cancel" invisible="['|', ('delivery_note_state', '=', 'draft'), ('delivery_note_state', '=', 'cancel')]" />
                                 </div>
                                 <div class="statusbar_status">
-                                    <button
-                                        class="btn arrow_button active"
-                                        attrs="{'invisible': [('delivery_note_state', '!=', 'cancel')]}"
-                                    >
+                                    <button class="btn arrow_button active" invisible="[('delivery_note_state', '!=', 'cancel')]">
                                         Cancelled
                                     </button>
-                                    <button
-                                        class="btn arrow_button active"
-                                        attrs="{'invisible': [('delivery_note_state', '!=', 'done')]}"
-                                    >
+                                    <button class="btn arrow_button active" invisible="[('delivery_note_state', '!=', 'done')]">
                                         Done
                                     </button>
-                                    <button
-                                        class="btn arrow_button active"
-                                        attrs="{'invisible': [('delivery_note_state', '!=', 'invoiced')]}"
-                                    >
+                                    <button class="btn arrow_button active" invisible="[('delivery_note_state', '!=', 'invoiced')]">
                                         Invoiced
                                     </button>
-                                    <button
-                                        class="btn arrow_button active"
-                                        attrs="{'invisible': [('delivery_note_state', '!=', 'confirm')]}"
-                                    >
+                                    <button class="btn arrow_button active" invisible="[('delivery_note_state', '!=', 'confirm')]">
                                         Validated
                                     </button>
-                                    <button
-                                        class="btn arrow_button"
-                                        attrs="{'invisible': [('delivery_note_state', '=', 'confirm')]}"
-                                    >
+                                    <button class="btn arrow_button" invisible="[('delivery_note_state', '=', 'confirm')]">
                                         Validated
                                     </button>
-                                    <button
-                                        class="btn arrow_button first_arrow active"
-                                        attrs="{'invisible': [('delivery_note_state', '!=', 'draft')]}"
-                                    >
+                                    <button class="btn arrow_button first_arrow active" invisible="[('delivery_note_state', '!=', 'draft')]">
                                         Draft
                                     </button>
-                                    <button
-                                        class="btn arrow_button first_arrow"
-                                        attrs="{'invisible': [('delivery_note_state', '=', 'draft')]}"
-                                    >
+                                    <button class="btn arrow_button first_arrow" invisible="[('delivery_note_state', '=', 'draft')]">
                                         Draft
                                     </button>
                                 </div>
@@ -177,163 +68,58 @@
                                     <group>
                                         <label for="delivery_note_id" />
                                         <div class="o_row">
-                                            <field
-                                                name="delivery_note_id"
-                                                domain="[('state', '=', 'draft'),
-                                                            ('partner_id', '=', partner_id)]"
-                                                attrs="{'required': [('delivery_note_exists', '=', True)],
-                                                           'readonly': [('delivery_note_draft', '=', False)]}"
-                                                options="{'no_create': True, 'no_open': True}"
-                                            />
-                                            <button
-                                                type="object"
-                                                name="goto_delivery_note"
-                                                class="btn-secondary"
-                                                groups="l10n_it_delivery_note.use_advanced_delivery_notes"
-                                                attrs="{'invisible': ['|', ('use_advanced_behaviour', '=', False),
-                                                                               ('delivery_note_exists', '=', False)]}"
-                                                icon="fa-external-link"
-                                                aria-label="Go to delivery note"
-                                                title="Go to delivery note"
-                                            />
+                                            <field name="delivery_note_id" domain="[('state', '=', 'draft'),                                                             ('partner_id', '=', partner_id)]" options="{'no_create': True, 'no_open': True}" required="[('delivery_note_exists', '=', True)]" readonly="[('delivery_note_draft', '=', False)]" />
+                                            <button type="object" name="goto_delivery_note" class="btn-secondary" groups="l10n_it_delivery_note.use_advanced_delivery_notes" icon="fa-external-link" aria-label="Go to delivery note" title="Go to delivery note" invisible="['|', ('use_advanced_behaviour', '=', False), ('delivery_note_exists', '=', False)]" />
                                         </div>
-                                        <field
-                                            name="delivery_note_partner_ref"
-                                            attrs="{'invisible': [('delivery_note_type_code', '!=', 'incoming')],
-                                                       'readonly': [('delivery_note_readonly', '=', True)]}"
-                                        />
-                                        <field
-                                            name="delivery_note_partner_shipping_id"
-                                            attrs="{'required': [('delivery_note_exists', '=', True)],
-                                                       'readonly': [('delivery_note_readonly', '=', True)]}"
-                                        />
-                                        <field
-                                            name="delivery_note_carrier_id"
-                                            attrs="{'readonly': [('delivery_note_readonly', '=', True)]}"
-                                            domain="[('is_carrier','=', True)]"
-                                            string="Carrier"
-                                        />
-                                        <field
-                                            name="delivery_method_id"
-                                            attrs="{'readonly': [('delivery_note_readonly', '=', True)]}"
-                                        />
+                                        <field name="delivery_note_partner_ref" invisible="[('delivery_note_type_code', '!=', 'incoming')]" readonly="[('delivery_note_readonly', '=', True)]" />
+                                        <field name="delivery_note_partner_shipping_id" required="[('delivery_note_exists', '=', True)]" readonly="[('delivery_note_readonly', '=', True)]" />
+                                        <field name="delivery_note_carrier_id" domain="[('is_carrier','=', True)]" string="Carrier" readonly="[('delivery_note_readonly', '=', True)]" />
+                                        <field name="delivery_method_id" readonly="[('delivery_note_readonly', '=', True)]" />
                                     </group>
                                     <group>
-                                        <field
-                                            name="delivery_note_type_id"
-                                            widget="selection"
-                                            attrs="{'required': [('delivery_note_exists', '=', True)],
-                                                       'readonly': [('delivery_note_draft', '=', False)]}"
-                                        />
-                                        <field
-                                            name="delivery_note_date"
-                                            attrs="{'readonly': [('delivery_note_draft', '=', False)]}"
-                                        />
+                                        <field name="delivery_note_type_id" widget="selection" required="[('delivery_note_exists', '=', True)]" readonly="[('delivery_note_draft', '=', False)]" />
+                                        <field name="delivery_note_date" readonly="[('delivery_note_draft', '=', False)]" />
                                         <label for="transport_datetime" />
                                         <div class="o_row">
-                                            <field
-                                                name="transport_datetime"
-                                                attrs="{'readonly': [('delivery_note_readonly', '=', True)]}"
-                                            />
-                                            <button
-                                                type="object"
-                                                name="delivery_note_update_transport_datetime"
-                                                attrs="{'invisible': [('delivery_note_readonly', '=', True)]}"
-                                                class="btn-secondary"
-                                                icon="fa-clock-o"
-                                                aria-label="Update to now"
-                                                title="Update to now"
-                                            />
+                                            <field name="transport_datetime" readonly="[('delivery_note_readonly', '=', True)]" />
+                                            <button type="object" name="delivery_note_update_transport_datetime" class="btn-secondary" icon="fa-clock-o" aria-label="Update to now" title="Update to now" invisible="[('delivery_note_readonly', '=', True)]" />
                                         </div>
                                     </group>
                                 </group>
-                                <group
-                                    attrs="{'invisible': [('delivery_note_exists', '=', False)]}"
-                                >
+                                <group invisible="[('delivery_note_exists', '=', False)]">
                                     <group>
-                                        <field
-                                            name="packages"
-                                            attrs="{'readonly': [('delivery_note_readonly', '=', True)]}"
-                                        />
+                                        <field name="packages" readonly="[('delivery_note_readonly', '=', True)]" />
                                         <label for="delivery_note_volume" />
                                         <div class="o_row">
-                                            <field
-                                                name="delivery_note_volume"
-                                                attrs="{'readonly': [('delivery_note_readonly', '=', True)]}"
-                                                string="Volume"
-                                            />
-                                            <field
-                                                name="delivery_note_volume_uom_id"
-                                                groups="uom.group_uom"
-                                                widget="selection"
-                                                attrs="{'readonly': [('delivery_note_readonly', '=', True)]}"
-                                            />
+                                            <field name="delivery_note_volume" string="Volume" readonly="[('delivery_note_readonly', '=', True)]" />
+                                            <field name="delivery_note_volume_uom_id" groups="uom.group_uom" widget="selection" readonly="[('delivery_note_readonly', '=', True)]" />
                                         </div>
                                     </group>
                                     <group>
                                         <label for="gross_weight" />
                                         <div class="o_row">
-                                            <field
-                                                name="gross_weight"
-                                                attrs="{'readonly': [('delivery_note_readonly', '=', True)]}"
-                                            />
-                                            <field
-                                                name="gross_weight_uom_id"
-                                                groups="uom.group_uom"
-                                                widget="selection"
-                                                attrs="{'readonly': [('delivery_note_readonly', '=', True)]}"
-                                            />
+                                            <field name="gross_weight" readonly="[('delivery_note_readonly', '=', True)]" />
+                                            <field name="gross_weight_uom_id" groups="uom.group_uom" widget="selection" readonly="[('delivery_note_readonly', '=', True)]" />
                                         </div>
                                         <label for="net_weight" />
                                         <div class="o_row">
-                                            <field
-                                                name="net_weight"
-                                                attrs="{'readonly': [('delivery_note_readonly', '=', True)]}"
-                                            />
-                                            <field
-                                                name="net_weight_uom_id"
-                                                groups="uom.group_uom"
-                                                widget="selection"
-                                                attrs="{'readonly': [('delivery_note_readonly', '=', True)]}"
-                                            />
+                                            <field name="net_weight" readonly="[('delivery_note_readonly', '=', True)]" />
+                                            <field name="net_weight_uom_id" groups="uom.group_uom" widget="selection" readonly="[('delivery_note_readonly', '=', True)]" />
                                         </div>
                                     </group>
                                 </group>
                                 <group>
                                     <group>
-                                        <field
-                                            name="goods_appearance_id"
-                                            widget="selection"
-                                            attrs="{'readonly': [('delivery_note_readonly', '=', True)]}"
-                                        />
-                                        <field
-                                            name="transport_reason_id"
-                                            widget="selection"
-                                            attrs="{'readonly': [('delivery_note_readonly', '=', True)]}"
-                                        />
+                                        <field name="goods_appearance_id" widget="selection" readonly="[('delivery_note_readonly', '=', True)]" />
+                                        <field name="transport_reason_id" widget="selection" readonly="[('delivery_note_readonly', '=', True)]" />
                                     </group>
                                     <group>
-                                        <field
-                                            name="transport_condition_id"
-                                            widget="selection"
-                                            attrs="{'readonly': [('delivery_note_readonly', '=', True)]}"
-                                        />
-                                        <field
-                                            name="transport_method_id"
-                                            widget="selection"
-                                            attrs="{'readonly': [('delivery_note_readonly', '=', True)]}"
-                                        />
+                                        <field name="transport_condition_id" widget="selection" readonly="[('delivery_note_readonly', '=', True)]" />
+                                        <field name="transport_method_id" widget="selection" readonly="[('delivery_note_readonly', '=', True)]" />
                                     </group>
                                 </group>
-                                <group
-                                    string="Delivery Notes"
-                                    attrs="{'invisible': [('delivery_note_exists', '=', False)]}"
-                                >
-                                    <field
-                                        name="delivery_note_note"
-                                        nolabel="1"
-                                        attrs="{'readonly': [('delivery_note_readonly', '=', True)]}"
-                                    />
+                                <group string="Delivery Notes" invisible="[('delivery_note_exists', '=', False)]">
+                                    <field name="delivery_note_note" nolabel="1" readonly="[('delivery_note_readonly', '=', True)]" />
                                 </group>
                             </div>
                         </div>
@@ -349,16 +135,7 @@
         <field name="inherit_id" ref="stock.vpicktree" />
         <field name="arch" type="xml">
             <field name="state" position="after">
-                <button
-                    type="object"
-                    name="goto_delivery_note"
-                    class="oe_button"
-                    attrs="{'invisible': [('delivery_note_id', '=', False)]}"
-                    groups="l10n_it_delivery_note.use_advanced_delivery_notes"
-                    icon="fa-external-link"
-                    aria-label="Go to delivery note"
-                    title="Go to delivery note"
-                />
+                <button type="object" name="goto_delivery_note" class="oe_button" groups="l10n_it_delivery_note.use_advanced_delivery_notes" icon="fa-external-link" aria-label="Go to delivery note" title="Go to delivery note" invisible="[('delivery_note_id', '=', False)]" />
                 <field name="delivery_note_id" />
                 <field name="delivery_note_state" />
                 <field name="delivery_note_date" />
@@ -373,21 +150,9 @@
         <field name="arch" type="xml">
             <xpath expr="//filter[last()]" position="after">
                 <separator />
-                <filter
-                    string="No DN"
-                    name="no_delivery_note"
-                    domain="[('delivery_note_id', '=', False)]"
-                />
-                <filter
-                    string="Draft DN"
-                    name="draft_delivery_note"
-                    domain="[('delivery_note_state', '=', 'draft')]"
-                />
-                <filter
-                    string="Validated DN"
-                    name="validated_delivery_note"
-                    domain="[('delivery_note_state', '=', 'confirm')]"
-                />
+                <filter string="No DN" name="no_delivery_note" domain="[('delivery_note_id', '=', False)]" />
+                <filter string="Draft DN" name="draft_delivery_note" domain="[('delivery_note_state', '=', 'draft')]" />
+                <filter string="Validated DN" name="validated_delivery_note" domain="[('delivery_note_state', '=', 'confirm')]" />
             </xpath>
         </field>
     </record>
@@ -399,13 +164,7 @@
         <field name="view_mode">tree,form</field>
     </record>
 
-    <menuitem
-        id="stock_picking_transport_condition_menu"
-        parent="stock_delivery_note_config_menu"
-        action="stock_picking_transport_condition_action"
-        name="Conditions of transport"
-        sequence="20"
-    />
+    <menuitem id="stock_picking_transport_condition_menu" parent="stock_delivery_note_config_menu" action="stock_picking_transport_condition_action" name="Conditions of transport" sequence="20" />
 
     <record id="stock_picking_goods_appearance_action" model="ir.actions.act_window">
         <field name="name">Appearances of goods</field>
@@ -414,13 +173,7 @@
         <field name="view_mode">tree,form</field>
     </record>
 
-    <menuitem
-        id="stock_picking_good_appearance_menu"
-        parent="stock_delivery_note_config_menu"
-        action="stock_picking_goods_appearance_action"
-        name="Appearances of goods"
-        sequence="30"
-    />
+    <menuitem id="stock_picking_good_appearance_menu" parent="stock_delivery_note_config_menu" action="stock_picking_goods_appearance_action" name="Appearances of goods" sequence="30" />
 
     <record id="stock_picking_transport_reason_action" model="ir.actions.act_window">
         <field name="name">Reasons of transport</field>
@@ -429,13 +182,7 @@
         <field name="view_mode">tree,form</field>
     </record>
 
-    <menuitem
-        id="stock_picking_transport_reason_menu"
-        parent="stock_delivery_note_config_menu"
-        action="stock_picking_transport_reason_action"
-        name="Reasons of transport"
-        sequence="40"
-    />
+    <menuitem id="stock_picking_transport_reason_menu" parent="stock_delivery_note_config_menu" action="stock_picking_transport_reason_action" name="Reasons of transport" sequence="40" />
 
     <record id="stock_picking_transport_method_action" model="ir.actions.act_window">
         <field name="name">Methods of transport</field>
@@ -444,12 +191,6 @@
         <field name="view_mode">tree,form</field>
     </record>
 
-    <menuitem
-        id="stock_picking_transport_method_menu"
-        parent="stock_delivery_note_config_menu"
-        action="stock_picking_transport_method_action"
-        name="Methods of transport"
-        sequence="50"
-    />
+    <menuitem id="stock_picking_transport_method_menu" parent="stock_delivery_note_config_menu" action="stock_picking_transport_method_action" name="Methods of transport" sequence="50" />
 
 </odoo>

@@ -5,7 +5,7 @@
 
 {
     "name": "ITA - Esigibilità IVA",
-    "version": "16.0.1.0.0",
+    "version": "17.0.1.0.0",
     "development_status": "Beta",
     "category": "Localization/Italy",
     "author": "Openforce di Camilli Alessandro, Odoo Community Association (OCA)",

@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8" ?>
 <odoo>
         <record model="ir.ui.view" id="view_fatturapa_out_attachment_tree">
             <field name="name">fatturapa.attachment.out.tree</field>
@@ -22,26 +21,10 @@
                     <field name="name" />
                     <field name="invoice_partner_id" />
                     <field name="state" />
-                    <filter
-                    name="ready"
-                    string="Ready to Send"
-                    domain="[('state','=','ready')]"
-                />
-                    <filter
-                    name="sender_error"
-                    string="Sender Error"
-                    domain="[('state','=','sender_error')]"
-                />
-                    <filter
-                    name="recipient_error"
-                    string="Not delivered"
-                    domain="[('state','=','recipient_error')]"
-                />
-                    <filter
-                    name="rejected"
-                    string="Rejected (PA)"
-                    domain="[('state','=','rejected')]"
-                />
+                    <filter name="ready" string="Ready to Send" domain="[('state','=','ready')]" />
+                    <filter name="sender_error" string="Sender Error" domain="[('state','=','sender_error')]" />
+                    <filter name="recipient_error" string="Not delivered" domain="[('state','=','recipient_error')]" />
+                    <filter name="rejected" string="Rejected (PA)" domain="[('state','=','rejected')]" />
                 </search>
             </field>
         </record>
@@ -60,19 +43,10 @@
                                 <label for="datas" />
                                 <div>
                                     <div>
-                                        <field
-                                        name="datas"
-                                        filename="name"
-                                        attrs="{'readonly': [('state', 'not in', ['ready', 'sender_error'])]}"
-                                    />
+                                        <field name="datas" filename="name" readonly="[('state', 'not in', ['ready', 'sender_error'])]" />
                                     </div>
                                     <div>
-                                        <button
-                                        type="object"
-                                        name="ftpa_preview"
-                                        string="Show preview"
-                                        style="margin-bottom:10px;"
-                                    />
+                                        <button type="object" name="ftpa_preview" string="Show preview" style="margin-bottom:10px;" />
                                     </div>
                                 </div>
                                 <field name="name" />
@@ -83,10 +57,7 @@
                             </group>
                         </group>
                         <separator string="Invoices" />
-                        <field
-                        name="out_invoice_ids"
-                        context="{'form_view_ref': 'account.view_move_form', 'tree_view_ref': 'account.view_move_tree'}"
-                    >
+                        <field name="out_invoice_ids" context="{'form_view_ref': 'account.view_move_form', 'tree_view_ref': 'account.view_move_tree'}">
                             <tree>
                                 <field name="partner_id" />
                                 <field name="invoice_date" />
@@ -95,28 +66,14 @@
                                 <field name="amount_total" />
                                 <field name="amount_residual" />
                                 <field name="state" />
-                                <button
-                                name="open_form_current"
-                                type="object"
-                                string="Open full-screen"
-                                icon="fa-external-link"
-                                context="{'form_view_ref': 'account.view_move_form'}"
-                            />
+                                <button name="open_form_current" type="object" string="Open full-screen" icon="fa-external-link" context="{'form_view_ref': 'account.view_move_form'}" />
                             </tree>
                         </field>
                         <group string="History">
                             <label for="create_uid" string="Created by" />
                             <div name="creation_div">
-                                <field
-                                name="create_uid"
-                                readonly="1"
-                                class="oe_inline"
-                            /> on
-                                <field
-                                name="create_date"
-                                readonly="1"
-                                class="oe_inline"
-                            />
+                                <field name="create_uid" readonly="1" class="oe_inline" /> on
+                                <field name="create_date" readonly="1" class="oe_inline" />
                             </div>
                         </group>
                     </div>
@@ -134,15 +91,8 @@
             <field name="res_model">fatturapa.attachment.out</field>
             <field name="view_mode">tree,form</field>
             <field name="view_id" ref="view_fatturapa_out_attachment_tree" />
-            <field
-            name="context"
-        >{'search_default_ready': True, 'search_default_sender_error': True, 'search_default_rejected': True, }</field>
+            <field name="context">{'search_default_ready': True, 'search_default_sender_error': True, 'search_default_rejected': True, }</field>
         </record>
 
-        <menuitem
-        action="action_fatturapa_attachment"
-        parent="l10n_it_fatturapa.menu_fattura_pa_receivables"
-        name="E-invoice Export Files"
-        id="fatturapa_attachment_menu"
-    />
+        <menuitem action="action_fatturapa_attachment" parent="l10n_it_fatturapa.menu_fattura_pa_receivables" name="E-invoice Export Files" id="fatturapa_attachment_menu" />
 </odoo>

@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8" ?>
 <odoo>
     <record id="view_partner_form_fatturapa_in" model="ir.ui.view">
         <field name="name">partner.form.fatturapa.in</field>
@@ -7,10 +6,7 @@
         <field name="arch" type="xml">
             <group name="fatturapa_group" position="inside">
                 <newline />
-                <group
-                    attrs="{'invisible': [('electronic_invoice_subjected', '=', False)]}"
-                    string="Supplier data"
-                >
+                <group string="Supplier data" invisible="[('electronic_invoice_subjected', '=', False)]">
                     <field name="e_invoice_detail_level" />
                     <field name="e_invoice_default_product_id" />
                     <field name="e_invoice_price_decimal_digits" />

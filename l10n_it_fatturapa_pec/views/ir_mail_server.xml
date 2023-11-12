@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8" ?>
 <odoo>
     <record model="ir.ui.view" id="ir_mail_server_fatturapa_out_pec_form">
         <field name="name">ir.mail.server.fatturapa.out.pec.form</field>
@@ -8,11 +7,7 @@
             <xpath expr="//sheet/group[last()]" position="after">
                 <group string="PEC and Electronic Invoice">
                     <field name="is_fatturapa_pec" />
-                    <field
-                        name="email_from_for_fatturaPA"
-                        attrs="{'invisible': [('is_fatturapa_pec', '=', False)],
-                           'required': [('is_fatturapa_pec', '=', True)]}"
-                    />
+                    <field name="email_from_for_fatturaPA" invisible="[('is_fatturapa_pec', '=', False)]" required="[('is_fatturapa_pec', '=', True)]" />
                 </group>
             </xpath>
         </field>

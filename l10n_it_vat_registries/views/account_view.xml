@@ -1,4 +1,3 @@
-<?xml version="1.0" ?>
 <odoo>
 
     <record id="view_tax_code_form" model="ir.ui.view">
@@ -8,10 +7,7 @@
         <field name="arch" type="xml">
             <field name="type_tax_use" position="after">
                 <field name="exclude_from_registries" />
-                    <field
-                    name="cee_type"
-                    attrs="{'invisible': [('type_tax_use', '!=', 'none')]}"
-                />
+                    <field name="cee_type" invisible="[('type_tax_use', '!=', 'none')]" />
             </field>
         </field>
     </record>

@@ -1,4 +1,3 @@
-<?xml version="1.0" ?>
 <odoo>
 
     <record id="view_email_server_form_e_invoice" model="ir.ui.view">
@@ -10,10 +9,7 @@
                 <field name="is_fatturapa_pec" />
             </xpath>
             <notebook position="inside">
-                <page
-                    string="Last error message"
-                    attrs="{'invisible': [('last_pec_error_message', '=', False)]}"
-                >
+                <page string="Last error message" invisible="[('last_pec_error_message', '=', False)]">
                     <field name="last_pec_error_message" />
                     <group>
                         <field name="pec_error_count" />
@@ -21,17 +17,10 @@
                 </page>
             </notebook>
             <xpath expr="//notebook/page[1]/group[1]/group[3]" position="attributes">
-                <!-- Hiding, because it would not be considered. See 'fetch_mail' override -->
-                <attribute
-                    name="attrs"
-                >{'invisible': [('is_fatturapa_pec', '=', True)]}</attribute>
-            </xpath>
+                
+                <attribute name="invisible">[('is_fatturapa_pec', '=', True)]</attribute></xpath>
             <field name="active" position="after">
-                <field
-                    name="e_inv_notify_partner_ids"
-                    widget="many2many_tags"
-                    attrs="{'invisible': [('is_fatturapa_pec', '=', False)]}"
-                />
+                <field name="e_inv_notify_partner_ids" widget="many2many_tags" invisible="[('is_fatturapa_pec', '=', False)]" />
             </field>
         </field>
     </record>

@@ -1,16 +1,8 @@
-<?xml version="1.0" encoding="utf-8" ?>
 <odoo>
 
-        <menuitem
-        id="wt_main"
-        name="Withholding tax"
-        parent="account.menu_finance_entries"
-        groups="account.group_account_manager"
-    />
+        <menuitem id="wt_main" name="Withholding tax" parent="account.menu_finance_entries" groups="account.group_account_manager" />
 
-       <!--
-        WITHHOLDING TAX
-         -->
+       
         <record id="view_withholding_tax_tree" model="ir.ui.view">
             <field name="name">view.withholding.tax.tree</field>
             <field name="model">withholding.tax</field>
@@ -42,24 +34,13 @@
                             <field name="account_payable_id" />
                             <field name="journal_id" />
                             <field name="payment_term" />
-                            <field
-                            name="use_daticassaprev"
-                            attrs="{'invisible': [('wt_types', 'in', ('ritenuta', 'other'))]}"
-                        />
-                            <field
-                            name="daticassprev_tax_id"
-                            domain="[('amount', '=', 0.0)]"
-                            attrs="{'invisible': [('use_daticassaprev', '=', False)]}"
-                        />
-                            <field name="wt_types" widget='radio' />
+                            <field name="use_daticassaprev" invisible="[('wt_types', 'in', ('ritenuta', 'other'))]" />
+                            <field name="daticassprev_tax_id" domain="[('amount', '=', 0.0)]" invisible="[('use_daticassaprev', '=', False)]" />
+                            <field name="wt_types" widget="radio" />
                         </group>
                         <group>
                             <field name="active" />
-                            <field
-                            name="company_id"
-                            options="{'no_create': True}"
-                            groups="base.group_multi_company"
-                        />
+                            <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company" />
                         </group>
                     </group>
                     <field name="comment" />
@@ -99,18 +80,10 @@
             <field name="view_id" ref="view_withholding_tax_tree" />
         </record>
 
-        <menuitem
-        id="menu_withholding_tax"
-        name="Withholding Tax"
-        action="action_withholding_tax"
-        parent="account.account_account_menu"
-        sequence="45"
-    />
+        <menuitem id="menu_withholding_tax" name="Withholding Tax" action="action_withholding_tax" parent="account.account_account_menu" sequence="45" />
 
 
-        <!--
-        WITHHOLDING TAX STATEMENT
-         -->
+        
         <record id="view_withholding_statement_tree" model="ir.ui.view">
             <field name="name">view.withholding.tax.statement.tree</field>
             <field name="model">withholding.tax.statement</field>
@@ -136,12 +109,7 @@
             <field name="model">withholding.tax.statement</field>
             <field name="arch" type="xml">
 
-                <form
-                string="Withholding Tax statement"
-                create="false"
-                edit="false"
-                delete="false"
-            >
+                <form string="Withholding Tax statement" create="false" edit="false" delete="false">
                     <sheet>
                         <group>
                             <group>
@@ -154,11 +122,7 @@
                                 <field name="date" />
                                 <field name="move_id" />
                                 <field name="invoice_id" />
-                                <field
-                                name="company_id"
-                                groups="base.group_multi_company"
-                                readonly="1"
-                            />
+                                <field name="company_id" groups="base.group_multi_company" readonly="1" />
                             </group>
                         </group>
                         <newline />
@@ -187,48 +151,14 @@
             <field name="model">withholding.tax.statement</field>
             <field name="arch" type="xml">
                 <search string="Withholding Tax Statement">
-                    <field
-                    name="partner_id"
-                    filter_domain="[('partner_id','ilike',self)]"
-                />
-                    <field
-                    name="withholding_tax_id"
-                    filter_domain="[('withholding_tax_id','ilike',self)]"
-                />
-                    <filter
-                    name="typeIn"
-                    string="In type"
-                    domain="[('wt_type','=','in')]"
-                    help="Supplier invoices"
-                />
-                    <filter
-                    name="typeOut"
-                    string="Out type"
-                    domain="[('wt_type','=','out')]"
-                    help="Customer invoices"
-                />
+                    <field name="partner_id" filter_domain="[('partner_id','ilike',self)]" />
+                    <field name="withholding_tax_id" filter_domain="[('withholding_tax_id','ilike',self)]" />
+                    <filter name="typeIn" string="In type" domain="[('wt_type','=','in')]" help="Supplier invoices" />
+                    <filter name="typeOut" string="Out type" domain="[('wt_type','=','out')]" help="Customer invoices" />
                     <group expand="0" string="Group By...">
-                        <filter
-                        name="group_by_partners"
-                        string="Partners"
-                        icon="terp-personal"
-                        domain="[]"
-                        context="{'group_by':'partner_id'}"
-                    />
-                        <filter
-                        name="group_by_wt"
-                        string="Withholding Tax"
-                        icon="terp-personal"
-                        domain="[]"
-                        context="{'group_by':'withholding_tax_id'}"
-                    />
-                        <filter
-                        name="group_by_date"
-                        string="Date"
-                        icon="terp-go-month"
-                        domain="[]"
-                        context="{'group_by':'date'}"
-                    />
+                        <filter name="group_by_partners" string="Partners" icon="terp-personal" domain="[]" context="{'group_by':'partner_id'}" />
+                        <filter name="group_by_wt" string="Withholding Tax" icon="terp-personal" domain="[]" context="{'group_by':'withholding_tax_id'}" />
+                        <filter name="group_by_date" string="Date" icon="terp-go-month" domain="[]" context="{'group_by':'date'}" />
                     </group>
                 </search>
             </field>
@@ -241,17 +171,9 @@
             <field name="search_view_id" ref="view_withholding_tax_statement_search" />
         </record>
 
-        <menuitem
-        id="menu_withholding_tax_statement"
-        name="WT Statements"
-        action="action_withholding_tax_statement"
-        parent="wt_main"
-        sequence="5"
-    />
+        <menuitem id="menu_withholding_tax_statement" name="WT Statements" action="action_withholding_tax_statement" parent="wt_main" sequence="5" />
 
-        <!--
-        WITHHOLDING TAX MOVE
-         -->
+        
          <record id="view_withholding_move_tree" model="ir.ui.view">
             <field name="name">view.withholding.tax.move.tree</field>
             <field name="model">withholding.tax.move</field>
@@ -274,30 +196,11 @@
             <field name="name">view.withholding.tax.move.form</field>
             <field name="model">withholding.tax.move</field>
             <field name="arch" type="xml">
-                <form
-                string="Withholding Tax Move"
-                create="false"
-                edit="false"
-                delete="false"
-            >
+                <form string="Withholding Tax Move" create="false" edit="false" delete="false">
                     <header>
-                        <button
-                        name="action_set_to_draft"
-                        states="paid"
-                        string="Set to Due"
-                        type="object"
-                    />
-                        <button
-                        name="action_paid"
-                        states="due"
-                        string="Paid"
-                        type="object"
-                    />
-                        <field
-                        name="state"
-                        widget="statusbar"
-                        statusbar_visible="due,paid"
-                    />
+                        <button name="action_set_to_draft" states="paid" string="Set to Due" type="object" />
+                        <button name="action_paid" states="due" string="Paid" type="object" />
+                        <field name="state" widget="statusbar" statusbar_visible="due,paid" />
                     </header>
                     <sheet string="Withholding Tax Move">
                         <group>
@@ -318,11 +221,7 @@
                                 <field name="date_maturity" />
                                 <field name="wt_account_move_id" />
                                 <field name="full_reconcile_id" />
-                                <field
-                                name="company_id"
-                                groups="base.group_multi_company"
-                                readonly="1"
-                            />
+                                <field name="company_id" groups="base.group_multi_company" readonly="1" />
                             </group>
                         </group>
                     </sheet>
@@ -335,80 +234,20 @@
             <field name="model">withholding.tax.move</field>
             <field name="arch" type="xml">
                 <search string="Withholding Tax Move">
-                    <filter
-                    name="due"
-                    string="Due"
-                    domain="[('state','=','due')]"
-                    help="Due"
-                />
-                    <filter
-                    name="paid"
-                    string="Paid"
-                    domain="[('state','=','paid')]"
-                    help="Paid"
-                />
+                    <filter name="due" string="Due" domain="[('state','=','due')]" help="Due" />
+                    <filter name="paid" string="Paid" domain="[('state','=','paid')]" help="Paid" />
                     <newline />
-                    <filter
-                    name="typeIn"
-                    string="In type"
-                    domain="[('wt_type','=','in')]"
-                    help="Supplier invoices"
-                />
-                    <filter
-                    name="typeOut"
-                    string="Out type"
-                    domain="[('wt_type','=','out')]"
-                    help="Customer invoices"
-                />
-                    <field
-                    name="partner_id"
-                    filter_domain="[('partner_id','ilike',self)]"
-                />
-                    <field
-                    name="withholding_tax_id"
-                    filter_domain="[('withholding_tax_id','ilike',self)]"
-                />
-                    <field
-                    name="company_id"
-                    filter_domain="[('company_id','ilike',self)]"
-                    groups="base.group_multi_company"
-                />
+                    <filter name="typeIn" string="In type" domain="[('wt_type','=','in')]" help="Supplier invoices" />
+                    <filter name="typeOut" string="Out type" domain="[('wt_type','=','out')]" help="Customer invoices" />
+                    <field name="partner_id" filter_domain="[('partner_id','ilike',self)]" />
+                    <field name="withholding_tax_id" filter_domain="[('withholding_tax_id','ilike',self)]" />
+                    <field name="company_id" filter_domain="[('company_id','ilike',self)]" groups="base.group_multi_company" />
                     <group expand="0" string="Group By...">
-                        <filter
-                        name="group_by_partner"
-                        string="Partners"
-                        icon="terp-personal"
-                        domain="[]"
-                        context="{'group_by':'partner_id'}"
-                    />
-                        <filter
-                        name="group_by_wt"
-                        string="Withholding Tax"
-                        icon="terp-personal"
-                        domain="[]"
-                        context="{'group_by':'withholding_tax_id'}"
-                    />
-                        <filter
-                        name="group_by_date"
-                        string="Date"
-                        icon="terp-go-month"
-                        domain="[]"
-                        context="{'group_by':'date'}"
-                    />
-                        <filter
-                        name="group_by_maturity"
-                        string="Date Maturity"
-                        icon="terp-go-month"
-                        domain="[]"
-                        context="{'group_by':'date_maturity'}"
-                    />
-                        <filter
-                        name="group_by_company"
-                        string="Company"
-                        domain="[]"
-                        context="{'group_by':'company_id'}"
-                        groups="base.group_multi_company"
-                    />
+                        <filter name="group_by_partner" string="Partners" icon="terp-personal" domain="[]" context="{'group_by':'partner_id'}" />
+                        <filter name="group_by_wt" string="Withholding Tax" icon="terp-personal" domain="[]" context="{'group_by':'withholding_tax_id'}" />
+                        <filter name="group_by_date" string="Date" icon="terp-go-month" domain="[]" context="{'group_by':'date'}" />
+                        <filter name="group_by_maturity" string="Date Maturity" icon="terp-go-month" domain="[]" context="{'group_by':'date_maturity'}" />
+                        <filter name="group_by_company" string="Company" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company" />
                     </group>
                 </search>
             </field>
@@ -422,12 +261,6 @@
             <field name="context">{'search_default_due': True}</field>
         </record>
 
-        <menuitem
-        id="menu_withholding_tax_move"
-        name="WT Moves"
-        action="action_withholding_tax_move"
-        parent="wt_main"
-        sequence="10"
-    />
+        <menuitem id="menu_withholding_tax_move" name="WT Moves" action="action_withholding_tax_move" parent="wt_main" sequence="10" />
 
 </odoo>

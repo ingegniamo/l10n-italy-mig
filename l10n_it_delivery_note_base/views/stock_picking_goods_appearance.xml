@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8" ?>
 <odoo>
 
     <record id="stock_picking_goods_appearance_form_view" model="ir.ui.view">
@@ -8,12 +7,7 @@
         <field name="arch" type="xml">
             <form>
                 <sheet>
-                    <widget
-                        name="web_ribbon"
-                        title="Archived"
-                        bg_color="bg-danger"
-                        attrs="{'invisible': [('active', '=', True)]}"
-                    />
+                    <widget name="web_ribbon" title="Archived" bg_color="bg-danger" invisible="[('active', '=', True)]" />
                     <div class="oe_title">
                         <field name="active" invisible="1" />
                         <label class="oe_edit_only" for="name" />

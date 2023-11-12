@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8" ?>
 <odoo>
 
     <record id="view_comunicazione_liquidazione_tree" model="ir.ui.view">
@@ -43,43 +42,21 @@
                                     <field name="last_month" />
                                     <field name="liquidazione_del_gruppo" />
                                 </group>
-                                <group
-                                    string="Declarant"
-                                    name="dichiarante"
-                                    attrs="{'invisible': [('declarant_different', '!=', True)]}"
-                                >
-                                    <field
-                                        name="declarant_fiscalcode"
-                                        attrs="{'required': [('declarant_different', '=', True)]}"
-                                    />
-                                    <field
-                                        name="codice_carica_id"
-                                        attrs="{'required': [('declarant_different', '=', True)]}"
-                                    />
+                                <group string="Declarant" name="dichiarante" invisible="[('declarant_different', '!=', True)]">
+                                    <field name="declarant_fiscalcode" required="[('declarant_different', '=', True)]" />
+                                    <field name="codice_carica_id" required="[('declarant_different', '=', True)]" />
                                     <field name="declarant_fiscalcode_company" />
                                 </group>
                             </group>
                             <newline />
                             <group string="Signature" name="firma">
-                                <field
-                                    name="declarant_sign"
-                                    attrs="{'required': [('declarant_fiscalcode', '!=', True)]}"
-                                />
+                                <field name="declarant_sign" required="[('declarant_fiscalcode', '!=', True)]" />
                             </group>
-                            <group
-                                string="Telematic communication commitment"
-                                name="impegno_presentazione"
-                            >
+                            <group string="Telematic communication commitment" name="impegno_presentazione">
                                 <group>
                                     <field name="delegate_fiscalcode" />
-                                    <field
-                                        name="delegate_commitment"
-                                        attrs="{'required': [('delegate_fiscalcode', '!=', False)]}"
-                                    />
-                                    <field
-                                        name="date_commitment"
-                                        attrs="{'required': [('delegate_fiscalcode', '!=', False)]}"
-                                    />
+                                    <field name="delegate_commitment" required="[('delegate_fiscalcode', '!=', False)]" />
+                                    <field name="date_commitment" required="[('delegate_fiscalcode', '!=', False)]" />
                                     <field name="delegate_sign" />
                                 </group>
                             </group>
@@ -112,13 +89,7 @@
         <field name="view_id" ref="view_comunicazione_liquidazione_tree" />
     </record>
 
-    <menuitem
-        id="menu_comunicazione_liquidazione"
-        name="VAT statement communication"
-        action="action_comunicazione_liquidazione"
-        parent="account.menu_finance_entries"
-        sequence="50"
-    />
+    <menuitem id="menu_comunicazione_liquidazione" name="VAT statement communication" action="action_comunicazione_liquidazione" parent="account.menu_finance_entries" sequence="50" />
 
     <record id="view_comunicazione_liquidazione_vp_form" model="ir.ui.view">
         <field name="name">comunicazione.liquidazione.vp.form</field>
@@ -128,26 +99,13 @@
                 <separator string="VAT statements to communicate" />
                 <field name="liquidazioni_ids" />
                 <group>
-                    <button
-                        name="compute_from_liquidazioni"
-                        string="Recompute"
-                        type="object"
-                        confirm="This will overwrite all VP* values"
-                    />
+                    <button name="compute_from_liquidazioni" string="Recompute" type="object" confirm="This will overwrite all VP* values" />
                 </group>
                 <group string="Reference period" name="periodo">
                     <group>
                         <field name="period_type" />
-                        <field
-                            name="month"
-                            attrs="{'invisible': [('period_type', '!=', 'month')],
-                                    'required': [('period_type', '=', 'month')]}"
-                        />
-                        <field
-                            name="quarter"
-                            attrs="{'invisible': [('period_type', '!=', 'quarter')],
-                                    'required': [('period_type', '=', 'quarter')]}"
-                        />
+                        <field name="month" invisible="[('period_type', '!=', 'month')]" required="[('period_type', '=', 'month')]" />
+                        <field name="quarter" invisible="[('period_type', '!=', 'quarter')]" required="[('period_type', '=', 'quarter')]" />
                     </group>
                     <group>
                         <field name="subcontracting" />
@@ -157,22 +115,14 @@
                 <newline />
                 <group string="Tax statement" name="liquidazione_imposta" col="3">
                     <hr colspan="3" />
-                    <group><div><b
-                            >VP2</b> Profitable operations total (without VAT)</div></group>
-                    <group><field
-                            name="imponibile_operazioni_attive"
-                            nolabel="1"
-                        /></group>
+                    <group><div><b>VP2</b> Profitable operations total (without VAT)</div></group>
+                    <group><field name="imponibile_operazioni_attive" nolabel="1" /></group>
                     <group><div /></group>
 
                     <hr colspan="3" />
-                    <group><div><b
-                            >VP3</b> Unprofitable operations total (without VAT)</div></group>
+                    <group><div><b>VP3</b> Unprofitable operations total (without VAT)</div></group>
                     <group><div /></group>
-                    <group><field
-                            name="imponibile_operazioni_passive"
-                            nolabel="1"
-                        /></group>
+                    <group><field name="imponibile_operazioni_passive" nolabel="1" /></group>
 
                     <hr colspan="3" />
                     <group><div><b>VP4</b> Due VAT</div></group>
@@ -187,27 +137,17 @@
                     <hr colspan="3" />
                     <group><div><b>VP6</b> Debit VAT</div></group>
                     <group><field name="iva_dovuta_debito" nolabel="1" /></group>
-                    <group><span> or credit</span> <field
-                            name="iva_dovuta_credito"
-                            nolabel="1"
-                        /></group>
+                    <group><span> or credit</span> <field name="iva_dovuta_credito" nolabel="1" /></group>
 
                     <hr colspan="3" />
-                    <group><div><b
-                            >VP7</b> Previous period debit, not grater than 25,82 €</div></group>
-                    <group><field
-                            name="debito_periodo_precedente"
-                            nolabel="1"
-                        /></group>
+                    <group><div><b>VP7</b> Previous period debit, not grater than 25,82 &#8364;</div></group>
+                    <group><field name="debito_periodo_precedente" nolabel="1" /></group>
                     <group />
 
                     <hr colspan="3" />
                     <group><div><b>VP8</b> Previous period credit</div></group>
                     <group />
-                    <group><field
-                            name="credito_periodo_precedente"
-                            nolabel="1"
-                        /></group>
+                    <group><field name="credito_periodo_precedente" nolabel="1" /></group>
 
                     <hr colspan="3" />
                     <group><div><b>VP9</b> Previous year credit</div></group>
@@ -225,30 +165,19 @@
                     <group><field name="crediti_imposta" nolabel="1" /></group>
 
                     <hr colspan="3" />
-                    <group><div><b
-                            >VP12</b> Due interests for quarterly statements</div></group>
+                    <group><div><b>VP12</b> Due interests for quarterly statements</div></group>
                     <group><field name="interessi_dovuti" nolabel="1" /></group>
                     <group />
 
                     <hr colspan="3" />
                     <group><div><b>VP13</b> Due down payment</div></group>
-                    <group><div
-                            attrs="{'invisible': [('accounto_dovuto', '=', 0)]}"
-                        ><span>Computation method: </span><field
-                                attrs="{'required': [('accounto_dovuto', '!=', 0)]}"
-                                name="metodo_calcolo_acconto"
-                                nolabel="1"
-                                class="oe_inline"
-                            /></div></group>
+                    <group><div invisible="[('accounto_dovuto', '=', 0)]"><span>Computation method: </span><field name="metodo_calcolo_acconto" nolabel="1" class="oe_inline" required="[('accounto_dovuto', '!=', 0)]" /></div></group>
                     <group><field name="accounto_dovuto" nolabel="1" /></group>
 
                     <hr colspan="3" />
                     <group><div><b>VP14</b> VAT to pay</div></group>
                     <group><field name="iva_da_versare" nolabel="1" /></group>
-                    <group><span> or credit</span> <field
-                            name="iva_a_credito"
-                            nolabel="1"
-                        /></group>
+                    <group><span> or credit</span> <field name="iva_a_credito" nolabel="1" /></group>
 
                 </group>
             </form>

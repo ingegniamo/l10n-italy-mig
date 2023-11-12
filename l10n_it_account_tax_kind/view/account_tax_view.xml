@@ -1,4 +1,3 @@
-<?xml version="1.0" ?>
 <odoo>
 
     <record id="view_tax_form_account_tax_kind" model="ir.ui.view">
@@ -8,10 +7,7 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='tax_group_id']" position="after">
                 <field name="kind_id" />
-                <field
-                    name="law_reference"
-                    attrs="{'required': [('kind_id', '!=', False),('type_tax_use', '!=', 'purchase')], 'invisible': ['|',('kind_id', '=', False),('type_tax_use', '=', 'purchase')]}"
-                />
+                <field name="law_reference" required="[('kind_id', '!=', False), ('type_tax_use', '!=', 'purchase')]" invisible="['|', ('kind_id', '=', False), ('type_tax_use', '=', 'purchase')]" />
             </xpath>
         </field>
     </record>
@@ -26,12 +22,7 @@
                 <field name="kind_id" />
             </xpath>
             <xpath expr="//filter[@name='taxapp']" position="after">
-                <filter
-                    string="Exemption Kind"
-                    name="ex_kind"
-                    domain="[]"
-                    context="{'group_by': 'kind_id'}"
-                />
+                <filter string="Exemption Kind" name="ex_kind" domain="[]" context="{'group_by': 'kind_id'}" />
             </xpath>
         </field>
     </record>
