@@ -6,7 +6,7 @@
         <field name="arch" type="xml">
             <group name="fatturapa_group" position="inside">
                 <newline />
-                <group string="Supplier data" invisible="[('electronic_invoice_subjected', '=', False)]">
+                <group string="Supplier data" invisible="electronic_invoice_subjected == False">
                     <field name="e_invoice_detail_level" />
                     <field name="e_invoice_default_product_id" />
                     <field name="e_invoice_price_decimal_digits" />

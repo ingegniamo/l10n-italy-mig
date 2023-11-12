@@ -42,21 +42,21 @@
                                     <field name="last_month" />
                                     <field name="liquidazione_del_gruppo" />
                                 </group>
-                                <group string="Declarant" name="dichiarante" invisible="[('declarant_different', '!=', True)]">
-                                    <field name="declarant_fiscalcode" required="[('declarant_different', '=', True)]" />
-                                    <field name="codice_carica_id" required="[('declarant_different', '=', True)]" />
+                                <group string="Declarant" name="dichiarante" invisible="declarant_different != True">
+                                    <field name="declarant_fiscalcode" required="declarant_different == True" />
+                                    <field name="codice_carica_id" required="declarant_different == True" />
                                     <field name="declarant_fiscalcode_company" />
                                 </group>
                             </group>
                             <newline />
                             <group string="Signature" name="firma">
-                                <field name="declarant_sign" required="[('declarant_fiscalcode', '!=', True)]" />
+                                <field name="declarant_sign" required="declarant_fiscalcode != True" />
                             </group>
                             <group string="Telematic communication commitment" name="impegno_presentazione">
                                 <group>
                                     <field name="delegate_fiscalcode" />
-                                    <field name="delegate_commitment" required="[('delegate_fiscalcode', '!=', False)]" />
-                                    <field name="date_commitment" required="[('delegate_fiscalcode', '!=', False)]" />
+                                    <field name="delegate_commitment" required="delegate_fiscalcode != False" />
+                                    <field name="date_commitment" required="delegate_fiscalcode != False" />
                                     <field name="delegate_sign" />
                                 </group>
                             </group>
@@ -104,8 +104,8 @@
                 <group string="Reference period" name="periodo">
                     <group>
                         <field name="period_type" />
-                        <field name="month" invisible="[('period_type', '!=', 'month')]" required="[('period_type', '=', 'month')]" />
-                        <field name="quarter" invisible="[('period_type', '!=', 'quarter')]" required="[('period_type', '=', 'quarter')]" />
+                        <field name="month" invisible="period_type != &quot;month&quot;" required="period_type == &quot;month&quot;" />
+                        <field name="quarter" invisible="period_type != &quot;quarter&quot;" required="period_type == &quot;quarter&quot;" />
                     </group>
                     <group>
                         <field name="subcontracting" />
@@ -171,7 +171,7 @@
 
                     <hr colspan="3" />
                     <group><div><b>VP13</b> Due down payment</div></group>
-                    <group><div invisible="[('accounto_dovuto', '=', 0)]"><span>Computation method: </span><field name="metodo_calcolo_acconto" nolabel="1" class="oe_inline" required="[('accounto_dovuto', '!=', 0)]" /></div></group>
+                    <group><div invisible="accounto_dovuto == 0"><span>Computation method: </span><field name="metodo_calcolo_acconto" nolabel="1" class="oe_inline" required="accounto_dovuto != 0" /></div></group>
                     <group><field name="accounto_dovuto" nolabel="1" /></group>
 
                     <hr colspan="3" />

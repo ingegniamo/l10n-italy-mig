@@ -15,25 +15,25 @@
                     <field name="company_id" widget="selection" groups="base.group_multi_company" readonly="1" />
                 </group>
 
-                <group string="Acceptance" invisible="[('type', '!=', 'sbf')]">
-                    <field name="acceptance_journal_id" required="[('type', '=', 'sbf')]" />
-                    <field name="acceptance_account_id" required="[('type', '=', 'sbf')]" />
+                <group string="Acceptance" invisible="type != &quot;sbf&quot;">
+                    <field name="acceptance_journal_id" required="type == &quot;sbf&quot;" />
+                    <field name="acceptance_account_id" required="type == &quot;sbf&quot;" />
                 </group>
 
-                <group string="Credit" invisible="[('type', '!=', 'sbf')]">
+                <group string="Credit" invisible="type != &quot;sbf&quot;">
                     <field name="credit_journal_id" />
                     <field name="credit_account_id" />
                     <field name="bank_account_id" />
                     <field name="bank_expense_account_id" />
                 </group>
 
-                <group string="Past Due" invisible="[('type', '!=', 'sbf')]">
+                <group string="Past Due" invisible="type != &quot;sbf&quot;">
                     <field name="past_due_journal_id" />
                     <field name="overdue_effects_account_id" />
                     <field name="protest_charge_account_id" />
                 </group>
 
-                <group string="Settlement" invisible="[('type', '!=', 'sbf')]">
+                <group string="Settlement" invisible="type != &quot;sbf&quot;">
                     <field name="past_due_journal_id" />
                     <field name="settlement_journal_id" />
                 </group>

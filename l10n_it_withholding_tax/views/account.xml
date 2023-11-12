@@ -25,7 +25,7 @@
                 </xpath>
 
                 <xpath expr="//field[@name='narration']" position="before">
-                    <field name="withholding_tax_line_ids" invisible="[('withholding_tax', '=', False)]">
+                    <field name="withholding_tax_line_ids" invisible="withholding_tax == False">
                         <tree>
                             <field name="withholding_tax_id" />
                             <field name="base" />
@@ -49,11 +49,11 @@
                 </xpath>
 
                 <xpath expr="//field[@name='tax_totals']" position="after">
-                    <field name="withholding_tax_amount" widget="monetary" options="{'currency_field': 'currency_id'}" invisible="[('withholding_tax', '=', False)]" />
-                    <field name="amount_net_pay" widget="monetary" options="{'currency_field': 'currency_id'}" class="oe_subtotal_footer_separator" invisible="[('withholding_tax', '=', False)]" />
+                    <field name="withholding_tax_amount" widget="monetary" options="{'currency_field': 'currency_id'}" invisible="withholding_tax == False" />
+                    <field name="amount_net_pay" widget="monetary" options="{'currency_field': 'currency_id'}" class="oe_subtotal_footer_separator" invisible="withholding_tax == False" />
                 </xpath>
                 <xpath expr="//field[@name='amount_residual']" position="after">
-                    <field name="amount_net_pay_residual" widget="monetary" options="{'currency_field': 'currency_id'}" class="oe_subtotal_footer_separator" invisible="['|', ('state', '=', 'draft'), ('withholding_tax', '=', False)]" />
+                    <field name="amount_net_pay_residual" widget="monetary" options="{'currency_field': 'currency_id'}" class="oe_subtotal_footer_separator" invisible="(state == &quot;draft&quot; or withholding_tax == False)" />
                 </xpath>
 
                 <xpath expr="//page[@name='other_info']/group[1]/group[last()]" position="after"><group name="withholding_tax_info"><field name="withholding_tax_in_print" /></group></xpath>

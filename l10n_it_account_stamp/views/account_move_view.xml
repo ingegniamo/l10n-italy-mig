@@ -15,11 +15,11 @@
             <xpath expr="//group[@id='header_right_group']" position="inside">
                 <field name="auto_compute_stamp" invisible="1" />
                 <field name="tax_stamp" string="Tax stamp" invisible="1" />
-                <field name="manually_apply_tax_stamp" invisible="[('auto_compute_stamp', '=', True)]" />
+                <field name="manually_apply_tax_stamp" invisible="auto_compute_stamp == True" />
             </xpath>
             <field name="narration" position="before">
-                <img src="/l10n_it_account_stamp/static/description/icon.png" alt="Tax stamp" invisible="[('tax_stamp', '=', False)]" />
-                <button class="oe_edit_only" type="object" string="Add tax stamp line" name="add_tax_stamp_line" invisible="['|', ('tax_stamp', '=', False), ('state', 'not in', 'draft')]" />
+                <img src="/l10n_it_account_stamp/static/description/icon.png" alt="Tax stamp" invisible="tax_stamp == False" />
+                <button class="oe_edit_only" type="object" string="Add tax stamp line" name="add_tax_stamp_line" invisible="(tax_stamp == False or state not in &quot;draft&quot;)" />
                 
                 <div />
             </field>

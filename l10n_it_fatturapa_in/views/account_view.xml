@@ -6,7 +6,7 @@
         <field name="arch" type="xml">
             <form string="Import e-bill" duplicate="false">
                 <field name="inconsistencies" invisible="1" />
-                <div class="alert alert-info" role="alert" style="margin-bottom:0px;" invisible="[('e_invoice_validation_error', '=', False), ('inconsistencies', '=', False)]">
+                <div class="alert alert-info" role="alert" style="margin-bottom:0px;" invisible="inconsistencies == False">
                      <bold>
                          <field name="e_invoice_validation_message" nolabel="1" />
                          <field name="inconsistencies" nolabel="1" />
@@ -23,9 +23,9 @@
                                     <field name="datas" filename="name" />
                                 </div>
                                 <div>
-                                    <button type="object" name="ftpa_preview" string="Show preview" style="margin-bottom:10px;" invisible="[('id', '=', False)]" />
+                                    <button type="object" name="ftpa_preview" string="Show preview" style="margin-bottom:10px;" invisible="id == False" />
                                 </div>
-                                <button type="object" name="recompute_xml_fields" string="Recompute XML fields" icon="fa-refresh" invisible="[('invoices_number', '!=', 0), ('xml_supplier_id', '!=', False), ('invoices_date', '!=', False), ('linked_invoice_id_xml', '!=', False)]" />
+                                <button type="object" name="recompute_xml_fields" string="Recompute XML fields" icon="fa-refresh" invisible="linked_invoice_id_xml != False" />
                             </div>
                             <field name="name" invisible="1" />
                         </group>
@@ -124,20 +124,20 @@
         <field name="inherit_id" ref="account.view_move_form" />
         <field name="arch" type="xml">
             <xpath expr="//div[@role='alert']" position="after">
-                <div class="alert alert-info" role="alert" style="margin-bottom:0px;" invisible="[('e_invoice_validation_error', '=', False)]">
+                <div class="alert alert-info" role="alert" style="margin-bottom:0px;" invisible="e_invoice_validation_error == False">
                      <bold><field name="e_invoice_validation_message" nolabel="1" /></bold>
                 </div>
                 <field name="e_invoice_validation_error" invisible="1" />
             </xpath>
             <field name="partner_id" position="after">
                 <field name="electronic_invoice_subjected" invisible="1" />
-                <field name="tax_representative_id" readonly="1" invisible="[('fatturapa_attachment_in_id', '=', False)]" />
-                <field name="intermediary" readonly="1" invisible="[('fatturapa_attachment_in_id', '=', False)]" />
+                <field name="tax_representative_id" readonly="1" invisible="fatturapa_attachment_in_id == False" />
+                <field name="intermediary" readonly="1" invisible="fatturapa_attachment_in_id == False" />
             </field>
             <div name="journal_div" position="after">
-                <field name="sender" readonly="1" invisible="[('fatturapa_attachment_in_id', '=', False)]" />
-                <field name="protocol_number" invisible="[('fatturapa_attachment_in_id', '=', False)]" />
-                <field name="e_invoice_received_date" readonly="1" invisible="[('fatturapa_attachment_in_id', '=', False)]" />
+                <field name="sender" readonly="1" invisible="fatturapa_attachment_in_id == False" />
+                <field name="protocol_number" invisible="fatturapa_attachment_in_id == False" />
+                <field name="e_invoice_received_date" readonly="1" invisible="fatturapa_attachment_in_id == False" />
             </div>
             <field name="price_unit" position="before">
                 <field name="fatturapa_attachment_in_id" invisible="1" />
@@ -146,16 +146,16 @@
                 <field name="admin_ref" />
             </field>
             <field name="tax_totals" position="before">
-                <field name="efatt_rounding" widget="monetary" invisible="[('efatt_rounding', '=', 0)]" />
+                <field name="efatt_rounding" widget="monetary" invisible="efatt_rounding == 0" />
             </field>
             <xpath expr="//notebook" position="inside">
-                <page string="E-bill Inconsistencies" invisible="[('fatturapa_attachment_in_id', '=', False)]">
+                <page string="E-bill Inconsistencies" invisible="fatturapa_attachment_in_id == False">
                     <group>
-                        <field name="e_invoice_force_validation" invisible="[('e_invoice_validation_error', '=', False)]" />
+                        <field name="e_invoice_force_validation" invisible="e_invoice_validation_error == False" />
                     </group>
                     <field name="inconsistencies" nolabel="1" colspan="4" readonly="1" />
                 </page>
-                <page string="E-bill Details" invisible="[('fatturapa_attachment_in_id', '=', False)]">
+                <page string="E-bill Details" invisible="fatturapa_attachment_in_id == False">
                     <group>
                         <group string="Amount Summary">
                             <field name="e_invoice_amount_untaxed" />
@@ -373,7 +373,7 @@
                 </page>
             </xpath>
             <xpath expr="//group[@name='accounting_info_group']">
-                <field name="fatturapa_attachment_in_id" readonly="[('state', 'not in', 'draft')]" />
+                <field name="fatturapa_attachment_in_id" readonly="state not in &quot;draft&quot;" />
             </xpath>
         </field>
     </record>

@@ -18,8 +18,8 @@
         <field name="priority" eval="20" />
         <field name="arch" type="xml">
             <button name="preview_invoice" position="before">
-                <button name="%(action_wizard_export_fatturapa)d" type="action" string="Export E-invoice" class="oe_highlight" invisible="['|', '|', ('fatturapa_attachment_out_id', '!=', False), ('state', '!=', 'posted'), ('electronic_invoice_subjected', '=', False)]" />
-                <button name="%(action_wizard_export_fatturapa_regenerate)d" type="action" string="Re-Export E-invoice" class="oe_highlight" invisible="['|', '|', ('fatturapa_attachment_out_id', '=', False), ('state', '!=', 'posted'), ('fatturapa_state', 'not in', ['error'])]" />
+                <button name="%(action_wizard_export_fatturapa)d" type="action" string="Export E-invoice" class="oe_highlight" invisible="((fatturapa_attachment_out_id != False or state != &quot;posted&quot;) or electronic_invoice_subjected == False)" />
+                <button name="%(action_wizard_export_fatturapa_regenerate)d" type="action" string="Re-Export E-invoice" class="oe_highlight" invisible="((fatturapa_attachment_out_id == False or state != &quot;posted&quot;) or fatturapa_state not in ['error'])" />
             </button>
             <field name="partner_id" position="after">
                 <field name="electronic_invoice_subjected" invisible="1" />
@@ -29,7 +29,7 @@
             </xpath>
 
             <xpath expr="//notebook" position="inside">
-                <page string="Related Documents" invisible="[('electronic_invoice_subjected', '=', False)]">
+                <page string="Related Documents" invisible="electronic_invoice_subjected == False">
                     <field name="related_documents" nolabel="1">
                         <tree editable="bottom">
                             <field name="type" />
@@ -44,15 +44,15 @@
                         </tree>
                     </field>
                 </page>
-                <page string="Electronic Invoice" invisible="[('electronic_invoice_subjected', '=', False), ('fatturapa_attachment_out_id', '=', False)]">
+                <page string="Electronic Invoice" invisible="fatturapa_attachment_out_id == False">
                     <group>
                         <group string="Results">
                             <field name="fatturapa_attachment_out_id" />
-                            <field name="has_pdf_invoice_print" invisible="[('fatturapa_attachment_out_id', '=', False)]" />
+                            <field name="has_pdf_invoice_print" invisible="fatturapa_attachment_out_id == False" />
                         </group>
                     </group>
                 </page>
-                <page string="Electronic Invoice Attachments" invisible="[('electronic_invoice_subjected', '=', False), ('fatturapa_attachment_out_id', '=', False)]">
+                <page string="Electronic Invoice Attachments" invisible="fatturapa_attachment_out_id == False">
                     <field name="fatturapa_doc_attachments" nolabel="1">
                         <tree>
                             <field name="ir_attachment_id" />

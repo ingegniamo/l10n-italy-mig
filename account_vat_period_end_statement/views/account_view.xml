@@ -8,29 +8,29 @@
         <field name="arch" type="xml">
             <form>
                 <header>
-                    <button name="create_move" type="object" string="Create Move" class="oe_highlight" invisible="['|', ('annual', '=', True), ('state', '!=', 'draft')]" />
-                    <button name="statement_draft" type="object" string="Set to draft" invisible="[('state', 'not in', [&quot;'confirmed'&quot;, &quot;'paid'&quot;])]" />
-                    <button type="object" name="compute_amounts" string="Recompute amounts" invisible="[('state', 'not in', [&quot;'draft'&quot;])]" />
-                    <field name="state" widget="statusbar" invisible="[('annual', '=', True)]" />
+                    <button name="create_move" type="object" string="Create Move" class="oe_highlight" invisible="(annual == True or state != &quot;draft&quot;)" />
+                    <button name="statement_draft" type="object" string="Set to draft" invisible="state not in ('confirmed','paid')" />
+                    <button type="object" name="compute_amounts" string="Recompute amounts" invisible="state not in ('draft')" />
+                    <field name="state" widget="statusbar" invisible="annual == True" />
                 </header>
                 <group>
                     <field name="journal_id" widget="selection" />
                     <field name="date" />
                     <field name="annual" />
-                    <field name="move_id" invisible="[('annual', '=', True)]" />
-                    <field name="payment_term_id" invisible="[('annual', '=', True)]" />
-                    <field name="authority_partner_id" widget="res_partner_many2one" context="{'res_partner_search_mode': 'supplier', 'default_is_company': True}" invisible="[('annual', '=', True)]" />
-                    <field name="authority_vat_account_id" invisible="[('annual', '=', True)]" required="[('annual', '=', False)]" />
+                    <field name="move_id" invisible="annual == True" />
+                    <field name="payment_term_id" invisible="annual == True" />
+                    <field name="authority_partner_id" widget="res_partner_many2one" context="{'res_partner_search_mode': 'supplier', 'default_is_company': True}" invisible="annual == True" />
+                    <field name="authority_vat_account_id" invisible="annual == True" required="annual == False" />
                     <field name="company_id" groups="base.group_multi_company" />
                     <field name="interest" />
-                <field name="interest_percent" invisible="[('interest', '=', False)]" required="[('interest', '=', True)]" />
+                <field name="interest_percent" invisible="interest == False" required="interest == True" />
                 </group>
                 <notebook colspan="4">
                     <page string="Periods">
                         <div>
-                            <button type="action" name="%(action_add_period)d" string="Add period" colspan="2" icon="fa-plus" invisible="[('state', 'in', ('confirmed', 'paid'))]" />
+                            <button type="action" name="%(action_add_period)d" string="Add period" colspan="2" icon="fa-plus" invisible="state in ('confirmed', 'paid')" />
                             <span>&amp;nbsp;</span>
-                            <button type="action" name="%(action_remove_period)d" string="Remove period" colspan="2" icon="fa-minus" invisible="[('state', 'in', ('confirmed', 'paid'))]" />
+                            <button type="action" name="%(action_remove_period)d" string="Remove period" colspan="2" icon="fa-minus" invisible="state in ('confirmed', 'paid')" />
                         </div>
                         <group>
                             <field name="date_range_ids" colspan="4" nolabel="1" readonly="1" />
@@ -72,20 +72,20 @@
                             </group>
                             <group col="3" colspan="4">
                                 <separator colspan="3" string="Previous Credits VAT" />
-                                <field name="previous_credit_vat_account_id" required="[('previous_credit_vat_amount', '!=', 0)]" />
+                                <field name="previous_credit_vat_account_id" required="previous_credit_vat_amount != 0" />
                                 <field name="previous_credit_vat_amount" nolabel="1" />
                                 <field name="previous_year_credit" />
                                 <separator colspan="3" string="Previous Debits VAT" />
-                                <field name="previous_debit_vat_account_id" required="[('previous_debit_vat_amount', '!=', 0)]" />
+                                <field name="previous_debit_vat_account_id" required="previous_debit_vat_amount != 0" />
                                 <field name="previous_debit_vat_amount" nolabel="1" />
                                 <separator colspan="3" string="Due interests" />
-                                <field name="interests_debit_vat_account_id" required="[('interests_debit_vat_amount', '!=', 0)]" />
+                                <field name="interests_debit_vat_account_id" required="interests_debit_vat_amount != 0" />
                                 <field name="interests_debit_vat_amount" nolabel="1" />
                                 <separator colspan="3" string="Tax credits" />
-                                <field name="tax_credit_account_id" required="[('tax_credit_amount', '!=', 0)]" />
+                                <field name="tax_credit_account_id" required="tax_credit_amount != 0" />
                                 <field name="tax_credit_amount" nolabel="1" />
                                 <separator colspan="3" string="Down payment" />
-                                <field name="advance_account_id" required="[('advance_amount', '!=', 0)]" />
+                                <field name="advance_account_id" required="advance_amount != 0" />
                                 <field name="advance_amount" nolabel="1" />
                                 <field name="advance_computation_method" string="Computation method" />
                             </group>
@@ -103,11 +103,11 @@
                                </form>
                             </field>
                         </group>
-                        <group invisible="[('annual', '=', True)]">
+                        <group invisible="annual == True">
                             <field name="reconciled" />
                         </group>
                     </page>
-                    <page string="Tax Authority" invisible="[('annual', '=', True)]">
+                    <page string="Tax Authority" invisible="annual == True">
                         <group>
                             <field name="authority_vat_amount" />
                             <field name="residual" />

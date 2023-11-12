@@ -26,10 +26,10 @@
                 </xpath>
 
                 <xpath expr="//page[@name='other_info']" position="before">
-                    <page string="Intrastat" invisible="[('intrastat', '=', False)]">
+                    <page string="Intrastat" invisible="intrastat == False">
                         <group colspan="4">
                             <group>
-                                <button name="compute_intrastat_lines" string="Recompute Intrastat Lines" type="object" invisible="[('state', 'not in', [&quot;'draft'&quot;, &quot;'sent'&quot;])]" />
+                                <button name="compute_intrastat_lines" string="Recompute Intrastat Lines" type="object" invisible="state not in ('draft','sent')" />
                             </group>
                             <newline />
                             <group colspan="4">
@@ -77,7 +77,7 @@
                                <field name="invoice_type" invisible="1" />
                                <field name="transaction_nature_id" />
                                <field name="transaction_nature_b_id" />
-                               <field name="triangulation" invisible="[('invoice_type', 'in', ['in_invoice', 'in_refund'])]" />
+                               <field name="triangulation" invisible="invoice_type in ['in_invoice', 'in_refund']" />
                                <field name="weight_kg" />
                                <field name="show_weight" />
                                <field name="additional_units" />
@@ -90,7 +90,7 @@
 
                            
                            <group name="intra_origin" string="Origin">
-                                   <field name="province_origin_id" invisible="[('statement_section', 'not in', ['sale_s1'])]" required="[('statement_section', 'in', ['sale_s1'])]" />
+                                   <field name="province_origin_id" invisible="statement_section not in ['sale_s1']" required="statement_section in ['sale_s1']" />
                                    <field name="country_origin_id" />
                                   <field name="country_good_origin_id" />
                            </group>
@@ -99,12 +99,12 @@
                            <group name="intra_destination" string="Destination">
                                <field name="delivery_code_id" />
                                <field name="transport_code_id" />
-                               <field name="province_destination_id" invisible="[('statement_section', 'not in', ['purchase_s1'])]" required="[('statement_section', 'in', ['purchase_s1'])]" />
-                               <field name="country_destination_id" invisible="[('statement_section', 'not in', ['sale_s1'])]" required="[('statement_section', 'in', ['sale_s1'])]" />
+                               <field name="province_destination_id" invisible="statement_section not in ['purchase_s1']" required="statement_section in ['purchase_s1']" />
+                               <field name="country_destination_id" invisible="statement_section not in ['sale_s1']" required="statement_section in ['sale_s1']" />
                            </group>
 
                            
-                           <group name="intra_invoice" string="Invoice Ref" invisible="[('statement_section', '!=', 'sale_s3'), ('statement_section', '!=', 'sale_s4'), ('statement_section', '!=', 'purchase_s3'), ('statement_section', '!=', 'purchase_s4')]">
+                           <group name="intra_invoice" string="Invoice Ref" invisible="statement_section != &quot;purchase_s4&quot;">
                                <field name="invoice_number" />
                                <field name="invoice_date" />
                                <field name="supply_method" />

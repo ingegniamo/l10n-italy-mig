@@ -10,7 +10,7 @@
         <field name="arch" type="xml">
             <field name="name" position="after">
                 <field name="riba" />
-                <field name="riba_payment_cost" invisible="[('riba', '=', False)]" />
+                <field name="riba_payment_cost" invisible="riba == False" />
             </field>
         </field>
     </record>
@@ -101,8 +101,8 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='invoice_payment_term_id']" position="after">
                 <field name="is_riba_payment" invisible="1" />
-                 <field name="riba_partner_bank_id" domain="[('partner_id','=', partner_id)]" invisible="['|', ('is_riba_payment', '=', False), ('move_type', '!=', 'out_invoice')]" required="['&amp;', ('is_riba_payment', '=', True), ('move_type', '=', 'out_invoice')]" />
-                <field name="is_past_due" string="Past Due" invisible="[('is_past_due', '=', False)]" />
+                 <field name="riba_partner_bank_id" domain="[('partner_id','=', partner_id)]" invisible="(is_riba_payment == False or move_type != &quot;out_invoice&quot;)" required="(is_riba_payment == True and move_type == &quot;out_invoice&quot;)" />
+                <field name="is_past_due" string="Past Due" invisible="is_past_due == False" />
             </xpath>
         </field>
     </record>

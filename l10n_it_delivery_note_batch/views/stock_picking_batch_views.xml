@@ -6,12 +6,12 @@
         <field name="inherit_id" ref="stock_picking_batch.stock_picking_batch_form" />
         <field name="arch" type="xml">
             <xpath expr="//button[@name='action_print']" position="before">
-                <button class="oe_highlight" name="create_delivery_notes" type="object" string="Create DNs" style="margin-left:10px;" invisible="[('state', '!=', 'done')]" />
+                <button class="oe_highlight" name="create_delivery_notes" type="object" string="Create DNs" style="margin-left:10px;" invisible="state != &quot;done&quot;" />
                 
             </xpath>
             <xpath expr="//sheet/div" position="before">
                 <div class="oe_button_box" name="button_box">
-                    <button type="object" class="oe_stat_button" name="goto_delivery_notes" icon="fa-pencil-square-o" groups="l10n_it_delivery_note.use_advanced_delivery_notes" invisible="[('delivery_note_count', '=', 0)]">
+                    <button type="object" class="oe_stat_button" name="goto_delivery_notes" icon="fa-pencil-square-o" groups="l10n_it_delivery_note.use_advanced_delivery_notes" invisible="delivery_note_count == 0">
                         <field name="delivery_note_count" widget="statinfo" string="Delivery Notes" />
                     </button>
                 </div>

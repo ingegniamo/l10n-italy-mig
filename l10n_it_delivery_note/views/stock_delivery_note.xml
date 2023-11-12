@@ -15,33 +15,33 @@
                 <field name="can_change_number" invisible="True" />
                 <field name="show_product_information" invisible="True" />
                 <header>
-                    <button name="action_draft" type="object" class="oe_highlight" string="Reset to draft" invisible="[('state', 'not in', [&quot;'cancel'&quot;])]" />
-                    <button name="action_confirm" type="object" class="oe_highlight" string="Validate" invisible="[('state', 'not in', [&quot;'draft'&quot;])]" />
-                    <button name="action_invoice" type="object" class="oe_highlight" groups="account.group_account_invoice" string="Create invoice" invisible="['|', ('state', '!=', 'confirm'), ('sale_ids', '=', [])]" />
-                    <button name="action_done" type="object" class="oe_highlight" string="Set done" invisible="['&amp;', ('state', '!=', 'invoiced'), '|', ('state', '!=', 'confirm'), ('sale_ids', '!=', [])]" />
-                    <button name="action_print" type="object" string="Print" invisible="[('state', 'not in', [&quot;'draft'&quot;, &quot;'confirm'&quot;, &quot;'invoiced'&quot;])]" />
-                    <button name="action_print" type="object" class="oe_highlight" string="Print" invisible="[('state', 'not in', [&quot;'done'&quot;])]" />
-                    <button name="action_cancel" type="object" string="Cancel" invisible="[('state', 'not in', [&quot;'confirm'&quot;, &quot;'invoiced'&quot;, &quot;'done'&quot;])]" />
+                    <button name="action_draft" type="object" class="oe_highlight" string="Reset to draft" invisible="state not in ('cancel')" />
+                    <button name="action_confirm" type="object" class="oe_highlight" string="Validate" invisible="state not in ('draft')" />
+                    <button name="action_invoice" type="object" class="oe_highlight" groups="account.group_account_invoice" string="Create invoice" invisible="(state != &quot;confirm&quot; or sale_ids == [])" />
+                    <button name="action_done" type="object" class="oe_highlight" string="Set done" invisible="(state != &quot;invoiced&quot; and (state != &quot;confirm&quot; or sale_ids != []))" />
+                    <button name="action_print" type="object" string="Print" invisible="state not in ('draft','confirm','invoiced')" />
+                    <button name="action_print" type="object" class="oe_highlight" string="Print" invisible="state not in ('done')" />
+                    <button name="action_cancel" type="object" string="Cancel" invisible="state not in ('confirm','invoiced','done')" />
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirm" />
                 </header>
                 <sheet>
                     <div class="oe_button_box" name="button_box">
-                        <button type="object" class="oe_stat_button" name="goto_sales" icon="fa-pencil-square-o" invisible="[('sale_count', '=', 0)]">
+                        <button type="object" class="oe_stat_button" name="goto_sales" icon="fa-pencil-square-o" invisible="sale_count == 0">
                             <field name="sale_count" widget="statinfo" string="Sales orders" />
                         </button>
                     </div>
-                    <widget name="web_ribbon" text="Archived" bg_color="bg-danger" invisible="[('active', '=', True)]" />
+                    <widget name="web_ribbon" text="Archived" bg_color="bg-danger" invisible="active == True" />
                     <div class="oe_title">
                         <field name="active" invisible="1" />
-                        <div invisible="[('name', 'not in', [False, ''])]">
+                        <div invisible="name not in [False, '']">
                             <label for="name" string="Draft document" />
                         </div>
-                        <div invisible="[('name', 'in', [False, ''])]">
+                        <div invisible="name in [False, '']">
                             <label for="name" string="Document" />
                             <h1>
-                                <field name="name" class="oe_inline" readonly="[('can_change_number', '=', False)]" />
+                                <field name="name" class="oe_inline" readonly="can_change_number == False" />
                             </h1>
-                            <div invisible="[('type_code', '!=', 'incoming')]">
+                            <div invisible="type_code != &quot;incoming&quot;">
                                 <label for="name" string="Partner document" />
                                 <h2>
                                     <field name="partner_ref" class="oe_inline" />
@@ -49,7 +49,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="alert alert-warning mb0" role="alert" invisible="[('sales_transport_check', '=', True)]">
+                    <div class="alert alert-warning mb0" role="alert" invisible="sales_transport_check == True">
                         <p class="text-center mb0">
                             <strong>
                                 <span class="fa fa-exclamation-triangle" />
@@ -61,8 +61,8 @@
                     <group>
                         <group>
                             <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company" />
-                            <field name="partner_sender_id" readonly="[('pickings_picker', '!=', [])]" />
-                            <field name="partner_id" readonly="[('pickings_picker', '!=', [])]" />
+                            <field name="partner_sender_id" readonly="pickings_picker != []" />
+                            <field name="partner_id" readonly="pickings_picker != []" />
                             <field name="partner_shipping_id" />
                         </group>
                         <group>
@@ -79,7 +79,7 @@
                             <label for="transport_datetime" />
                             <div class="o_row">
                                 <field name="transport_datetime" />
-                                <button type="object" name="update_transport_datetime" class="btn-secondary" icon="fa-clock-o" aria-label="Update to now" title="Update to now" invisible="[('state', '=', 'done')]" />
+                                <button type="object" name="update_transport_datetime" class="btn-secondary" icon="fa-clock-o" aria-label="Update to now" title="Update to now" invisible="state == &quot;done&quot;" />
                             </div>
                         </group>
                     </group>
@@ -129,19 +129,19 @@
                                         <create string="Add a note" context="{'default_display_type': 'line_note'}" />
                                     </control>
                                     <field name="sequence" widget="handle" />
-                                    <field name="product_id" readonly="[('move_id', '!=', False)]" />
+                                    <field name="product_id" readonly="move_id != False" />
                                     <field name="name" widget="section_and_note_text" />
-                                    <field name="product_qty" readonly="[('move_id', '!=', False)]" />
+                                    <field name="product_qty" readonly="move_id != False" />
                                     <field name="product_uom_id" groups="uom.group_uom" options="{'no_create': True, 'no_open': True}" />
-                                    <field name="price_unit" column_invisible="[('parent.show_product_information', '=', False)]" readonly="[('sale_line_id', '!=', False)]" />
-                                    <field name="discount" groups="product.group_discount_per_so_line" column_invisible="[('parent.show_product_information', '=', False)]" readonly="[('sale_line_id', '!=', False)]" />
-                                    <field name="tax_ids" domain="[('company_id', 'in', [company_id, False])]" widget="many2many_tags" column_invisible="[('parent.show_product_information', '=', False)]" readonly="[('sale_line_id', '!=', False)]" />
+                                    <field name="price_unit" column_invisible="parent.show_product_information == False" readonly="sale_line_id != False" />
+                                    <field name="discount" groups="product.group_discount_per_so_line" column_invisible="parent.show_product_information == False" readonly="sale_line_id != False" />
+                                    <field name="tax_ids" domain="[('company_id', 'in', [company_id, False])]" widget="many2many_tags" column_invisible="parent.show_product_information == False" readonly="sale_line_id != False" />
                                     <field name="company_id" invisible="1" />
                                 </tree>
                                 <form>
                                     <field name="currency_id" invisible="True" />
                                     <field name="display_type" invisible="True" />
-                                    <div invisible="[('product_id', '=', False)]">
+                                    <div invisible="product_id == False">
                                         <label for="product_id" style="margin-bottom: 5px;" />
                                         <div>
                                             <field name="product_id" style="margin-bottom: 0px;" />
@@ -150,23 +150,23 @@
                                             <field name="product_description" />
                                         </div>
                                     </div>
-                                    <div invisible="[('product_id', '!=', False)]">
-                                        <label for="name" string="Section name (e.g. Products, Services)" style="margin-bottom: 5px;" invisible="[('display_type', '!=', 'line_section')]" />
-                                        <label for="name" string="Note" style="margin-bottom: 5px;" invisible="[('display_type', '!=', 'line_note')]" />
+                                    <div invisible="product_id != False">
+                                        <label for="name" string="Section name (e.g. Products, Services)" style="margin-bottom: 5px;" invisible="display_type != &quot;line_section&quot;" />
+                                        <label for="name" string="Note" style="margin-bottom: 5px;" invisible="display_type != &quot;line_note&quot;" />
                                         <div>
                                             <field name="name" />
                                         </div>
                                     </div>
-                                    <group invisible="[('display_type', '!=', False)]">
+                                    <group invisible="display_type != False">
                                         <group>
-                                            <field name="price_unit" invisible="[('parent.show_product_information', '=', False)]" />
+                                            <field name="price_unit" invisible="parent.show_product_information == False" />
                                             <label for="product_qty" />
                                             <div class="o_row">
                                                 <field name="product_qty" />
                                                 <field name="product_uom_id" groups="uom.group_uom" widget="selection" />
                                             </div>
                                         </group>
-                                        <group invisible="[('parent.show_product_information', '=', False)]">
+                                        <group invisible="parent.show_product_information == False">
                                             <field name="discount" groups="product.group_discount_per_so_line" />
                                             <field name="tax_ids" domain="[('company_id', 'in', [company_id, False])]" widget="many2many_tags" />
                                             <field name="company_id" invisible="1" />
@@ -189,7 +189,7 @@
                                 </tree>
                             </field>
                         </page>
-                        <page name="invoices" string="Invoices" groups="account.group_account_invoice" invisible="[('invoice_ids', '=', [])]">
+                        <page name="invoices" string="Invoices" groups="account.group_account_invoice" invisible="invoice_ids == []">
                             <field name="invoice_ids">
                                 <tree editable="bottom">
                                     <field name="currency_id" invisible="True" />

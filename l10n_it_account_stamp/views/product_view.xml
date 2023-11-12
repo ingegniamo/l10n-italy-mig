@@ -9,21 +9,21 @@
             <xpath expr="//group[@name='payables']" position="after">
                 <group string="Tax stamp">
                     <field name="is_stamp" />
-                    <field name="auto_compute" invisible="[('is_stamp', '=', False)]" />
-                    <p colspan="2" invisible="['|', ('auto_compute', '=', False), ('is_stamp', '=', False)]">
+                    <field name="auto_compute" invisible="is_stamp == False" />
+                    <p colspan="2" invisible="(auto_compute == False or is_stamp == False)">
                         For each invoice, the base amount for each selected tax will be added up and used to determine
                         the application of the account stamp.
                     </p>
-                    <field name="stamp_apply_min_total_base" invisible="['|', ('auto_compute', '=', False), ('is_stamp', '=', False)]" required="[('auto_compute', '=', True)]" />
-                    <field name="stamp_apply_tax_ids" widget="many2many_tags" invisible="['|', ('auto_compute', '=', False), ('is_stamp', '=', False)]" />
+                    <field name="stamp_apply_min_total_base" invisible="(auto_compute == False or is_stamp == False)" required="auto_compute == True" />
+                    <field name="stamp_apply_tax_ids" widget="many2many_tags" invisible="(auto_compute == False or is_stamp == False)" />
                 </group>
             </xpath>
 
             <xpath expr="//field[@name='property_account_income_id']" position="attributes">
-                <attribute name="required">[('is_stamp', '=', True)]</attribute></xpath>
+                <attribute name="required">['is_stamp == True']</attribute></xpath>
 
             <xpath expr="//field[@name='property_account_expense_id']" position="attributes">
-                <attribute name="required">[('is_stamp', '=', True)]</attribute></xpath>
+                <attribute name="required">['is_stamp == True']</attribute></xpath>
 
         </field>
     </record>

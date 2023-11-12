@@ -14,14 +14,14 @@
                         <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company" />
                     </group>
                     <group string="Self Invoicing">
-                        <field name="partner_type" readonly="[('method', '!=', 'selfinvoice')]" required="[('method', '=', 'selfinvoice')]" />
-                        <field name="with_supplier_self_invoice" invisible="['|', ('partner_type', '!=', 'other'), ('method', '!=', 'selfinvoice')]" />
-                        <field name="partner_id" readonly="[('method', '!=', 'selfinvoice')]" invisible="[('partner_type', '!=', 'other')]" required="[('partner_type', '=', 'other')]" />
-                        <field name="journal_id" readonly="[('method', '!=', 'selfinvoice')]" required="[('method', '=', 'selfinvoice')]" />
-                        <field name="supplier_journal_id" invisible="['|', ('method', '!=', 'selfinvoice'), '|', ('partner_type', '!=', 'other'), ('with_supplier_self_invoice', '!=', True)]" required="[('method', '=', 'selfinvoice'), ('partner_type', '=', 'other'), ('with_supplier_self_invoice', '=', True)]" />
-                        <field name="payment_journal_id" readonly="[('method', '!=', 'selfinvoice')]" required="[('method', '=', 'selfinvoice')]" />
-                        <field name="transitory_account_id" readonly="[('method', '!=', 'selfinvoice')]" required="[('method', '=', 'selfinvoice')]" />
-                        <field name="tax_ids" widget="one2many_list" readonly="[('method', '!=', 'selfinvoice')]" required="[('method', '=', 'selfinvoice')]">
+                        <field name="partner_type" readonly="method != &quot;selfinvoice&quot;" required="method == &quot;selfinvoice&quot;" />
+                        <field name="with_supplier_self_invoice" invisible="(partner_type != &quot;other&quot; or method != &quot;selfinvoice&quot;)" />
+                        <field name="partner_id" readonly="method != &quot;selfinvoice&quot;" invisible="partner_type != &quot;other&quot;" required="partner_type == &quot;other&quot;" />
+                        <field name="journal_id" readonly="method != &quot;selfinvoice&quot;" required="method == &quot;selfinvoice&quot;" />
+                        <field name="supplier_journal_id" invisible="(method != &quot;selfinvoice&quot; or (partner_type != &quot;other&quot; or with_supplier_self_invoice != True))" required="with_supplier_self_invoice == True" />
+                        <field name="payment_journal_id" readonly="method != &quot;selfinvoice&quot;" required="method == &quot;selfinvoice&quot;" />
+                        <field name="transitory_account_id" readonly="method != &quot;selfinvoice&quot;" required="method == &quot;selfinvoice&quot;" />
+                        <field name="tax_ids" widget="one2many_list" readonly="method != &quot;selfinvoice&quot;" required="method == &quot;selfinvoice&quot;">
                             <tree editable="bottom">
                                 <field name="original_purchase_tax_id" />
                                 <field name="purchase_tax_id" />
@@ -30,7 +30,7 @@
                         </field>
                     </group>
                     <group string="Text on Self Invoice">
-                        <field name="self_invoice_text" readonly="[('method', '!=', 'selfinvoice')]" />
+                        <field name="self_invoice_text" readonly="method != &quot;selfinvoice&quot;" />
                     </group>
                 </group>
             </form>

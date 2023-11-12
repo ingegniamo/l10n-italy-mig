@@ -6,21 +6,21 @@
         <field name="arch" type="xml">
             <form string="Import e-bill ZIP" duplicate="false">
                 <header>
-                        <button name="action_import" type="object" string="Import invoices" class="oe_highlight" invisible="[('state', 'not in', [&quot;'draft'&quot;])]" />
+                        <button name="action_import" type="object" string="Import invoices" class="oe_highlight" invisible="state not in ('draft')" />
                     <field name="state" widget="statusbar" />
                 </header>
                 <sheet string="Import e-bill ZIP">
                     <div class="oe_button_box" name="button_box">
-                        <button name="action_view_xml" type="object" class="oe_stat_button" icon="fa-files-o" context="{'xml_type': 'out_xml'}" invisible="[('xml_out_count', '=', 0)]">
+                        <button name="action_view_xml" type="object" class="oe_stat_button" icon="fa-files-o" context="{'xml_type': 'out_xml'}" invisible="xml_out_count == 0">
                             <field name="xml_out_count" widget="statinfo" string="XML Out" />
                         </button>
-                        <button name="action_view_xml" type="object" class="oe_stat_button" icon="fa-files-o" context="{'xml_type': 'in_xml'}" invisible="[('xml_in_count', '=', 0)]">
+                        <button name="action_view_xml" type="object" class="oe_stat_button" icon="fa-files-o" context="{'xml_type': 'in_xml'}" invisible="xml_in_count == 0">
                             <field name="xml_in_count" widget="statinfo" string="XML In" />
                         </button>
-                        <button name="action_view_invoices" type="object" class="oe_stat_button" icon="fa-pencil-square-o" context="{'invoice_type': 'out_invoice'}" invisible="[('invoices_out_count', '=', 0)]">
+                        <button name="action_view_invoices" type="object" class="oe_stat_button" icon="fa-pencil-square-o" context="{'invoice_type': 'out_invoice'}" invisible="invoices_out_count == 0">
                             <field name="invoices_out_count" widget="statinfo" string="Out invoices" />
                         </button>
-                        <button name="action_view_invoices" type="object" class="oe_stat_button" icon="fa-pencil-square-o" context="{'invoice_type': 'in_invoice'}" invisible="[('invoices_in_count', '=', 0)]">
+                        <button name="action_view_invoices" type="object" class="oe_stat_button" icon="fa-pencil-square-o" context="{'invoice_type': 'in_invoice'}" invisible="invoices_in_count == 0">
                             <field name="invoices_in_count" widget="statinfo" string="In invoices" />
                         </button>
                     </div>
@@ -29,7 +29,7 @@
                             <group>
                                 <label for="datas" />
                                 <div>
-                                    <field name="datas" filename="name" readonly="[('state', '!=', 'draft')]" />
+                                    <field name="datas" filename="name" readonly="state != &quot;draft&quot;" />
                                 </div>
                                 <field name="name" invisible="1" />
                             </group>
@@ -83,7 +83,7 @@
         <field name="inherit_id" ref="l10n_it_fatturapa_in.view_fatturapa_in_attachment_form" />
         <field name="arch" type="xml">
             <xpath expr="//notebook" position="inside">
-                <page string="ZIP import" invisible="[('attachment_import_zip_id', '=', False)]">
+                <page string="ZIP import" invisible="attachment_import_zip_id == False">
                     <group>
                         <field name="attachment_import_zip_id" />
                     </group>
@@ -97,7 +97,7 @@
         <field name="inherit_id" ref="l10n_it_fatturapa_out.view_fatturapa_out_attachment_form" />
         <field name="arch" type="xml">
             <field name="invoice_partner_id" position="after">
-                <field name="attachment_import_zip_id" invisible="[('attachment_import_zip_id', '=', False)]" />
+                <field name="attachment_import_zip_id" invisible="attachment_import_zip_id == False" />
             </field>
         </field>
     </record>

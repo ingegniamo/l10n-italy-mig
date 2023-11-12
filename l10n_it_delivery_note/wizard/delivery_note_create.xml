@@ -6,10 +6,10 @@
         <field name="arch" type="xml">
             <form>
                 <field name="picking_type" invisible="True" />
-                <div invisible="[('error_message', '=', False)]">
+                <div invisible="error_message == False">
                     <field name="error_message" />
                 </div>
-                <group string="Summary" invisible="[('error_message', '!=', False)]">
+                <group string="Summary" invisible="error_message != False">
                     <group>
                         <field name="partner_sender_id" />
                         <field name="partner_id" />
@@ -20,7 +20,7 @@
                         <field name="date" />
                     </group>
                 </group>
-                <notebook invisible="[('error_message', '!=', False)]">
+                <notebook invisible="error_message != False">
                     <page name="pickings" string="Pickings">
                         <field name="selected_picking_ids">
                             <tree decoration-success="True">
@@ -35,9 +35,9 @@
                     </page>
                 </notebook>
                 <footer>
-                    <button name="confirm" type="object" class="btn-primary" string="Confirm" invisible="[('error_message', '!=', False)]" />
-                    <button special="cancel" class="btn-primary" string="Cancel" style="float: right;" invisible="[('error_message', '=', False)]" />
-                    <button special="cancel" class="btn-secondary" string="Cancel" invisible="[('error_message', '!=', False)]" />
+                    <button name="confirm" type="object" class="btn-primary" string="Confirm" invisible="error_message != False" />
+                    <button special="cancel" class="btn-primary" string="Cancel" style="float: right;" invisible="error_message == False" />
+                    <button special="cancel" class="btn-secondary" string="Cancel" invisible="error_message != False" />
                 </footer>
             </form>
         </field>

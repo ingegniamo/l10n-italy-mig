@@ -10,9 +10,9 @@
             </xpath>
             <xpath expr="//p" position="attributes">
                 <attribute name="name">initial_message</attribute>
-                <attribute name="invisible">[('step', '!=', 'initial')]</attribute></xpath>
+                <attribute name="invisible">['step != "initial"']</attribute></xpath>
             <xpath expr="//p" position="after">
-                <div name="confirm_message" invisible="[('step', '!=', 'confirm')]">
+                <div name="confirm_message" invisible="step != &quot;confirm&quot;">
                     <div class="o_horizontal_separator">
                         <span class="fa fa-warning" /> Warning!
                     </div>
@@ -36,15 +36,15 @@
             </xpath>
             <xpath expr="//group" position="attributes">
                 <attribute name="name">initial_fields</attribute>
-                <attribute name="invisible">[('step', '!=', 'initial')]</attribute></xpath>
+                <attribute name="invisible">['step != "initial"']</attribute></xpath>
             <xpath expr="//button[@name='create_invoices'][1]" position="attributes">
                 <attribute name="id">initial_create_view_invoice_btn</attribute>
-                <attribute name="invisible">[('step', '!=', 'initial')]</attribute></xpath>
+                <attribute name="invisible">['step != "initial"']</attribute></xpath>
             <xpath expr="//button[@name='create_invoices'][2]" position="attributes">
                 <attribute name="id">initial_create_invoice_btn</attribute>
-                <attribute name="invisible">[('step', '!=', 'initial')]</attribute></xpath>
+                <attribute name="invisible">['step != "initial"']</attribute></xpath>
             <xpath expr="//button[hasclass('btn-secondary')]" position="after">
-                <button name="action_step_confirm" type="object" class="btn-primary pull-right" string="Understood, continue anyway" invisible="[('step', '!=', 'confirm')]" />
+                <button name="action_step_confirm" type="object" class="btn-primary pull-right" string="Understood, continue anyway" invisible="step != &quot;confirm&quot;" />
             </xpath>
             <xpath expr="//button[hasclass('btn-secondary')]" position="attributes">
                 <attribute name="id">cancel_btn</attribute>

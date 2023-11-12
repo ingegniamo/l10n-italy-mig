@@ -60,7 +60,7 @@
                             </group>
                         </group>
                         <notebook>
-                            <page string="Sales" invisible="[('sale', '=', False)]">
+                            <page string="Sales" invisible="sale == False">
                                 <group>
                                     <group>
                                         <field name="sale_statement_sequence" string="Statement Sequence" />
@@ -104,7 +104,7 @@
                                     </page>
                                 </notebook>
                             </page>
-                            <page string="Purchases" invisible="[('purchase', '=', False)]">
+                            <page string="Purchases" invisible="purchase == False">
                                 <group>
                                     <group>
                                         <field name="purchase_statement_sequence" string="Statement Sequence" />
@@ -206,7 +206,7 @@
                         <group>
                             <field name="intrastat_code_id" string="Goods Code" required="1" />
                             <field name="weight_kg" required="1" />
-                            <field name="additional_units" required="[('additional_units_required', '=', True)]" />
+                            <field name="additional_units" required="additional_units_required == True" />
                             <field name="additional_units_uom" />
                             <field name="amount_euro" />
                             <field name="statistic_amount_euro" />
@@ -348,8 +348,8 @@
                     <group>
                         <group>
                             <field name="partner_id" string="Buyer" required="1" />
-                            <field name="country_partner_id" string="Buyer State" required="[('cancellation', '=', False)]" invisible="[('cancellation', '=', True)]" />
-                            <field name="vat_code" string="Buyer VAT Code" required="[('cancellation', '=', False)]" invisible="[('cancellation', '=', True)]" />
+                            <field name="country_partner_id" string="Buyer State" required="cancellation == False" invisible="cancellation == True" />
+                            <field name="vat_code" string="Buyer VAT Code" required="cancellation == False" invisible="cancellation == True" />
                         </group>
                         <group>
                             <field name="intrastat_custom_id" required="1" />
@@ -361,11 +361,11 @@
                     </group>
                     <newline />
                     <group>
-                        <group invisible="[('cancellation', '=', True)]">
-                            <field name="intrastat_code_id" string="Service Code" required="[('cancellation', '=', False)]" />
+                        <group invisible="cancellation == True">
+                            <field name="intrastat_code_id" string="Service Code" required="cancellation == False" />
                             <field name="amount_euro" />
                         </group>
-                        <group invisible="[('cancellation', '=', True)]">
+                        <group invisible="cancellation == True">
                             <field name="invoice_number" />
                             <field name="invoice_date" />
                             <field name="supply_method" />
@@ -417,7 +417,7 @@
                         <group>
                             <field name="intrastat_code_id" string="Goods Code" required="1" />
                             <field name="weight_kg" required="1" />
-                            <field name="additional_units" required="[('additional_units_required', '=', True)]" />
+                            <field name="additional_units" required="additional_units_required == True" />
                             <field name="additional_units_uom" />
                             <field name="amount_euro" />
                             <field name="statistic_amount_euro" />

@@ -7,7 +7,7 @@
             <xpath expr="//sheet/group[last()]" position="after">
                 <group string="PEC and Electronic Invoice">
                     <field name="is_fatturapa_pec" />
-                    <field name="email_from_for_fatturaPA" invisible="[('is_fatturapa_pec', '=', False)]" required="[('is_fatturapa_pec', '=', True)]" />
+                    <field name="email_from_for_fatturaPA" invisible="is_fatturapa_pec == False" required="is_fatturapa_pec == True" />
                 </group>
             </xpath>
         </field>

@@ -9,7 +9,7 @@
                     <field name="financial_statements_report_type" required="1" />
                     <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company" />
                 </group>
-                <div invisible="[('not_only_one_unaffected_earnings_account', '=', True)]">
+                <div invisible="not_only_one_unaffected_earnings_account == True">
                     <group name="filters">
                         <group name="date_range">
                             <field name="company_id" invisible="True" />
@@ -24,13 +24,13 @@
                             <field name="hide_accounts_codes" />
                             <field name="show_partner_details" />
                             <field name="show_hierarchy" invisible="1" />
-                            <field name="limit_hierarchy_level" invisible="[('show_hierarchy', '=', False)]" />
-                            <field name="show_hierarchy_level" invisible="[('limit_hierarchy_level', '=', False)]" />
-                            <field name="hide_parent_hierarchy_level" invisible="[('limit_hierarchy_level', '=', False)]" />
+                            <field name="limit_hierarchy_level" invisible="show_hierarchy == False" />
+                            <field name="show_hierarchy_level" invisible="limit_hierarchy_level == False" />
+                            <field name="hide_parent_hierarchy_level" invisible="limit_hierarchy_level == False" />
                             <field name="foreign_currency" string="Show Ending Balance in Currency" />
                         </group>
                     </group>
-                    <group name="partner_filter" col="4" invisible="[('show_partner_details', '=', False)]">
+                    <group name="partner_filter" col="4" invisible="show_partner_details == False">
                         <label for="partner_ids" colspan="4" />
                         <field name="partner_ids" nolabel="1" widget="many2many_tags" options="{'no_create': True}" colspan="4" />
                         <div />
@@ -45,7 +45,7 @@
                         <field name="account_ids" nolabel="1" widget="many2many_tags" options="{'no_create': True}" colspan="4" />
                     </group>
                 </div>
-                <div invisible="[('not_only_one_unaffected_earnings_account', '=', False)]">
+                <div invisible="not_only_one_unaffected_earnings_account == False">
                     <field name="not_only_one_unaffected_earnings_account" invisible="1" />
                     <group />
                     <h4>
@@ -55,7 +55,7 @@
                     <group />
                 </div>
                 <footer>
-                    <div invisible="[('not_only_one_unaffected_earnings_account', '=', True)]">
+                    <div invisible="not_only_one_unaffected_earnings_account == True">
                         <button name="button_export_html" string="View" type="object" default_focus="1" class="oe_highlight" />
                         or
                         <button name="button_export_pdf" string="Export PDF" type="object" class="oe_highlight" />
@@ -64,7 +64,7 @@
                         or
                         <button string="Cancel" class="oe_link" special="cancel" />
                     </div>
-                    <div invisible="[('not_only_one_unaffected_earnings_account', '=', False)]">
+                    <div invisible="not_only_one_unaffected_earnings_account == False">
                         <button string="Cancel" class="oe_link" special="cancel" />
                     </div>
                 </footer>

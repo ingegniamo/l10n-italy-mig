@@ -6,17 +6,17 @@
             <form string="Export Intrastat File">
                 <field invisible="1" name="state" />
                 <field name="name" invisible="1" />
-                <div invisible="[('state', 'not in', [&quot;'get'&quot;])]">
+                <div invisible="state not in ('get')">
                     <h2>Export Complete</h2>
                     <p>Here is the exported file: <field name="data" readonly="1" filename="name" /></p>
                 </div>
-                <footer invisible="[('state', 'not in', [&quot;'choose'&quot;])]">
+                <footer invisible="state not in ('choose')">
                     <button name="act_getfile" string="Export submission file" type="object" class="oe_highlight" context="{'export_without_head': 0, 'purchase': True, 'sale': True}" /> or
                     <button name="act_getfile" string="Export acquisti.cee" type="object" class="oe_highlight" context="{'export_without_head': 1, 'export_filename': 'SCAMBI.CEE', 'purchase': True, 'sale': False}" /> or
                     <button name="act_getfile" string="Export cessioni.cee" type="object" class="oe_highlight" context="{'export_without_head': 1, 'export_filename': 'SCAMBI.CEE', 'purchase': False, 'sale': True}" /> or
                     <button special="cancel" string="Cancel" type="object" class="oe_link" />
                 </footer>
-                <footer invisible="[('state', 'not in', [&quot;'get'&quot;])]">
+                <footer invisible="state not in ('get')">
                     <button special="cancel" string="Close" type="object" />
                 </footer>
             </form>

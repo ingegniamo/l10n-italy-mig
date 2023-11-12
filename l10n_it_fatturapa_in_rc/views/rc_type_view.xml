@@ -6,7 +6,7 @@
         <field name="inherit_id" ref="l10n_it_reverse_charge.view_rc_type_form" />
         <field name="arch" type="xml">
             <field name="method" position="after">
-                <field name="e_invoice_suppliers" invisible="[('method', '!=', 'selfinvoice')]" />
+                <field name="e_invoice_suppliers" invisible="method != &quot;selfinvoice&quot;" />
             </field>
         </field>
     </record>

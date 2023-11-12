@@ -5,46 +5,46 @@
         <field name="arch" type="xml">
             <form>
                 <header>
-                    <button name="change_force_close" string="Force Close" type="object" invisible="[('state', '=', 'close')]" />
-                    <button name="change_force_close" string="Force Reopen" type="object" invisible="['|', ('state', '!=', 'close'), ('force_close', '=', False)]" />
+                    <button name="change_force_close" string="Force Close" type="object" invisible="state == &quot;close&quot;" />
+                    <button name="change_force_close" string="Force Reopen" type="object" invisible="(state != &quot;close&quot; or force_close == False)" />
                     <field name="state" widget="statusbar" readonly="1" />
                 </header>
                 <sheet>
                     <h1 class="mt0">
-                        <field name="number" readonly="[('state', '!=', 'valid')]" invisible="[('number', '=', '')]" />
+                        <field name="number" readonly="state != &quot;valid&quot;" invisible="number == &quot;&quot;" />
                     </h1>
                     <group>
                         <group name="main">
-                            <field name="type" readonly="[('state', '!=', 'valid')]" />
-                            <field name="partner_id" options="{'no_create': True}" readonly="[('state', '!=', 'valid')]" />
-                            <field name="telematic_protocol" readonly="[('state', '!=', 'valid')]" />
+                            <field name="type" readonly="state != &quot;valid&quot;" />
+                            <field name="partner_id" options="{'no_create': True}" readonly="state != &quot;valid&quot;" />
+                            <field name="telematic_protocol" readonly="state != &quot;valid&quot;" />
                             <field name="force_close" invisible="1" />
                         </group>
                         <group />
                     </group>
                     <group>
                         <group name="main_ref" string="Refs">
-                            <field name="date" readonly="[('state', '!=', 'valid')]" />
-                            <field name="partner_document_number" readonly="[('state', '!=', 'valid')]" />
-                            <field name="partner_document_date" readonly="[('state', '!=', 'valid')]" />
+                            <field name="date" readonly="state != &quot;valid&quot;" />
+                            <field name="partner_document_number" readonly="state != &quot;valid&quot;" />
+                            <field name="partner_document_date" readonly="state != &quot;valid&quot;" />
                         </group>
                         <group name="valid_period" string="Valid Period">
-                            <field name="date_start" readonly="[('state', '!=', 'valid')]" />
+                            <field name="date_start" readonly="state != &quot;valid&quot;" />
                             <field name="date_end" />
                         </group>
                     </group>
 
                     <group name="accounting" string="Accounting">
-                        <field name="fiscal_position_id" widget="selection" readonly="[('state', '!=', 'valid')]" />
-                        <field name="taxes_ids" widget="many2many_tags" readonly="[('state', '!=', 'valid')]" />
+                        <field name="fiscal_position_id" widget="selection" readonly="state != &quot;valid&quot;" />
+                        <field name="taxes_ids" widget="many2many_tags" readonly="state != &quot;valid&quot;" />
                     </group>
 
                     <div>
                         <label for="limit_amount" class="oe_inline" />
                         <field name="used_amount" class="oe_inline" nolabel="1" />
                         /
-                        <field name="limit_amount" nolabel="1" class="oe_inline" readonly="[('state', '!=', 'valid')]" />
-                        <field name="currency_id" nolabel="1" class="oe_inline" readonly="[('state', '!=', 'valid')]" />
+                        <field name="limit_amount" nolabel="1" class="oe_inline" readonly="state != &quot;valid&quot;" />
+                        <field name="currency_id" nolabel="1" class="oe_inline" readonly="state != &quot;valid&quot;" />
                     </div>
                     <notebook>
                         <page string="Details">

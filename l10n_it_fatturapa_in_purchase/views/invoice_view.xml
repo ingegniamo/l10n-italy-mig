@@ -8,7 +8,7 @@
             <xpath expr="//div[@id='admin_ref']" position="after">
                 <group>
                     <field name="partner_id" invisible="1" />
-                    <field name="purchase_line_id" domain="[('partner_id', '=', partner_id), ('to_invoice', '=', True)]" readonly="0" options="{'no_create': True}" invisible="[('fatturapa_attachment_in_id', '=', False)]" />
+                    <field name="purchase_line_id" domain="[('partner_id', '=', partner_id), ('to_invoice', '=', True)]" readonly="0" options="{'no_create': True}" invisible="fatturapa_attachment_in_id == False" />
                 </group>
             </xpath>
         </field>
@@ -24,7 +24,7 @@
             <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='purchase_line_id']" position="attributes">
                 <attribute name="invisible" />
                 <attribute name="domain">[('partner_id', '=', partner_id), ('to_invoice', '=', True)]</attribute>
-            <attribute name="column_invisible">[('parent.move_type', 'not in', ('in_invoice', 'in_refund'))]</attribute></xpath>
+            <attribute name="column_invisible">["parent.move_type not in ('in_invoice', 'in_refund')"]</attribute></xpath>
         </field>
     </record>
 

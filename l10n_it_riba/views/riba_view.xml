@@ -116,11 +116,11 @@
         <field name="arch" type="xml">
             <form string="RiBa Slip" version="7.0">
                 <header>
-                    <button name="confirm" type="object" string="Mark as Accepted" class="oe_highlight" invisible="['|', ('state', '!=', 'draft'), ('type', '=', 'incasso')]" />
-                    <button name="%(riba_credit_action)d" type="action" string="Mark as Credited" class="oe_highlight" invisible="['|', ('state', '!=', 'accepted'), ('type', '=', 'incasso')]" />
-                    <button name="riba_cancel" type="object" string="Cancel" invisible="[('state', '=', 'cancel')]" />
-                    <button name="settle_all_line" type="object" string="Mark All as Settled" class="oe_highlight" invisible="[('state', '!=', 'credited')]" />
-                    <button name="action_cancel_draft" string="Reset to Draft" type="object" invisible="['|', ('state', '!=', 'cancel'), ('type', '=', 'incasso')]" />
+                    <button name="confirm" type="object" string="Mark as Accepted" class="oe_highlight" invisible="(state != &quot;draft&quot; or type == &quot;incasso&quot;)" />
+                    <button name="%(riba_credit_action)d" type="action" string="Mark as Credited" class="oe_highlight" invisible="(state != &quot;accepted&quot; or type == &quot;incasso&quot;)" />
+                    <button name="riba_cancel" type="object" string="Cancel" invisible="state == &quot;cancel&quot;" />
+                    <button name="settle_all_line" type="object" string="Mark All as Settled" class="oe_highlight" invisible="state != &quot;credited&quot;" />
+                    <button name="action_cancel_draft" string="Reset to Draft" type="object" invisible="(state != &quot;cancel&quot; or type == &quot;incasso&quot;)" />
                     <field name="state" widget="statusbar" />
                 </header>
                 <group>
@@ -140,8 +140,8 @@
                                 <field name="amount" sum="Amount" />
                                 <field name="due_date" />
                                 <field name="state" />
-                                <button name="%(riba_past_due_action)d" type="action" string="Mark as Past Due" icon="fa-exclamation-triangle" invisible="['|', ('type', '=', 'incasso'), ('state', '!=', 'credited')]" />
-                                <button name="riba_line_settlement" type="object" string="Mark as Settled" icon="fa-check" invisible="['|', ('type', '=', 'incasso'), ('state', '!=', 'credited')]" />
+                                <button name="%(riba_past_due_action)d" type="action" string="Mark as Past Due" icon="fa-exclamation-triangle" invisible="(type == &quot;incasso&quot; or state != &quot;credited&quot;)" />
+                                <button name="riba_line_settlement" type="object" string="Mark as Settled" icon="fa-check" invisible="(type == &quot;incasso&quot; or state != &quot;credited&quot;)" />
                                 <field name="type" invisible="1" />
                             </tree>
                         </field>
@@ -151,8 +151,8 @@
                         <group>
                             <field name="user_id" />
                             <field name="date_created" />
-                            <field name="date_accepted" readonly="[('state', '!=', 'draft')]" />
-                            <field name="date_credited" readonly="[('state', '!=', 'draft'), ('state', '!=', 'accepted')]" />
+                            <field name="date_accepted" readonly="state != &quot;draft&quot;" />
+                            <field name="date_credited" readonly="state != &quot;accepted&quot;" />
                             <field name="date_paid" />
                         </group>
                     </page>

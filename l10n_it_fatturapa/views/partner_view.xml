@@ -13,13 +13,13 @@
                     </group>
                     <group>
                         <field name="electronic_invoice_subjected" />
-                        <field name="electronic_invoice_obliged_subject" invisible="[('electronic_invoice_subjected', '=', False)]" />
+                        <field name="electronic_invoice_obliged_subject" invisible="electronic_invoice_subjected == False" />
                     </group>
-                    <group invisible="['|', ('electronic_invoice_subjected', '=', False), ('electronic_invoice_obliged_subject', '=', False)]">
+                    <group invisible="(electronic_invoice_subjected == False or electronic_invoice_obliged_subject == False)">
                         <field name="is_pa" invisible="True" />
-                        <field name="ipa_code" placeholder="IPA123" invisible="[('is_pa', '=', False)]" />
-                        <field name="codice_destinatario" invisible="[('is_pa', '=', True)]" />
-                        <field name="pec_destinatario" invisible="['|', ('is_pa', '=', True), ('codice_destinatario', '!=', '0000000')]" />
+                        <field name="ipa_code" placeholder="IPA123" invisible="is_pa == False" />
+                        <field name="codice_destinatario" invisible="is_pa == True" />
+                        <field name="pec_destinatario" invisible="(is_pa == True or codice_destinatario != &quot;0000000&quot;)" />
                         <field name="eori_code" />
                     </group>
                 </group>
@@ -47,14 +47,14 @@
             <xpath expr="//div[@name='div_address']/../../.." position="after">
                 <field name="electronic_invoice_obliged_subject" invisible="True" />
                 <field name="electronic_invoice_subjected" invisible="True" />
-                <group string="E-invoicing" name="e_invoice_info" groups="account.group_account_invoice" invisible="['|', ('type', '=', 'contact'), '|', ('parent.electronic_invoice_subjected', '=', False), ('parent.electronic_invoice_obliged_subject', '=', False)]">
+                <group string="E-invoicing" name="e_invoice_info" groups="account.group_account_invoice" invisible="(type == &quot;contact&quot; or (parent.electronic_invoice_subjected == False or parent.electronic_invoice_obliged_subject == False))">
                     <group>
                         <field name="electronic_invoice_use_this_address" />
                     </group>
-                    <group invisible="[('electronic_invoice_use_this_address', '=', False)]">
-                        <field name="ipa_code" placeholder="IPA123" invisible="[('parent.is_pa', '=', False)]" />
-                        <field name="codice_destinatario" invisible="[('parent.is_pa', '=', True)]" />
-                        <field name="pec_destinatario" invisible="['|', ('parent.is_pa', '=', True), ('codice_destinatario', '!=', '0000000')]" />
+                    <group invisible="electronic_invoice_use_this_address == False">
+                        <field name="ipa_code" placeholder="IPA123" invisible="parent.is_pa == False" />
+                        <field name="codice_destinatario" invisible="parent.is_pa == True" />
+                        <field name="pec_destinatario" invisible="(parent.is_pa == True or codice_destinatario != &quot;0000000&quot;)" />
                         <field name="eori_code" />
                     </group>
                 </group>

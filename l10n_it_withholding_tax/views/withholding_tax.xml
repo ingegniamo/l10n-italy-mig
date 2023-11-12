@@ -34,8 +34,8 @@
                             <field name="account_payable_id" />
                             <field name="journal_id" />
                             <field name="payment_term" />
-                            <field name="use_daticassaprev" invisible="[('wt_types', 'in', ('ritenuta', 'other'))]" />
-                            <field name="daticassprev_tax_id" domain="[('amount', '=', 0.0)]" invisible="[('use_daticassaprev', '=', False)]" />
+                            <field name="use_daticassaprev" invisible="wt_types in ('ritenuta', 'other')" />
+                            <field name="daticassprev_tax_id" domain="[('amount', '=', 0.0)]" invisible="use_daticassaprev == False" />
                             <field name="wt_types" widget="radio" />
                         </group>
                         <group>
@@ -198,8 +198,8 @@
             <field name="arch" type="xml">
                 <form string="Withholding Tax Move" create="false" edit="false" delete="false">
                     <header>
-                        <button name="action_set_to_draft" string="Set to Due" type="object" invisible="[('state', 'not in', [&quot;'paid'&quot;])]" />
-                        <button name="action_paid" string="Paid" type="object" invisible="[('state', 'not in', [&quot;'due'&quot;])]" />
+                        <button name="action_set_to_draft" string="Set to Due" type="object" invisible="state not in ('paid')" />
+                        <button name="action_paid" string="Paid" type="object" invisible="state not in ('due')" />
                         <field name="state" widget="statusbar" statusbar_visible="due,paid" />
                     </header>
                     <sheet string="Withholding Tax Move">

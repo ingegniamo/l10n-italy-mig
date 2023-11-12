@@ -7,7 +7,7 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='tax_group_id']" position="after">
                 <field name="kind_id" />
-                <field name="law_reference" required="[('kind_id', '!=', False), ('type_tax_use', '!=', 'purchase')]" invisible="['|', ('kind_id', '=', False), ('type_tax_use', '=', 'purchase')]" />
+                <field name="law_reference" required="type_tax_use != &quot;purchase&quot;" invisible="(kind_id == False or type_tax_use == &quot;purchase&quot;)" />
             </xpath>
         </field>
     </record>

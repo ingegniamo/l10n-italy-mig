@@ -9,7 +9,7 @@
                 <field name="is_fatturapa_pec" />
             </xpath>
             <notebook position="inside">
-                <page string="Last error message" invisible="[('last_pec_error_message', '=', False)]">
+                <page string="Last error message" invisible="last_pec_error_message == False">
                     <field name="last_pec_error_message" />
                     <group>
                         <field name="pec_error_count" />
@@ -18,9 +18,9 @@
             </notebook>
             <xpath expr="//notebook/page[1]/group[1]/group[3]" position="attributes">
                 
-                <attribute name="invisible">[('is_fatturapa_pec', '=', True)]</attribute></xpath>
+                <attribute name="invisible">['is_fatturapa_pec == True']</attribute></xpath>
             <field name="active" position="after">
-                <field name="e_inv_notify_partner_ids" widget="many2many_tags" invisible="[('is_fatturapa_pec', '=', False)]" />
+                <field name="e_inv_notify_partner_ids" widget="many2many_tags" invisible="is_fatturapa_pec == False" />
             </field>
         </field>
     </record>
