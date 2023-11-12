@@ -2,6 +2,7 @@ import glob
 import xml.etree.ElementTree as ET
 import json
 print("TROVATO BUG NON USARE")
+exit
 views = glob.glob("**/*.xml",recursive=True)
 for view in views:
     
@@ -15,8 +16,7 @@ for view in views:
             states = state_field.attrib.get('states')
             states = states.split(",")
             states = ["'%s'" % state for state in states]
-            state_field.set("invisible",str([('state','not in',states)]))
-            
+            state_field.set("invisible","state not in (%)"% ",".join(states))
             del state_field.attrib['states']
         string = ET.tostring(root).decode('utf-8')
         file = open(view,"w")
