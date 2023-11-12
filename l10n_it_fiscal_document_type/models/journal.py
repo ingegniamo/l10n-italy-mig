@@ -1,5 +1,5 @@
 from odoo import models
-from odoo.exceptions import Warning as UserError
+from odoo.exceptions import  UserError
 from odoo.tools.translate import _
 
 

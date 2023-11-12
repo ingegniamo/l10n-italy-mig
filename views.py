@@ -8,6 +8,21 @@ for view in views:
     root = file.getroot()
     attrs_fields =root.findall(".//*[@attrs]")
     attrs_extend_parent_fields = root.findall(".//attribute[@name='attrs']/..")
+    states_fields = root.findall(".//*[@states]")
+    if states_fields:
+        for state_field in states_fields:
+            states = state_field.attrib.get('states')
+            states = states.split(",")
+            states = ["'%s'" % state for state in states]
+            state_field.set("invisible",str([('state','not in',states)]))
+            
+            del state_field.attrib['states']
+        string = ET.tostring(root).decode('utf-8')
+        file = open(view,"w")
+        file.write(string)
+        file.close()
+        
+
     if attrs_extend_parent_fields:
         print(view)
         for parent in attrs_extend_parent_fields:

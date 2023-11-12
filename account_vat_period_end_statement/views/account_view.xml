@@ -9,8 +9,8 @@
             <form>
                 <header>
                     <button name="create_move" type="object" string="Create Move" class="oe_highlight" invisible="['|', ('annual', '=', True), ('state', '!=', 'draft')]" />
-                    <button name="statement_draft" type="object" states="confirmed,paid" string="Set to draft" />
-                    <button type="object" name="compute_amounts" string="Recompute amounts" states="draft" />
+                    <button name="statement_draft" type="object" string="Set to draft" invisible="[('state', 'not in', [&quot;'confirmed'&quot;, &quot;'paid'&quot;])]" />
+                    <button type="object" name="compute_amounts" string="Recompute amounts" invisible="[('state', 'not in', [&quot;'draft'&quot;])]" />
                     <field name="state" widget="statusbar" invisible="[('annual', '=', True)]" />
                 </header>
                 <group>

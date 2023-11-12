@@ -198,8 +198,8 @@
             <field name="arch" type="xml">
                 <form string="Withholding Tax Move" create="false" edit="false" delete="false">
                     <header>
-                        <button name="action_set_to_draft" states="paid" string="Set to Due" type="object" />
-                        <button name="action_paid" states="due" string="Paid" type="object" />
+                        <button name="action_set_to_draft" string="Set to Due" type="object" invisible="[('state', 'not in', [&quot;'paid'&quot;])]" />
+                        <button name="action_paid" string="Paid" type="object" invisible="[('state', 'not in', [&quot;'due'&quot;])]" />
                         <field name="state" widget="statusbar" statusbar_visible="due,paid" />
                     </header>
                     <sheet string="Withholding Tax Move">

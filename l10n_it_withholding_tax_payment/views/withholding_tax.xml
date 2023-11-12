@@ -45,8 +45,8 @@
             <field name="arch" type="xml">
                 <form string="Withholding Tax Payment Move">
                     <header>
-                        <button name="action_set_to_draft" states="confirmed" string="Set to Draft" type="object" />
-                        <button name="action_confirmed" states="draft" string="Confirm" type="object" />
+                        <button name="action_set_to_draft" string="Set to Draft" type="object" invisible="[('state', 'not in', [&quot;'confirmed'&quot;])]" />
+                        <button name="action_confirmed" string="Confirm" type="object" invisible="[('state', 'not in', [&quot;'draft'&quot;])]" />
                         <button name="create_account_move" string="Create Account Move" type="object" class="oe_highlight" invisible="['|', ('state', '!=', 'confirmed'), ('move_id', '!=', False)]" />
                         <field name="state" widget="statusbar" statusbar_visible="draft,confirmed" />
                     </header>

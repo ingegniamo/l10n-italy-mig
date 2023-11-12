@@ -27,7 +27,6 @@ class IrMailServer(models.Model):
         offset=0,
         limit=None,
         order=None,
-        count=False,
         access_rights_uid=None,
     ):
         if args == [] and order == "sequence" and limit == 1:
@@ -37,5 +36,5 @@ class IrMailServer(models.Model):
             # the e-invoice PEC server must not be used
             args = [("is_fatturapa_pec", "=", False)]
         return super(IrMailServer, self)._search(
-            args, offset, limit, order, count, access_rights_uid
+            args, offset, limit, order,  access_rights_uid
         )

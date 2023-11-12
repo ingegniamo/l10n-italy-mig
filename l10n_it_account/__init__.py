@@ -5,6 +5,6 @@ from . import tools
 from odoo import api, SUPERUSER_ID
 
 
-def _l10n_it_account_post_init(cr, registry):
-    env = api.Environment(cr, SUPERUSER_ID, {})
-    env["account.account"].set_account_types_negative_sign()
+def _l10n_it_account_post_init(env):
+    
+    env["account.account"].sudo().set_account_types_negative_sign()

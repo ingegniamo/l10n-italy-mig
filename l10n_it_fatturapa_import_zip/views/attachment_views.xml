@@ -6,7 +6,7 @@
         <field name="arch" type="xml">
             <form string="Import e-bill ZIP" duplicate="false">
                 <header>
-                        <button name="action_import" type="object" states="draft" string="Import invoices" class="oe_highlight" />
+                        <button name="action_import" type="object" string="Import invoices" class="oe_highlight" invisible="[('state', 'not in', [&quot;'draft'&quot;])]" />
                     <field name="state" widget="statusbar" />
                 </header>
                 <sheet string="Import e-bill ZIP">

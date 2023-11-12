@@ -29,7 +29,7 @@
                     <page string="Intrastat" invisible="[('intrastat', '=', False)]">
                         <group colspan="4">
                             <group>
-                                <button name="compute_intrastat_lines" states="draft,sent" string="Recompute Intrastat Lines" type="object" />
+                                <button name="compute_intrastat_lines" string="Recompute Intrastat Lines" type="object" invisible="[('state', 'not in', [&quot;'draft'&quot;, &quot;'sent'&quot;])]" />
                             </group>
                             <newline />
                             <group colspan="4">

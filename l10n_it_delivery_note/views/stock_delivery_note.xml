@@ -15,13 +15,13 @@
                 <field name="can_change_number" invisible="True" />
                 <field name="show_product_information" invisible="True" />
                 <header>
-                    <button name="action_draft" type="object" states="cancel" class="oe_highlight" string="Reset to draft" />
-                    <button name="action_confirm" type="object" states="draft" class="oe_highlight" string="Validate" />
+                    <button name="action_draft" type="object" class="oe_highlight" string="Reset to draft" invisible="[('state', 'not in', [&quot;'cancel'&quot;])]" />
+                    <button name="action_confirm" type="object" class="oe_highlight" string="Validate" invisible="[('state', 'not in', [&quot;'draft'&quot;])]" />
                     <button name="action_invoice" type="object" class="oe_highlight" groups="account.group_account_invoice" string="Create invoice" invisible="['|', ('state', '!=', 'confirm'), ('sale_ids', '=', [])]" />
                     <button name="action_done" type="object" class="oe_highlight" string="Set done" invisible="['&amp;', ('state', '!=', 'invoiced'), '|', ('state', '!=', 'confirm'), ('sale_ids', '!=', [])]" />
-                    <button name="action_print" type="object" states="draft,confirm,invoiced" string="Print" />
-                    <button name="action_print" type="object" class="oe_highlight" states="done" string="Print" />
-                    <button name="action_cancel" type="object" states="confirm,invoiced,done" string="Cancel" />
+                    <button name="action_print" type="object" string="Print" invisible="[('state', 'not in', [&quot;'draft'&quot;, &quot;'confirm'&quot;, &quot;'invoiced'&quot;])]" />
+                    <button name="action_print" type="object" class="oe_highlight" string="Print" invisible="[('state', 'not in', [&quot;'done'&quot;])]" />
+                    <button name="action_cancel" type="object" string="Cancel" invisible="[('state', 'not in', [&quot;'confirm'&quot;, &quot;'invoiced'&quot;, &quot;'done'&quot;])]" />
                     <field name="state" widget="statusbar" statusbar_visible="draft,confirm" />
                 </header>
                 <sheet>
