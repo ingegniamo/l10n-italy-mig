@@ -1,6 +1,7 @@
 import glob
 import xml.etree.ElementTree as ET
 import json
+print("TROVATO BUG NON USARE")
 views = glob.glob("**/*.xml",recursive=True)
 for view in views:
     
