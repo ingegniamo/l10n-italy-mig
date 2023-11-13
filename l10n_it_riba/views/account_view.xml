@@ -101,7 +101,7 @@
         <field name="arch" type="xml">
             <xpath expr="//field[@name='invoice_payment_term_id']" position="after">
                 <field name="is_riba_payment" invisible="1" />
-                 <field name="riba_partner_bank_id" domain="[('partner_id','=', partner_id)]" invisible="(is_riba_payment == False or move_type != &quot;out_invoice&quot;)" required="(is_riba_payment == True and move_type == &quot;out_invoice&quot;)" />
+                 <field name="riba_partner_bank_id" domain="[('partner_id','=', partner_id)]" readonly="state != 'draft'" invisible="(is_riba_payment == False or move_type != &quot;out_invoice&quot;)" required="(is_riba_payment == True and move_type == &quot;out_invoice&quot;)" />
                 <field name="is_past_due" string="Past Due" invisible="is_past_due == False" />
             </xpath>
         </field>

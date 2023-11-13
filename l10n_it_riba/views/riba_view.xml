@@ -14,8 +14,9 @@
                 <filter name="filter_confirm" string="Confirmed" domain="[('state','=','accepted')]" help="Confirmed" />
                 <filter name="filter_paid" string="Paid" domain="[('state','=','paid')]" help="Paid" />
                 <separator orientation="vertical" />
-                <field name="name" />
-                <field name="config_id" />
+                <field name="state" invisible="1"/>
+                <field name="name" readonly="state != 'draft'"/>
+                <field name="config_id" readonly="state != 'draft'"/>
                 <field name="date_accepted" />
                 <field name="date_paid" />
            </search>
@@ -126,11 +127,11 @@
                 <group>
                     <field name="name" />
                     <field name="config_id" widget="selection" />
-                    <field name="registration_date" />
+                    <field name="registration_date" readonly="state not in ('draft','cancel')"/>
                 </group>
                 <notebook colspan="4">
                     <page string="General">
-                        <field name="line_ids" nolabel="1" colspan="4">
+                        <field name="line_ids" nolabel="1" colspan="4" readonly="state != 'draft'">
                             <tree>
                                 <field name="sequence" />
                                 <field name="invoice_number" />
@@ -149,7 +150,7 @@
                     </page>
                     <page string="Other Info">
                         <group>
-                            <field name="user_id" />
+                            <field name="user_id" readonly="state != 'draft'"/>
                             <field name="date_created" />
                             <field name="date_accepted" readonly="state != &quot;draft&quot;" />
                             <field name="date_credited" readonly="state != &quot;accepted&quot;" />

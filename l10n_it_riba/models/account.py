@@ -86,7 +86,6 @@ class AccountMove(models.Model):
         help="Bank Account Number to which the RiBa will be debited. "
         "If not set, first bank in partner will be used.",
         readonly=True,
-        states={"draft": [("readonly", False)]},
     )
 
     @api.model_create_multi

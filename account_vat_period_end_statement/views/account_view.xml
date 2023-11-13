@@ -14,13 +14,13 @@
                     <field name="state" widget="statusbar" invisible="annual == True" />
                 </header>
                 <group>
-                    <field name="journal_id" widget="selection" />
-                    <field name="date" />
+                    <field name="journal_id" widget="selection" readonly="state in ('confirmed','paid')" />
+                    <field name="date" readonly="state in ('confirmed','paid')" />
                     <field name="annual" />
                     <field name="move_id" invisible="annual == True" />
-                    <field name="payment_term_id" invisible="annual == True" />
-                    <field name="authority_partner_id" widget="res_partner_many2one" context="{'res_partner_search_mode': 'supplier', 'default_is_company': True}" invisible="annual == True" />
-                    <field name="authority_vat_account_id" invisible="annual == True" required="annual == False" />
+                    <field name="payment_term_id" invisible="annual == True" readonly="state in ('confirmed','paid')" />
+                    <field name="authority_partner_id" readonly="state in ('confirmed','paid')" widget="res_partner_many2one" context="{'res_partner_search_mode': 'supplier', 'default_is_company': True}" invisible="annual == True" />
+                    <field name="authority_vat_account_id" readonly="state in ('confirmed','paid')" invisible="annual == True" required="annual == False" />
                     <field name="company_id" groups="base.group_multi_company" />
                     <field name="interest" />
                 <field name="interest_percent" invisible="interest == False" required="interest == True" />
@@ -72,25 +72,25 @@
                             </group>
                             <group col="3" colspan="4">
                                 <separator colspan="3" string="Previous Credits VAT" />
-                                <field name="previous_credit_vat_account_id" required="previous_credit_vat_amount != 0" />
-                                <field name="previous_credit_vat_amount" nolabel="1" />
+                                <field name="previous_credit_vat_account_id" readonly="state in ('confirmed','paid')" required="previous_credit_vat_amount != 0" />
+                                <field name="previous_credit_vat_amount" nolabel="1" readonly="state in ('confirmed','paid')"/>
                                 <field name="previous_year_credit" />
                                 <separator colspan="3" string="Previous Debits VAT" />
-                                <field name="previous_debit_vat_account_id" required="previous_debit_vat_amount != 0" />
-                                <field name="previous_debit_vat_amount" nolabel="1" />
+                                <field name="previous_debit_vat_account_id" required="previous_debit_vat_amount != 0" readonly="state in ('confirmed','paid')"/>
+                                <field name="previous_debit_vat_amount" nolabel="1" readonly="state in ('confirmed','paid')"/>
                                 <separator colspan="3" string="Due interests" />
-                                <field name="interests_debit_vat_account_id" required="interests_debit_vat_amount != 0" />
-                                <field name="interests_debit_vat_amount" nolabel="1" />
+                                <field name="interests_debit_vat_account_id" readonly="state in ('confirmed','paid')" required="interests_debit_vat_amount != 0" />
+                                <field name="interests_debit_vat_amount" readonly="state in ('confirmed','paid')" nolabel="1" />
                                 <separator colspan="3" string="Tax credits" />
-                                <field name="tax_credit_account_id" required="tax_credit_amount != 0" />
-                                <field name="tax_credit_amount" nolabel="1" />
+                                <field name="tax_credit_account_id" readonly="state in ('confirmed','paid')" required="tax_credit_amount != 0" />
+                                <field name="tax_credit_amount" readonly="state in ('confirmed','paid')" nolabel="1" />
                                 <separator colspan="3" string="Down payment" />
-                                <field name="advance_account_id" required="advance_amount != 0" />
-                                <field name="advance_amount" nolabel="1" />
-                                <field name="advance_computation_method" string="Computation method" />
+                                <field name="advance_account_id" readonly="state in ('confirmed','paid')" required="advance_amount != 0" />
+                                <field name="advance_amount" readonly="state in ('confirmed','paid')" nolabel="1" />
+                                <field name="advance_computation_method" readonly="state in ('confirmed','paid')" string="Computation method" />
                             </group>
                             <separator colspan="3" string="Other VAT Credits / Debits or Tax Compensations (Positive amounts for credits, negative for debits)" />
-                            <field name="generic_vat_account_line_ids" colspan="3" nolabel="1">
+                            <field name="generic_vat_account_line_ids" readonly="state in ('confirmed','paid')" colspan="3" nolabel="1">
                                 <tree editable="bottom">
                                     <field name="account_id" />
                                     <field name="name" />
