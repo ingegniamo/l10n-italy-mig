@@ -25,6 +25,7 @@
         "l10n_it_vat_payability",
         "l10n_it_fiscal_payment_term",
         "partner_firstname",
+        "account_payment"
     ],
     "data": [
         "data/fatturapa_data.xml",
