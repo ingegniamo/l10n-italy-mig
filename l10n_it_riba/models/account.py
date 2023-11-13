@@ -154,6 +154,7 @@ class AccountMove(models.Model):
             pterm = self.env["account.payment.term"].browse(
                 self.invoice_payment_term_id.id
             )
+            
             pterm_list = pterm._compute_terms(
                 date_ref=self.invoice_date,
                 currency=self.currency_id,
@@ -164,8 +165,8 @@ class AccountMove(models.Model):
                 untaxed_amount_currency=0,
                 sign=1,
             )
-
-            for pay_date in pterm_list:
+            
+            for pay_date in (pterm_list.get('line_ids') or []):
                 if not self.month_check(pay_date["date"], previous_date_due):
                     # ---- Get Line values for service product
                     service_prod = invoice.company_id.due_cost_service_id
