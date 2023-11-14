@@ -44,7 +44,6 @@ class RibaList(models.Model):
         "Reference",
         required=True,
         readonly=True,
-        states={"draft": [("readonly", False)]},
         default=(lambda self: self.env["ir.sequence"].next_by_code("riba.slip")),
     )
     config_id = fields.Many2one(
@@ -53,7 +52,6 @@ class RibaList(models.Model):
         index=True,
         required=True,
         readonly=True,
-        states={"draft": [("readonly", False)]},
         help="RiBa configuration to be used.",
     )
     state = fields.Selection(
@@ -73,14 +71,12 @@ class RibaList(models.Model):
         "slip_id",
         "RiBa Due Dates",
         readonly=True,
-        states={"draft": [("readonly", False)]},
     )
     user_id = fields.Many2one(
         "res.users",
         "User",
         required=True,
         readonly=True,
-        states={"draft": [("readonly", False)]},
         default=lambda self: self.env.user,
     )
     date_created = fields.Date(
@@ -97,7 +93,6 @@ class RibaList(models.Model):
         "Company",
         required=True,
         readonly=True,
-        states={"draft": [("readonly", False)]},
         default=lambda self: self.env.company,
     )
     acceptance_move_ids = fields.Many2many(
@@ -114,10 +109,6 @@ class RibaList(models.Model):
     )
     type = fields.Selection(string="Type", related="config_id.type", readonly=True)
     registration_date = fields.Date(
-        states={
-            "draft": [("readonly", False)],
-            "cancel": [("readonly", False)],
-        },
         readonly=True,
         required=True,
         default=lambda self: fields.Date.context_today(self),
