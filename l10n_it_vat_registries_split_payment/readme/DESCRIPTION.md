@@ -5,5 +5,5 @@ funzionalità inerenti alla scissione dei pagamenti.
 
 **English**
 
-Bridge module to make "VAT Registries" module work along with "Split Payment"
-module.
+Bridge module to make "VAT Registries" module work along with "Split
+Payment" module.
