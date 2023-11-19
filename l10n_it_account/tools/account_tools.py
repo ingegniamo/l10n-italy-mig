@@ -4,7 +4,8 @@ import re
 import xmlschema
 from lxml import etree
 
-from odoo.modules.module import get_module_resource
+from odoo.tools.misc import file_path
+import os
 
 _logger = logging.getLogger(__name__)
 _logger.setLevel(logging.INFO)
@@ -38,16 +39,9 @@ def encode_for_export(string_to_encode, max_chars, encoding="latin"):
 # Per lxml.etree, va creata al classe Resover. Per xmlschema, si indicano
 # le locations aggiuntive.
 
-_old_xsd_specs = get_module_resource(
-    "l10n_it_account", "tools", "xsd", "xmldsig-core-schema.xsd"
-)
+_old_xsd_specs = file_path(os.path.join("l10n_it_account", "tools", "xsd", "xmldsig-core-schema.xsd"))
 
-_fpa_schema_file = get_module_resource(
-    "l10n_it_account",
-    "tools",
-    "xsd",
-    "Schema_del_file_xml_FatturaPA_v1.2.2.xsd",
-)
+_fpa_schema_file = file_path(os.path.join("l10n_it_account", "tools", "xsd", "Schema_del_file_xml_FatturaPA_v1.2.2.xsd")) 
 
 fpa_schema = xmlschema.XMLSchema(
     _fpa_schema_file,
