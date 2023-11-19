@@ -458,7 +458,7 @@ class WizardImportFatturapa(models.TransientModel):
     def _get_default_product_taxes(self, tax_field_name):
         """Return default tax for field `product.product.<tax_field_name>`."""
         company = self.env.company
-        default_taxes_ids = self.env["ir.default"].get(
+        default_taxes_ids = self.env["ir.default"]._get(
             "product.product",
             tax_field_name,
             company_id=company.id,
