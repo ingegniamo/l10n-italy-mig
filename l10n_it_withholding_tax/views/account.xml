@@ -25,7 +25,7 @@
                 </xpath>
 
                 <xpath expr="//field[@name='narration']" position="before">
-                    <field name="withholding_tax_line_ids" invisible="withholding_tax == False">
+                    <field name="withholding_tax_line_ids" invisible="withholding_tax == False" readonly="state =='draft'">
                         <tree>
                             <field name="withholding_tax_id" />
                             <field name="base" />
