@@ -32,7 +32,7 @@ class WizardExportFatturapa(models.TransientModel):
             else:
                 res[key] = {
                     "AliquotaIVA": format_numbers(0.0),
-                    "Natura": tax_id.kind_id.code,
+                    "Natura": tax_id.kind_id,
                     # possibile tag (non gestito)
                     # 'Arrotondamento':'',
                     "ImponibileImporto": float_round(wt_line.tax, 2),

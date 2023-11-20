@@ -39,7 +39,7 @@ class TestFatturaPAXMLValidation(FatturapaCommon):
         self.assertEqual(invoice.amount_total, 57.00)
         self.assertEqual(invoice.gross_weight, 0.00)
         self.assertEqual(invoice.net_weight, 0.00)
-        self.assertEqual(invoice.welfare_fund_ids[0].kind_id.code, "N4")
+        self.assertEqual(invoice.welfare_fund_ids[0].kind_id, "N4")
         self.assertFalse(invoice.art73)
         welfare_found = False
         for line in invoice.invoice_line_ids:
@@ -1080,7 +1080,7 @@ class TestFatturaPAEnasarco(FatturapaCommon):
         self.assertEqual(invoice.amount_total, 3013.40)
         self.assertEqual(invoice.amount_net_pay, 2729.35)
         self.assertEqual(invoice.withholding_tax_amount, 284.05)
-        self.assertEqual(invoice.welfare_fund_ids[0].kind_id.code, "N2")
+        self.assertEqual(invoice.welfare_fund_ids[0].kind_id, "N2")
         self.assertTrue(len(invoice.e_invoice_line_ids) == 1)
         self.assertEqual(invoice.e_invoice_line_ids[0].name, "ACCONTO PROVVIGIONI")
         self.assertEqual(invoice.e_invoice_line_ids[0].qty, 1.0)

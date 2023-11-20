@@ -45,7 +45,7 @@ class TestFatturaPAXMLValidation(FatturaPACommon):
         tax_form.name = "FC INC"
         tax_form.amount = 0
         tax_form.price_include = True
-        tax_form.kind_id = self.env.ref("l10n_it_account_tax_kind.n3_5")
+        tax_form.kind_id = "N3,5"
         tax_form.law_reference = "Art. 8 co. 1 lett. c) e co. 2 del DPR 633/72"
         self.tax1 = tax_form.save()
 

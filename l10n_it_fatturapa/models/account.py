@@ -98,7 +98,9 @@ class WelfareFundDataLine(models.Model):
     _description = "E-invoice Welfare Fund Data"
 
     name = fields.Many2one("welfare.fund.type", string="Welfare Fund Type")
-    kind_id = fields.Many2one("account.tax.kind", string="Non taxable nature")
+    def _get_selection_kind_id(self):
+        return self.env['account.tax']._fields.get('l10n_it_exempt_reason')._description_selection(self.env)
+    kind_id = fields.Selection(_get_selection_kind_id)#fields.Many2one("account.tax.kind", string="Non taxable nature")
     welfare_rate_tax = fields.Float("Welfare Tax Rate")
     welfare_amount_tax = fields.Float("Welfare Tax Amount")
     welfare_taxable = fields.Float()

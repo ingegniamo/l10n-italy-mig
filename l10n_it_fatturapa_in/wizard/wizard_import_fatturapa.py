@@ -484,7 +484,7 @@ class WizardImportFatturapa(models.TransientModel):
             [
                 tax_domain,
                 [
-                    ("kind_id.code", "=", Natura),
+                    ("kind_id", "=", Natura),
                 ],
             ]
         )
@@ -768,7 +768,7 @@ class WizardImportFatturapa(models.TransientModel):
             if not kind:
                 self.log_inconsistency(_("Tax kind %s not found") % Natura)
             else:
-                kind_id = kind[0].id
+                kind_id = kind[0]
 
         RiferimentoAmministrazione = line.RiferimentoAmministrazione or ""
         WelfareTypeModel = self.env["welfare.fund.type"]

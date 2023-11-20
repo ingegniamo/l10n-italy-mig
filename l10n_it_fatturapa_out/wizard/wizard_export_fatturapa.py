@@ -138,7 +138,7 @@ class WizardExportFatturapa(models.TransientModel):
             key = _key(tax_line_id)
             out_computed[key] = {
                 "AliquotaIVA": aliquota,
-                "Natura": tax_line_id.kind_id.code,
+                "Natura": tax_line_id.kind_id,
                 # 'Arrotondamento':'',
                 "ImponibileImporto": tax_id.tax_base_amount,
                 "Imposta": abs(tax_id.balance),
@@ -166,7 +166,7 @@ class WizardExportFatturapa(models.TransientModel):
                 if key not in out:
                     out[key] = {
                         "AliquotaIVA": aliquota,
-                        "Natura": tax_id.kind_id.code,
+                        "Natura": tax_id.kind_id,
                         # 'Arrotondamento':'',
                         "ImponibileImporto": line.price_subtotal,
                         "Imposta": 0.0,

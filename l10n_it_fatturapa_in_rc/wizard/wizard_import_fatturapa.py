@@ -18,7 +18,7 @@ class WizardImportFatturapa(models.TransientModel):
             account_taxes = account_tax_model.search(
                 [
                     ("type_tax_use", "=", "purchase"),
-                    ("kind_id.code", "=", line.Natura),
+                    ("kind_id", "=", line.Natura),
                     ("id", "in", reversed_acc_tax_ids),
                 ]
             )

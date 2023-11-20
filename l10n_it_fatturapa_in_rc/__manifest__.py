@@ -17,7 +17,7 @@
     "depends": [
         "l10n_it_reverse_charge",
         "l10n_it_fatturapa_in",
-        "l10n_it_account_tax_kind",
+       # "l10n_it_account_tax_kind",
     ],
     "data": [
         "views/rc_type_view.xml",

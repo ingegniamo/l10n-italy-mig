@@ -610,7 +610,7 @@ class TestFatturaPAXMLValidation(FatturaPACommon):
         self.check_content(xml_content, "IT06363391001_00012.xml")
 
     def test_13_xml_export(self):
-        self.tax_00_ns.kind_id = self.env.ref("l10n_it_account_tax_kind.n2_1")
+        self.tax_00_ns.kind_id = "N2.1"
         invoice = self.invoice_model.create(
             {
                 "name": "INV/2020/0013",
@@ -709,7 +709,7 @@ class TestFatturaPAXMLValidation(FatturaPACommon):
         invoice_form.invoice_date = fields.Date.from_string("2021-12-16")
         invoice_form.invoice_payment_term_id = self.account_payment_term
 
-        self.tax_00_ns.kind_id = self.env.ref("l10n_it_account_tax_kind.n3_2")
+        self.tax_00_ns.kind_id = "N3.2"
 
         with invoice_form.invoice_line_ids.new() as line_form:
             line_form.product_id = self.product_product_10

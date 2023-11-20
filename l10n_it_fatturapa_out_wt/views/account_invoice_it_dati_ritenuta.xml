@@ -53,7 +53,7 @@
                   <ImportoContributoCassa t-out="format_numbers_two(wt_line.tax)" />
                   <AliquotaIVA>0.00</AliquotaIVA>
                   <Natura
-                    t-out="wt_line.withholding_tax_id.daticassprev_tax_id.kind_id.code"
+                    t-out="wt_line.withholding_tax_id.daticassprev_tax_id.kind_id"
                 />
             </DatiCassaPrevidenziale>
         </xpath>

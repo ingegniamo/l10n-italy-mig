@@ -190,8 +190,8 @@ e 'line' per riga di fattura (a seconda del livello in cui sono chiamati)
             />
                 <t t-call="l10n_it_fatturapa_out.account_invoice_line_ritenuta" />
                 <Natura
-                t-if="not line_is_section_note and tax_ids.kind_id.code"
-                t-out="tax_ids.kind_id.code"
+                t-if="not line_is_section_note and tax_ids.kind_id"
+                t-out="tax_ids.kind_id"
             />
                 <Natura
                 t-if="line_is_section_note and existing_tax_line.get('Natura')"
@@ -202,7 +202,7 @@ e 'line' per riga di fattura (a seconda del livello in cui sono chiamati)
                 t-out="line.admin_ref"
             />
                 <AltriDatiGestionali
-                t-if="tax_ids.kind_id.code == 'N2.1' and in_eu(line.move_id.partner_id)"
+                t-if="tax_ids.kind_id == 'N2.1' and in_eu(line.move_id.partner_id)"
             >
                     <TipoDato>INVCONT</TipoDato>
                 </AltriDatiGestionali>
@@ -224,7 +224,7 @@ e 'line' per riga di fattura (a seconda del livello in cui sono chiamati)
             <DatiRiepilogo>
                 <!--2.2.2-->
                 <AliquotaIVA t-out="format_numbers(tax.amount)" />
-                <Natura t-if="tax.kind_id.code" t-out="tax.kind_id.code" />
+                <Natura t-if="tax.kind_id" t-out="tax.kind_id" />
                 <!--                <SpeseAccessorie t-out=""/>-->
                 <!--                <Arrotondamento t-out=""/>-->
                 <ImponibileImporto

@@ -34,7 +34,7 @@ class TestInvoiceRC(FatturapaCommon):
                 "name": "Tax 22% Purchase RC ITA",
                 "type_tax_use": "purchase",
                 "amount": 22,
-                "kind_id": self.env.ref("l10n_it_account_tax_kind.n6_1").id,
+                "kind_id": "N6.1",
                 "sequence": 10,
             }
         )
@@ -43,7 +43,7 @@ class TestInvoiceRC(FatturapaCommon):
                 "name": "Tax 22% Sales RC ITA",
                 "type_tax_use": "sale",
                 "amount": 22,
-                "kind_id": self.env.ref("l10n_it_account_tax_kind.n6_1").id,
+                "kind_id": "N6.1",
                 "law_reference": "articoli 23 e 25 D.P.R. 633/1972",
                 "sequence": 10,
             }
