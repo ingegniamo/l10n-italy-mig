@@ -1,3 +1,5 @@
+/** @odoo-module **/
+
 odoo.define("l10n_it_financial_statements_report.client_action", function (require) {
     "use strict";
 

@@ -22,11 +22,6 @@
         "report/templates/financial_statements_report.xml",
         "report/reports.xml",
         "wizard/wizard_financial_statements_report.xml",
-    ],
-    "assets": {
-        "web.assets_backend": [
-            "l10n_it_financial_statements_report/static/src/js/action_manager_report.js",
-            "l10n_it_financial_statements_report/static/src/js/client_action.js",
-        ],
-    },
+    ]
+
 }

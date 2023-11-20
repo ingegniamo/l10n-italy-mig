@@ -226,7 +226,7 @@ for view in views:
                     element = ET.SubElement(parent, 'attribute')
                     element.set("name",attr)
 
-                    element.text = str(obj.parse())
+                    element.text = str(obj.parse()[0])
                 attrs_extend_element.text
                 parent.remove(attrs_extend_element)
 

@@ -1,12 +1,8 @@
-odoo.define(
-    "l10n_it_financial_statements_report.ReportActionManager",
-    function (require) {
-        "use strict";
+/** @odoo-module **/
+import { actionService } from "@web/webclient/actions/action_service";
+import { patch } from "@web/core/utils/patch";
 
-        const ActionManager = require("web.ActionManager");
-        require("web.ReportActionManager");
-
-        ActionManager.include({
+patch(actionService,{
             /**
              * @override
              */
@@ -33,5 +29,3 @@ odoo.define(
                 return this._super.apply(this, arguments);
             },
         });
-    }
-);
