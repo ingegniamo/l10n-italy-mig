@@ -18,7 +18,7 @@
             </notebook>
             <xpath expr="//notebook/page[1]/group[1]/group[3]" position="attributes">
                 
-                <attribute name="invisible">['is_fatturapa_pec == True']</attribute></xpath>
+                <attribute name="invisible">is_fatturapa_pec == True</attribute></xpath>
             <field name="active" position="after">
                 <field name="e_inv_notify_partner_ids" widget="many2many_tags" invisible="is_fatturapa_pec == False" />
             </field>

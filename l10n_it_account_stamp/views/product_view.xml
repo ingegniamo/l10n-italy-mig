@@ -20,10 +20,10 @@
             </xpath>
 
             <xpath expr="//field[@name='property_account_income_id']" position="attributes">
-                <attribute name="required">['is_stamp == True']</attribute></xpath>
+                <attribute name="required">is_stamp == True</attribute></xpath>
 
             <xpath expr="//field[@name='property_account_expense_id']" position="attributes">
-                <attribute name="required">['is_stamp == True']</attribute></xpath>
+                <attribute name="required">is_stamp == True</attribute></xpath>
 
         </field>
     </record>

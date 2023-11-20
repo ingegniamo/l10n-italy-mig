@@ -7,11 +7,11 @@
         <field name="arch" type="xml">
             <data>
                 <xpath expr="//form/sheet/group/group/div[hasclass('o_td_label')]" position="attributes">
-                    <attribute name="required">['picking_type_code != "internal"']</attribute><attribute name="invisible">['picking_type_code == "internal"']</attribute></xpath>
+                    <attribute name="required">picking_type_code != "internal"</attribute><attribute name="invisible">picking_type_code == "internal"</attribute></xpath>
                 <xpath expr="//form/sheet/group/group/field[@name='partner_id']" position="attributes">
-                    <attribute name="required">['picking_type_code != "internal"']</attribute><attribute name="invisible">['picking_type_code == "internal"']</attribute></xpath>
+                    <attribute name="required"> picking_type_code != "internal"</attribute><attribute name="invisible">picking_type_code == "internal"</attribute></xpath>
                 <xpath expr="//button[@name='%(stock.action_report_delivery)d']" position="attributes">
-                    <attribute name="invisible">['(state != "done" or delivery_note_state != "draft")']</attribute></xpath>
+                    <attribute name="invisible"> (state != "done" or delivery_note_state != "draft")</attribute></xpath>
                 <xpath expr="//page[1]" position="before">
                     <page name="delivery_note" string="Delivery Note" autofocus="autofocus" invisible="use_delivery_note == False">
                         <field name="delivery_note_sequence_id" invisible="True" />
