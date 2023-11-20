@@ -39,9 +39,9 @@ class WizardExportFatturapa(models.TransientModel):
                     "Imposta": 0.0,
                     "EsigibilitaIVA": tax_id.payability,
                 }
-                if tax_id.law_reference:
+                if tax_id.l10n_it_law_reference:
                     res[key]["RiferimentoNormativo"] = encode_for_export(
-                        tax_id.law_reference, 100
+                        tax_id.l10n_it_law_reference, 100
                     )
         return res
 

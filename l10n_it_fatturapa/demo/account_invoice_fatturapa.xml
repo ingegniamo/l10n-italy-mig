@@ -153,7 +153,7 @@
         <field name="name">Exempt</field>
         <field name="description">00</field>
         <field name="amount">0.00</field>
-        <field name="kind_id" ref="l10n_it_account_tax_kind.n4" />
+        <field name="l10n_it_exempt_reason" >N4</field>
         <field
             name="law_reference"
         >Minimum contributors regime art.27 c.1-2 DL.98/11</field>
@@ -190,7 +190,8 @@
         <field name="name">Exempt Pur</field>
         <field name="description">00 Pur</field>
         <field name="amount">0.00</field>
-       <field name="kind_id">N4</field>
+     
+        <field name="l10n_it_exempt_reason" >N4</field>
         <field
             name="law_reference"
         >Minimum contributors regime art.27 c.1-2 DL.98/11</field>
@@ -227,7 +228,7 @@
         <field name="name">Excluding ex Art. 15</field>
         <field name="description">00</field>
         <field name="amount">0.00</field>
-       <field name="kind_id">N1</field>
+        <field name="l10n_it_exempt_reason" >N1</field>
         <field name="law_reference">Excluding ex Article 15</field>
         <field
             name="invoice_repartition_line_ids"
@@ -261,7 +262,7 @@
         <field name="name">Not Subject</field>
         <field name="description">00</field>
         <field name="amount">0.00</field>
-       <field name="kind_id">N2.1</field>
+        <field name="l10n_it_exempt_reason" >N2.1</field>
         <field name="law_reference">Not subject to VAT law</field>
         <field
             name="invoice_repartition_line_ids"
@@ -295,7 +296,7 @@
         <field name="name">Not Taxable</field>
         <field name="description">00</field>
         <field name="amount">0.00</field>
-       <field name="kind_id">N3.1</field>
+        <field name="l10n_it_exempt_reason" >N3.1</field>
         <field name="law_reference">Not subject to VAT law</field>
         <field
             name="invoice_repartition_line_ids"
@@ -329,7 +330,7 @@
         <field name="name">Reverse Charge</field>
         <field name="description">00</field>
         <field name="amount">0.00</field>
-       <field name="kind_id">N6.1</field>
+        <field name="l10n_it_exempt_reason" >N6.1</field>
         <field name="law_reference">Reverse Charge</field>
         <field
             name="invoice_repartition_line_ids"
@@ -363,7 +364,7 @@
         <field name="name">Escluso</field>
         <field name="description">00</field>
         <field name="amount">0.00</field>
-       <field name="kind_id">N2.2</field>
+        <field name="l10n_it_exempt_reason" >N2.2</field>
         <field name="law_reference">Escluso Art. 13 5C DPR 633/72</field>
         <field
             name="invoice_repartition_line_ids"

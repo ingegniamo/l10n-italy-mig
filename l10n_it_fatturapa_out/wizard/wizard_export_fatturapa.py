@@ -138,15 +138,15 @@ class WizardExportFatturapa(models.TransientModel):
             key = _key(tax_line_id)
             out_computed[key] = {
                 "AliquotaIVA": aliquota,
-                "Natura": tax_line_id.kind_id,
+                "Natura": tax_line_id.l10n_it_exempt_reason,
                 # 'Arrotondamento':'',
                 "ImponibileImporto": tax_id.tax_base_amount,
                 "Imposta": abs(tax_id.balance),
                 "EsigibilitaIVA": tax_line_id.payability,
             }
-            if tax_line_id.law_reference:
+            if tax_line_id.l10n_it_law_reference:
                 out_computed[key]["RiferimentoNormativo"] = encode_for_export(
-                    tax_line_id.law_reference, 100
+                    tax_line_id.l10n_it_law_reference, 100
                 )
 
         out = {}
@@ -166,15 +166,15 @@ class WizardExportFatturapa(models.TransientModel):
                 if key not in out:
                     out[key] = {
                         "AliquotaIVA": aliquota,
-                        "Natura": tax_id.kind_id,
+                        "Natura": tax_id.l10n_it_exempt_reason,
                         # 'Arrotondamento':'',
                         "ImponibileImporto": line.price_subtotal,
                         "Imposta": 0.0,
                         "EsigibilitaIVA": tax_id.payability,
                     }
-                    if tax_id.law_reference:
+                    if tax_id.l10n_it_law_reference:
                         out[key]["RiferimentoNormativo"] = encode_for_export(
-                            tax_id.law_reference, 100
+                            tax_id.l10n_it_law_reference, 100
                         )
                 else:
                     out[key]["ImponibileImporto"] += line.price_subtotal

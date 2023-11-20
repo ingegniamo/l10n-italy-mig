@@ -190,8 +190,8 @@ e 'line' per riga di fattura (a seconda del livello in cui sono chiamati)
             />
                 <t t-call="l10n_it_fatturapa_out.account_invoice_line_ritenuta" />
                 <Natura
-                t-if="not line_is_section_note and tax_ids.kind_id"
-                t-out="tax_ids.kind_id"
+                t-if="not line_is_section_note and tax_ids.l10n_it_exempt_reason"
+                t-out="tax_ids.l10n_it_exempt_reason"
             />
                 <Natura
                 t-if="line_is_section_note and existing_tax_line.get('Natura')"
@@ -202,7 +202,7 @@ e 'line' per riga di fattura (a seconda del livello in cui sono chiamati)
                 t-out="line.admin_ref"
             />
                 <AltriDatiGestionali
-                t-if="tax_ids.kind_id == 'N2.1' and in_eu(line.move_id.partner_id)"
+                t-if="tax_ids.l10n_it_exempt_reason == 'N2.1' and in_eu(line.move_id.partner_id)"
             >
                     <TipoDato>INVCONT</TipoDato>
                 </AltriDatiGestionali>
@@ -224,7 +224,7 @@ e 'line' per riga di fattura (a seconda del livello in cui sono chiamati)
             <DatiRiepilogo>
                 <!--2.2.2-->
                 <AliquotaIVA t-out="format_numbers(tax.amount)" />
-                <Natura t-if="tax.kind_id" t-out="tax.kind_id" />
+                <Natura t-if="tax.l10n_it_exempt_reason" t-out="tax.l10n_it_exempt_reason" />
                 <!--                <SpeseAccessorie t-out=""/>-->
                 <!--                <Arrotondamento t-out=""/>-->
                 <ImponibileImporto
@@ -235,8 +235,8 @@ e 'line' per riga di fattura (a seconda del livello in cui sono chiamati)
             />
                 <EsigibilitaIVA t-if="tax.payability" t-out="tax.payability" />
                 <RiferimentoNormativo
-                t-if="tax.law_reference"
-                t-out="encode_for_export(tax.law_reference, 100)"
+                t-if="tax.l10n_it_law_reference"
+                t-out="encode_for_export(tax.l10n_it_law_reference, 100)"
             />
             </DatiRiepilogo>
         </template>
