@@ -283,7 +283,7 @@ class FatturapaSummaryData(models.Model):
 
     @api.model
     def _get_tax_kinds(self):
-        return [(t.code, t.name) for t in self.env["account.tax.kind"].search([])]
+        return self.env['account.tax']._fields.get('l10n_it_exempt_reason')._description_selection(self.env)
 
     non_taxable_nature = fields.Selection(
         selection="_get_tax_kinds",
