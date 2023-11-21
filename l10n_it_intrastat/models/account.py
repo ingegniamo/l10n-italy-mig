@@ -274,7 +274,6 @@ class AccountMove(models.Model):
 
     intrastat = fields.Boolean(
         string="Subject to Intrastat",
-        states={"draft": [("readonly", False)]},
         copy=False,
     )
     intrastat_line_ids = fields.One2many(
@@ -282,7 +281,6 @@ class AccountMove(models.Model):
         inverse_name="invoice_id",
         string="Intrastat",
         readonly=True,
-        states={"draft": [("readonly", False)]},
         copy=False,
     )
 
