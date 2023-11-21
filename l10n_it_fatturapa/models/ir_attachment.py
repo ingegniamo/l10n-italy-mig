@@ -5,12 +5,11 @@ import re
 from io import BytesIO
 
 import lxml.etree as ET
-
+import os
 from odoo import fields, models
 from odoo.exceptions import UserError
-from odoo.modules import get_resource_path
 from odoo.tools.translate import _
-
+from odoo.tools.misc import file_path
 _logger = logging.getLogger(__name__)
 
 try:
@@ -115,11 +114,9 @@ class Attachment(models.Model):
             raise UserError(_("Invalid xml %s.") % e.args) from e
 
     def get_fattura_elettronica_preview(self):
-        xsl_path = get_resource_path(
-            "l10n_it_fatturapa",
+        xsl_path =file_path(os.path.join("l10n_it_fatturapa",
             "data",
-            self.env.company.fatturapa_preview_style,
-        )
+            self.env.company.fatturapa_preview_style))
         xslt = ET.parse(xsl_path)
         xml_string = self.get_xml_string()
         xml_file = BytesIO(xml_string)
