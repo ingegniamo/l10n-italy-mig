@@ -22,7 +22,7 @@
             <field name="arch" type="xml">
 
                 <xpath expr="//field[@name='fiscal_position_id']" position="after">
-                    <field name="intrastat" readonly="state != 'draft" />
+                    <field name="intrastat" readonly="state != 'draft'" />
                 </xpath>
 
                 <xpath expr="//page[@name='other_info']" position="before">
@@ -33,7 +33,7 @@
                             </group>
                             <newline />
                             <group colspan="4">
-                                <field name="intrastat_line_ids" readonly="state != 'draft"  nolabel="1" colspan="4" />
+                                <field name="intrastat_line_ids" readonly="state != 'draft'"  nolabel="1" colspan="4" />
                             </group>
                         </group>
                     </page>
