@@ -6,7 +6,45 @@
         <field name="model">res.config.settings</field>
         <field name="inherit_id" ref="l10n_it_fatturapa.view_account_config_settings" />
         <field name="arch" type="xml">
-            <xpath expr="//div[@id='fatturapa_settings']" position="after">
+        <xpath expr="//block[@id='electronic_invoices']//setting[last()]" position="after">
+                <setting string="Supplier Bills">
+                 <div class="content-group">
+                   <div class="text-muted">
+                                Default user used in electronic supplier bills
+                            </div>
+                       <div class="row mt8">
+                                    <label
+                                        for="email_from_for_fatturaPA"
+                                        class="col-lg-6 o_form_label"
+                                    />
+                                    <field
+                                        name="email_from_for_fatturaPA"
+                                        class="col-lg-6"
+                                    />
+                                </div>
+                                <div class="row mt8">
+                                    <label
+                                        for="email_exchange_system"
+                                        class="col-lg-6 o_form_label"
+                                    />
+                                    <field
+                                        name="email_exchange_system"
+                                        class="col-lg-6"
+                                    />
+                                </div>
+                                <div class="row mt8">
+                                    <label
+                                        for="e_invoice_user_id"
+                                        class="col-lg-6 o_light_label"
+                                    />
+                                    <field name="e_invoice_user_id" class="col-lg-6" />
+                                </div>
+                        </div>
+
+
+                </setting>
+                </xpath>
+            <!-- <xpath expr="//div[@id='fatturapa_settings']" position="after">
                 <div
                     class="row mt16 o_settings_container"
                     id="supplier_fatturapa_settings"
@@ -55,7 +93,7 @@
                         </div>
                     </div>
                 </div>
-            </xpath>
+            </xpath> -->
         </field>
     </record>
 
