@@ -12,32 +12,13 @@
         <field name="arch" type="xml">
             <xpath expr="//app[@name='stock']/block[1]" position="after">
                 <block title="Delivery Notes" name="delivery_notes">
-                    <setting>
-                        <field name="group_use_advanced_delivery_notes" class="col flex-grow-0 ml16 mr0 pe-2"/>
-                        <div class="col ps-0">
-                            <label for="group_use_advanced_delivery_notes"/>
-                            <div class="text-muted">
-                                <p>
-                                    It extends the standard behaviour of DNs
-                                    management by introducing additional functions.
-                                </p>
-                                <i>(e.g. link multiple pickings to a single DN)</i>
-                            </div>
-                        </div>
+                    <setting help="It extends the standard behaviour of DNs management by introducing additional functions.(e.g. link multiple pickings to a single DN)">
+                        <field name="group_use_advanced_delivery_notes"/>
+                      
                     </setting>
-                    <setting>
-                        <field name="virtual_locations_root" class="col flex-grow-0 ml16 mr0 pe-2"/>
-                        <div class="col ps-0">
-                            <label for="virtual_locations_root"/>
-                            <div class="text-muted">
-                                <p>
-                                    Select the root of all your virtual locations.<br />
-                                    Internal transfers between at least one virtual
-                                    locations won't generate automatically any DN
-                                    documents.
-                                </p>
-                            </div>
-                        </div>
+                    <setting help="Select the root of all your virtual locations. Internal transfers between at least one virtual locations won't generate automatically any DN documents.">
+                        <field name="virtual_locations_root"/>
+                      
 
 
                     </setting>
