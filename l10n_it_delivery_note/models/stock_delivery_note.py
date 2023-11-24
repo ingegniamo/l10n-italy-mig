@@ -520,7 +520,7 @@ class StockDeliveryNote(models.Model):
         pickings_move_ids = self.mapped("picking_ids.move_ids")
         for line in pickings_lines.filtered(lambda l: len(l.move_ids) > 1):
             move_ids = line.move_ids & pickings_move_ids
-            qty_to_invoice = sum(move_ids.mapped("quantity_done"))
+            qty_to_invoice = sum(move_ids.mapped("quantity"))
 
             if qty_to_invoice < line.qty_to_invoice:
                 cache[line] = line.fix_qty_to_invoice(qty_to_invoice)
