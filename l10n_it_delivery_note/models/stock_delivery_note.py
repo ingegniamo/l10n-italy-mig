@@ -84,11 +84,16 @@ class StockDeliveryNote(models.Model):
         copy=False,
         tracking=True,
     )
+    is_readonly_done_readonly_state = fields.Boolean(compute='_compute_states_fields')
+    is_readonly_draft_editable_state = fields.Boolean(compute='_compute_states_fields')
+    def _compute_states_fields(self):
+        for dn in self:
+            dn.is_readonly_done_readonly_state = dn.state in DONE_READONLY_STATE 
+            dn.is_readonly_draft_editable_state = dn.state not in DRAFT_EDITABLE_STATE
     partner_ref = fields.Char(
         string="Partner reference",
         index=True,
         copy=False,
-        states=DONE_READONLY_STATE,
         tracking=True,
     )
 
@@ -103,7 +108,6 @@ class StockDeliveryNote(models.Model):
     partner_sender_id = fields.Many2one(
         "res.partner",
         string="Sender",
-        states=DRAFT_EDITABLE_STATE,
         default=_default_company,
         readonly=True,
         required=True,
@@ -114,7 +118,6 @@ class StockDeliveryNote(models.Model):
     partner_id = fields.Many2one(
         "res.partner",
         string="Recipient",
-        states=DRAFT_EDITABLE_STATE,
         readonly=True,
         required=True,
         index=True,
@@ -124,7 +127,6 @@ class StockDeliveryNote(models.Model):
     partner_shipping_id = fields.Many2one(
         "res.partner",
         string="Shipping address",
-        states=DONE_READONLY_STATE,
         required=True,
         tracking=True,
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",
@@ -133,23 +135,20 @@ class StockDeliveryNote(models.Model):
     carrier_id = fields.Many2one(
         "res.partner",
         string="Carrier",
-        states=DONE_READONLY_STATE,
         tracking=True,
         domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]",
     )
     delivery_method_id = fields.Many2one(
         "delivery.carrier",
         string="Delivery method",
-        states=DONE_READONLY_STATE,
         tracking=True,
     )
 
-    date = fields.Date(states=DRAFT_EDITABLE_STATE, copy=False)
+    date = fields.Date( copy=False)
     type_id = fields.Many2one(
         "stock.delivery.note.type",
         string="Type",
         default=_default_type,
-        states=DRAFT_EDITABLE_STATE,
         readonly=True,
         required=True,
         index=True,
@@ -160,68 +159,59 @@ class StockDeliveryNote(models.Model):
     type_code = fields.Selection(
         string="Type of Operation", related="type_id.code", store=True
     )
-    packages = fields.Integer(states=DONE_READONLY_STATE)
-    volume = fields.Float(states=DONE_READONLY_STATE)
+    packages = fields.Integer()
+    volume = fields.Float()
 
     volume_uom_id = fields.Many2one(
         "uom.uom",
         string="Volume UoM",
         default=_default_volume_uom,
         domain=_domain_volume_uom,
-        states=DONE_READONLY_STATE,
     )
     gross_weight = fields.Float(
         string="Gross weight",
         store=True,
         readonly=False,
         compute="_compute_weights",
-        states=DONE_READONLY_STATE,
     )
     gross_weight_uom_id = fields.Many2one(
         "uom.uom",
         string="Gross weight UoM",
         default=_default_weight_uom,
         domain=_domain_weight_uom,
-        states=DONE_READONLY_STATE,
     )
     net_weight = fields.Float(
         string="Net weight",
         store=True,
         readonly=False,
         compute="_compute_weights",
-        states=DONE_READONLY_STATE,
     )
     net_weight_uom_id = fields.Many2one(
         "uom.uom",
         string="Net weight UoM",
         default=_default_weight_uom,
         domain=_domain_weight_uom,
-        states=DONE_READONLY_STATE,
     )
 
     transport_condition_id = fields.Many2one(
         "stock.picking.transport.condition",
-        string="Condition of transport",
-        states=DONE_READONLY_STATE,
+        string="Condition of transport"
     )
     goods_appearance_id = fields.Many2one(
         "stock.picking.goods.appearance",
-        string="Appearance of goods",
-        states=DONE_READONLY_STATE,
+        string="Appearance of goods"
     )
     transport_reason_id = fields.Many2one(
         "stock.picking.transport.reason",
         string="Reason of transport",
-        states=DONE_READONLY_STATE,
     )
     transport_method_id = fields.Many2one(
         "stock.picking.transport.method",
-        string="Method of transport",
-        states=DONE_READONLY_STATE,
+        string="Method of transport"
     )
 
     transport_datetime = fields.Datetime(
-        string="Transport date", states=DONE_READONLY_STATE
+        string="Transport date"
     )
 
     line_ids = fields.One2many(
@@ -269,7 +259,7 @@ class StockDeliveryNote(models.Model):
     print_prices = fields.Boolean(
         string="Show prices on printed DN", related="type_id.print_prices", store=True
     )
-    note = fields.Html(string="Internal note", states=DONE_READONLY_STATE)
+    note = fields.Html(string="Internal note")
 
     can_change_number = fields.Boolean(compute="_compute_boolean_flags")
     show_product_information = fields.Boolean(compute="_compute_boolean_flags")

@@ -14,6 +14,8 @@
                 <field name="sales_transport_check" invisible="True" />
                 <field name="can_change_number" invisible="True" />
                 <field name="show_product_information" invisible="True" />
+                <field name="is_readonly_done_readonly_state" invisible="True"/>
+                <field name="is_readonly_draft_editable_state" invisible="True"/>
                 <header>
                     <button name="action_draft" type="object" class="oe_highlight" string="Reset to draft" invisible="state not in ('cancel')" />
                     <button name="action_confirm" type="object" class="oe_highlight" string="Validate" invisible="state not in ('draft')" />
@@ -44,7 +46,7 @@
                             <div invisible="type_code != &quot;incoming&quot;">
                                 <label for="name" string="Partner document" />
                                 <h2>
-                                    <field name="partner_ref" class="oe_inline" />
+                                    <field name="partner_ref" class="oe_inline" readonly="is_readonly_done_readonly_state" />
                                 </h2>
                             </div>
                         </div>
@@ -61,58 +63,58 @@
                     <group>
                         <group>
                             <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company" />
-                            <field name="partner_sender_id" readonly="pickings_picker != []" />
-                            <field name="partner_id" readonly="pickings_picker != []" />
-                            <field name="partner_shipping_id" />
+                            <field name="partner_sender_id" readonly="pickings_picker != [] or is_readonly_draft_editable_state" />
+                            <field name="partner_id" readonly="pickings_picker != [] or is_readonly_draft_editable_state" />
+                            <field name="partner_shipping_id" readonly="is_readonly_done_readonly_state"/>
                         </group>
                         <group>
-                            <field name="type_id" widget="selection" />
-                            <field name="date" />
+                            <field name="type_id" widget="selection" readonly="is_readonly_draft_editable_state" />
+                            <field name="date" readonly="is_readonly_draft_editable_state"/>
                         </group>
                     </group>
                     <group>
                         <group>
-                            <field name="carrier_id" domain="[('is_carrier','=', True)]" />
-                            <field name="delivery_method_id" />
+                            <field name="carrier_id" domain="[('is_carrier','=', True)]" readonly="is_readonly_done_readonly_state" />
+                            <field name="delivery_method_id" readonly="is_readonly_done_readonly_state" />
                         </group>
                         <group>
                             <label for="transport_datetime" />
                             <div class="o_row">
-                                <field name="transport_datetime" />
+                                <field name="transport_datetime"  readonly="is_readonly_done_readonly_state" />
                                 <button type="object" name="update_transport_datetime" class="btn-secondary" icon="fa-clock-o" aria-label="Update to now" title="Update to now" invisible="state == &quot;done&quot;" />
                             </div>
                         </group>
                     </group>
                     <group>
                         <group>
-                            <field name="packages" />
-                            <label for="volume" />
+                            <field name="packages" readonly="is_readonly_done_readonly_state"/>
+                            <label for="volume" readonly="is_readonly_done_readonly_state" />
                             <div class="o_row">
                                 <field name="volume" />
-                                <field name="volume_uom_id" groups="uom.group_uom" widget="selection" />
+                                <field name="volume_uom_id"  readonly="is_readonly_done_readonly_state" groups="uom.group_uom" widget="selection" />
                             </div>
                         </group>
                         <group>
                             <label for="gross_weight" />
                             <div class="o_row">
-                                <field name="gross_weight" />
-                                <field name="gross_weight_uom_id" groups="uom.group_uom" widget="selection" />
+                                <field name="gross_weight" readonly="is_readonly_done_readonly_state" />
+                                <field name="gross_weight_uom_id"  readonly="is_readonly_done_readonly_state" groups="uom.group_uom" widget="selection" />
                             </div>
                             <label for="net_weight" />
                             <div class="o_row">
-                                <field name="net_weight" />
-                                <field name="net_weight_uom_id" groups="uom.group_uom" widget="selection" />
+                                <field name="net_weight" readonly="is_readonly_done_readonly_state" />
+                                <field name="net_weight_uom_id" readonly="is_readonly_done_readonly_state" groups="uom.group_uom" widget="selection" />
                             </div>
                         </group>
                     </group>
                     <group>
                         <group>
-                            <field name="goods_appearance_id" widget="selection" />
-                            <field name="transport_reason_id" widget="selection" />
+                            <field name="goods_appearance_id" widget="selection"  readonly="is_readonly_done_readonly_state" />
+                            <field name="transport_reason_id" widget="selection"  readonly="is_readonly_done_readonly_state"/>
                         </group>
                         <group>
-                            <field name="transport_condition_id" widget="selection" />
-                            <field name="transport_method_id" widget="selection" />
+                            <field name="transport_condition_id" widget="selection"  readonly="is_readonly_done_readonly_state" />
+                            <field name="transport_method_id" widget="selection"  readonly="is_readonly_done_readonly_state"/>
                         </group>
                     </group>
                     <notebook>
@@ -205,7 +207,7 @@
                             </field>
                         </page>
                         <page name="internal_notes" string="Internal notes">
-                            <field name="note" />
+                            <field name="note"  readonly="is_readonly_done_readonly_state" />
                         </page>
                     </notebook>
                 </sheet>

@@ -36,17 +36,21 @@ class MailThread(models.AbstractModel):
     _inherit = "mail.thread"
 
     def clean_message_dict(self, message_dict):
-        del message_dict["attachments"]
-        del message_dict["cc"]
-        del message_dict["from"]
-        del message_dict["to"]
-        del message_dict["recipients"]
-        del message_dict["references"]
-        del message_dict["in_reply_to"]
-        del message_dict["bounced_email"]
-        del message_dict["bounced_partner"]
-        del message_dict["bounced_msg_id"]
-        del message_dict["bounced_message"]
+        list_fields_to_clean = ["attachments","cc","from","to","recipients","in_reply_to","bounced_email","references","bounced_partner","bounced_msg_id","bounced_message","is_bounce"]
+        for field in list_fields_to_clean:
+            message_dict.pop(field, None)
+
+        # del message_dict["attachments"]
+        # del message_dict["cc"]
+        # del message_dict["from"]
+        # del message_dict["to"]
+        # del message_dict["recipients"]
+        # del message_dict["references"]
+        # del message_dict["in_reply_to"]
+        # del message_dict["bounced_email"]
+        # del message_dict["bounced_partner"]
+        # del message_dict["bounced_msg_id"]
+        # del message_dict["bounced_message"]
 
     @api.model
     def message_route(
@@ -127,7 +131,7 @@ class MailThread(models.AbstractModel):
             message_dict
         )
         message_dict["record_name"] = message_dict["subject"]
-        attachment_ids = self._message_post_process_attachments(
+        attachment_ids = self._process_attachments_for_post(
             message_dict["attachments"], [], message_dict
         ).get("attachment_ids")
         message_dict["attachment_ids"] = attachment_ids
@@ -151,7 +155,7 @@ class MailThread(models.AbstractModel):
         message_dict["model"] = "fatturapa.attachment.in"
         message_dict["record_name"] = message_dict["subject"]
         message_dict["res_id"] = 0
-        attachment_ids = self._message_post_process_attachments(
+        attachment_ids = self._process_attachments_for_post(
             message_dict["attachments"], [], message_dict
         ).get("attachment_ids")
         for attachment in self.env["ir.attachment"].browse(
