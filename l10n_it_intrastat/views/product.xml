@@ -11,7 +11,7 @@
                             <field name="intrastat_type" />
                         </group>
                         <group>
-                            <field name="intrastat_code_id" invisible="intrastat_type != &quot;service&quot;" required="intrastat_type in ['good', 'service']" />
+                            <field name="intrastat_code_id" invisible="intrastat_type not in ('service','good')" required="intrastat_type in ['good', 'service']" />
                       </group>
 
                     </group>
@@ -28,7 +28,7 @@
                     <group>
                         <group string="Intrastat" name="intrastat">
                             <field name="intrastat_type" />
-                            <field name="intrastat_code_id" invisible="intrastat_type != &quot;service&quot;" required="intrastat_type in ['good', 'service']" />
+                            <field name="intrastat_code_id" invisible="intrastat_type not in ('service','good')" required="intrastat_type in ['good', 'service']" />
                         </group>
                     </group>
                 </xpath>
