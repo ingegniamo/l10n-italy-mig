@@ -10,15 +10,12 @@
         <field name="model">res.config.settings</field>
         <field name="inherit_id" ref="stock.res_config_settings_view_form" />
         <field name="arch" type="xml">
-            <xpath expr="//div[@data-key='stock']/div[1]" position="after">
-                <h2>Delivery Notes</h2>
-                <div class="row mt16 o_settings_container">
-                    <div class="col-12 col-lg-6 o_setting_box">
-                        <div class="o_setting_left_pane">
-                            <field name="group_use_advanced_delivery_notes" />
-                        </div>
-                        <div class="o_setting_right_pane">
-                            <label for="group_use_advanced_delivery_notes" />
+            <xpath expr="//app[@name='stock']/block[1]" position="after">
+                <block title="Delivery Notes" name="delivery_notes">
+                    <setting>
+                        <field name="group_use_advanced_delivery_notes" class="col flex-grow-0 ml16 mr0 pe-2"/>
+                        <div class="col ps-0">
+                            <label for="group_use_advanced_delivery_notes"/>
                             <div class="text-muted">
                                 <p>
                                     It extends the standard behaviour of DNs
@@ -27,10 +24,11 @@
                                 <i>(e.g. link multiple pickings to a single DN)</i>
                             </div>
                         </div>
-                    </div>
-                    <div class="col-12 col-lg-6 o_setting_box">
-                        <div class="o_setting_right_pane">
-                            <label for="virtual_locations_root" />
+                    </setting>
+                    <setting>
+                        <field name="virtual_locations_root" class="col flex-grow-0 ml16 mr0 pe-2"/>
+                        <div class="col ps-0">
+                            <label for="virtual_locations_root"/>
                             <div class="text-muted">
                                 <p>
                                     Select the root of all your virtual locations.<br />
@@ -39,10 +37,12 @@
                                     documents.
                                 </p>
                             </div>
-                            <field name="virtual_locations_root" />
                         </div>
-                    </div>
-                </div>
+
+
+                    </setting>
+
+                </block>
             </xpath>
         </field>
     </record>
