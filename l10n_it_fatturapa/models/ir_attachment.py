@@ -37,7 +37,7 @@ class Attachment(models.Model):
     def _compute_ftpa_preview_link(self):
         for att in self:
             att.ftpa_preview_link = (
-                att.get_base_url() + "/fatturapa/preview/%s" % att.id
+                att.get_base_url() + "/fatturapa/preview/%s?cid=%s" % (att.id, self.env.company.id)
             )
 
     @staticmethod

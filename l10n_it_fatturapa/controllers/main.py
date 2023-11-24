@@ -11,7 +11,10 @@ class FatturaElettronicaController(Controller):
         website=True,
     )
     def pdf_preview(self, attachment_id, **data):
-        attach = request.env["ir.attachment"].browse(int(attachment_id))
+        IrAttachment = request.env["ir.attachment"]
+        if 'cid' in data and data.get('cid'):
+            IrAttachment = IrAttachment.with_company(int(data.get('cid')))
+        attach = IrAttachment.browse(int(attachment_id))
         html = attach.get_fattura_elettronica_preview()
         pdf = request.env["ir.actions.report"]._run_wkhtmltopdf([html])
 
