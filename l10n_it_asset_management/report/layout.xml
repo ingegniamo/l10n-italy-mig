@@ -38,7 +38,7 @@
                 href="/l10n_it_asset_management/static/src/css/report.css"
                 rel="stylesheet"
             />
-            <t t-raw="0" />
+            <t t-out="0" />
         </div>
 
         <div class="footer">

@@ -14,7 +14,7 @@ class DepLineType(models.Model):
 
     @api.model
     def get_default_company_id(self):
-        return self.env.user.company_id
+        return self.env.company.id
 
     code = fields.Char()
 
@@ -35,9 +35,9 @@ class DepLineType(models.Model):
             ):
                 raise ValidationError(
                     _(
-                        "Cannot remove type {}: there is some depreciation"
-                        " line linked to it."
-                    ).format(line_type.name)
+                        "Cannot remove type %(name)s: there is some depreciation"
+                        " line linked to it.",name=line_type.name
+                    )
                 )
 
         return super().unlink()

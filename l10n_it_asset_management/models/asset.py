@@ -14,7 +14,7 @@ class Asset(models.Model):
 
     @api.model
     def get_default_company_id(self):
-        return self.env.user.company_id
+        return self.env.company.id
 
     asset_accounting_info_ids = fields.One2many(
         "asset.accounting.info", "asset_id", string="Accounting Info"

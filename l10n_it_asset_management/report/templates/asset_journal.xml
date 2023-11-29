@@ -86,11 +86,11 @@
                 <span style="margin: 5px; font-weight: bold;">
                     <span>Asset Category: </span>
                     <a
-                        t-att-data-domain="domain"
-                        t-att-data-res-model="'asset.asset'"
+                        t-att-domain="domain"
+                        res-model="asset.asset"
                         class="o_account_financial_reports_web_action_multi"
                     >
-                        <t t-raw="category_section.category_name" />
+                        <t t-out="category_section.category_name" />
                     </a>
                 </span>
             </h2>
@@ -187,11 +187,11 @@
                 <span style="margin: 5px;">
                     <span>Asset: </span>
                     <a
-                        t-att-data-active-id="active_id"
+                        t-att-res-id="active_id"
                         t-att-data-res-model="'asset.asset'"
                         class="o_account_financial_reports_web_action"
                     >
-                        <t t-raw="asset_section.asset_name" />
+                        <t t-out="asset_section.asset_name" />
                     </a>
                 </span>
             </h2>
@@ -226,7 +226,7 @@
                         t-att-data-res-model="res_model"
                         class="o_account_financial_reports_web_action"
                     >
-                        <t t-raw="asset_section.asset_code" />
+                        <t t-out="asset_section.asset_code" />
                     </a>
                 </span>
             </div>
@@ -238,7 +238,7 @@
                         class="o_account_financial_reports_web_action"
                     >
                         <t
-                            t-raw="asset_section.format_amount(asset_section.asset_purchase_amount)"
+                            t-out="asset_section.format_amount(asset_section.asset_purchase_amount)"
                         />
                     </a>
                 </span>
@@ -250,7 +250,7 @@
                         t-att-data-res-model="res_model"
                         class="o_account_financial_reports_web_action"
                     >
-                        <t t-raw="asset_section.asset_used" />
+                        <t t-out="asset_section.asset_used" />
                     </a>
                 </span>
             </div>
@@ -261,7 +261,7 @@
                         t-att-data-res-model="res_model"
                         class="o_account_financial_reports_web_action"
                     >
-                        <t t-raw="asset_section.asset_state" />
+                        <t t-out="asset_section.asset_state" />
                     </a>
                 </span>
             </div>
@@ -303,7 +303,7 @@
                         t-att-data-res-model="res_model"
                         class="o_account_financial_reports_web_action"
                     >
-                        <t t-raw="accounting_doc.partner_name" />
+                        <t t-out="accounting_doc.partner_name" />
                     </a>
                 </span>
             </div>
@@ -314,7 +314,7 @@
                         t-att-data-res-model="res_model"
                         class="o_account_financial_reports_web_action"
                     >
-                        <t t-raw="accounting_doc.partner_vat" />
+                        <t t-out="accounting_doc.partner_vat" />
                     </a>
                 </span>
             </div>
@@ -325,7 +325,7 @@
                         t-att-data-res-model="res_model"
                         class="o_account_financial_reports_web_action"
                     >
-                        <t t-raw="accounting_doc.document_nr" />
+                        <t t-out="accounting_doc.document_nr" />
                     </a>
                 </span>
             </div>
@@ -336,7 +336,7 @@
                         t-att-data-res-model="res_model"
                         class="o_account_financial_reports_web_action"
                     >
-                        <t t-raw="accounting_doc.document_date" />
+                        <t t-out="accounting_doc.document_date" />
                     </a>
                 </span>
             </div>
@@ -351,7 +351,7 @@
                         t-att-data-res-model="res_model"
                         class="o_account_financial_reports_web_action"
                     >
-                        <t t-raw="accounting_doc.partner_ref" />
+                        <t t-out="accounting_doc.partner_ref" />
                     </a>
                 </span>
             </div>
@@ -428,7 +428,7 @@
                         t-att-data-res-model="res_model"
                         class="o_account_financial_reports_web_action"
                     >
-                        <t t-raw="dep_section.type_name" />
+                        <t t-out="dep_section.type_name" />
                     </a>
                 </span>
             </div>
@@ -439,7 +439,7 @@
                         t-att-data-res-model="res_model"
                         class="o_account_financial_reports_web_action"
                     >
-                        <t t-raw="dep_section.mode_name" />
+                        <t t-out="dep_section.mode_name" />
                     </a>
                 </span>
             </div>
@@ -451,7 +451,7 @@
                         class="o_account_financial_reports_web_action"
                     >
                         <t
-                            t-raw="dep_section.format_amount(dep_section.dep_amount_depreciable)"
+                            t-out="dep_section.format_amount(dep_section.dep_amount_depreciable)"
                         />
                     </a>
                 </span>
@@ -463,7 +463,7 @@
                         t-att-data-res-model="res_model"
                         class="o_account_financial_reports_web_action"
                     >
-                        <t t-raw="dep_section.dep_date_start" />
+                        <t t-out="dep_section.dep_date_start" />
                     </a>
                 </span>
             </div>
@@ -474,7 +474,7 @@
                         t-att-data-res-model="res_model"
                         class="o_account_financial_reports_web_action"
                     >
-                        <t t-raw="dep_section.dep_percentage" />
+                        <t t-out="dep_section.dep_percentage" />
                     </a>
                 </span>
             </div>
@@ -485,7 +485,7 @@
                         t-att-data-res-model="res_model"
                         class="o_account_financial_reports_web_action"
                     >
-                        <t t-raw="dep_section.dep_pro_rata_temporis" />
+                        <t t-out="dep_section.dep_pro_rata_temporis" />
                     </a>
                 </span>
             </div>
@@ -539,7 +539,7 @@
                         t-att-data-res-model="res_model"
                         class="o_account_financial_reports_web_action_multi"
                     >
-                        <t t-raw="year_section.year" />
+                        <t t-out="year_section.year" />
                     </a>
                 </span>
             </div>
@@ -551,7 +551,7 @@
                         class="o_account_financial_reports_web_action_multi"
                     >
                         <t
-                            t-raw="year_section.format_amount(year_section.amount_depreciable_updated)"
+                            t-out="year_section.format_amount(year_section.amount_depreciable_updated)"
                         />
                     </a>
                 </span>
@@ -563,7 +563,7 @@
                         t-att-data-res-model="res_model"
                         class="o_account_financial_reports_web_action_multi"
                     >
-                        <t t-raw="year_section.format_amount(year_section.amount_in)" />
+                        <t t-out="year_section.format_amount(year_section.amount_in)" />
                     </a>
                 </span>
             </div>
@@ -575,7 +575,7 @@
                         class="o_account_financial_reports_web_action_multi"
                     >
                         <t
-                            t-raw="year_section.format_amount(year_section.amount_out)"
+                            t-out="year_section.format_amount(year_section.amount_out)"
                         />
                     </a>
                 </span>
@@ -588,7 +588,7 @@
                         class="o_account_financial_reports_web_action_multi"
                     >
                         <t
-                            t-raw="year_section.format_amount(year_section.amount_depreciation_fund_prev_year)"
+                            t-out="year_section.format_amount(year_section.amount_depreciation_fund_prev_year)"
                         />
                     </a>
                 </span>
@@ -601,7 +601,7 @@
                         class="o_account_financial_reports_web_action_multi"
                     >
                         <t
-                            t-raw="year_section.format_amount(year_section.amount_depreciated)"
+                            t-out="year_section.format_amount(year_section.amount_depreciated)"
                         />
                     </a>
                 </span>
@@ -614,7 +614,7 @@
                         class="o_account_financial_reports_web_action_multi"
                     >
                         <t
-                            t-raw="year_section.format_amount(year_section.amount_depreciation_fund_curr_year)"
+                            t-out="year_section.format_amount(year_section.amount_depreciation_fund_curr_year)"
                         />
                     </a>
                 </span>
@@ -626,7 +626,7 @@
                         t-att-data-res-model="res_model"
                         class="o_account_financial_reports_web_action_multi"
                     >
-                        <t t-raw="year_section.format_amount(year_section.gain_loss)" />
+                        <t t-out="year_section.format_amount(year_section.gain_loss)" />
                     </a>
                 </span>
             </div>
@@ -638,7 +638,7 @@
                         class="o_account_financial_reports_web_action_multi"
                     >
                         <t
-                            t-raw="year_section.format_amount(year_section.amount_residual)"
+                            t-out="year_section.format_amount(year_section.amount_residual)"
                         />
                     </a>
                 </span>
@@ -667,8 +667,8 @@
                         t-att-data-res-model="res_model"
                         class="o_account_financial_reports_web_action_multi"
                     >
-                        <t t-raw="year_section.year" /><br />
-                        <t t-raw="'In/Out Amounts Details'" />
+                        <t t-out="year_section.year" /><br />
+                        <t t-out="'In/Out Amounts Details'" />
                     </a>
                 </span>
             </div>
@@ -679,7 +679,7 @@
                         t-att-data-res-model="res_model"
                         class="o_account_financial_reports_web_action_multi"
                     >
-                        <t t-raw="''" />
+                        <t t-out="''" />
                     </a>
                 </span>
             </div>
@@ -694,7 +694,7 @@
                         t-att-data-res-model="res_model"
                         class="o_account_financial_reports_web_action_multi"
                     >
-                        <t t-raw="year_section.amount_in_detail" />
+                        <t t-out="year_section.amount_in_detail" />
                     </a>
                 </span>
             </div>
@@ -709,7 +709,7 @@
                         t-att-data-res-model="res_model"
                         class="o_account_financial_reports_web_action_multi"
                     >
-                        <t t-raw="year_section.amount_out_detail" />
+                        <t t-out="year_section.amount_out_detail" />
                     </a>
                 </span>
             </div>
@@ -720,7 +720,7 @@
                         t-att-data-res-model="res_model"
                         class="o_account_financial_reports_web_action_multi"
                     >
-                        <t t-raw="''" />
+                        <t t-out="''" />
                     </a>
                 </span>
             </div>
@@ -731,7 +731,7 @@
                         t-att-data-res-model="res_model"
                         class="o_account_financial_reports_web_action_multi"
                     >
-                        <t t-raw="''" />
+                        <t t-out="''" />
                     </a>
                 </span>
             </div>
@@ -742,7 +742,7 @@
                         t-att-data-res-model="res_model"
                         class="o_account_financial_reports_web_action_multi"
                     >
-                        <t t-raw="''" />
+                        <t t-out="''" />
                     </a>
                 </span>
             </div>
@@ -753,7 +753,7 @@
                         t-att-data-res-model="res_model"
                         class="o_account_financial_reports_web_action_multi"
                     >
-                        <t t-raw="''" />
+                        <t t-out="''" />
                     </a>
                 </span>
             </div>
@@ -764,7 +764,7 @@
                         t-att-data-res-model="res_model"
                         class="o_account_financial_reports_web_action_multi"
                     >
-                        <t t-raw="''" />
+                        <t t-out="''" />
                     </a>
                 </span>
             </div>
@@ -782,8 +782,8 @@
                         t-att-data-res-model="res_model"
                         class="o_account_financial_reports_web_action_multi"
                     >
-                        <t t-raw="year_section.year" /><br />
-                        <t t-raw="'In/Out Amounts Details'" />
+                        <t t-out="year_section.year" /><br />
+                        <t t-out="'In/Out Amounts Details'" />
                     </a>
                 </span>
             </div>
@@ -794,7 +794,7 @@
                         t-att-data-res-model="res_model"
                         class="o_account_financial_reports_web_action_multi"
                     >
-                        <t t-raw="''" />
+                        <t t-out="''" />
                     </a>
                 </span>
             </div>
@@ -805,7 +805,7 @@
                         t-att-data-res-model="res_model"
                         class="o_account_financial_reports_web_action"
                     >
-                        <t t-raw="accounting_doc.partner_name" />
+                        <t t-out="accounting_doc.partner_name" />
                     </a>
                 </span>
             </div>
@@ -816,7 +816,7 @@
                         t-att-data-res-model="res_model"
                         class="o_account_financial_reports_web_action"
                     >
-                        <t t-raw="accounting_doc.partner_vat" />
+                        <t t-out="accounting_doc.partner_vat" />
                     </a>
                 </span>
             </div>
@@ -827,7 +827,7 @@
                         t-att-data-res-model="res_model"
                         class="o_account_financial_reports_web_action"
                     >
-                        <t t-raw="accounting_doc.document_nr" />
+                        <t t-out="accounting_doc.document_nr" />
                     </a>
                 </span>
             </div>
@@ -838,7 +838,7 @@
                         t-att-data-res-model="res_model"
                         class="o_account_financial_reports_web_action"
                     >
-                        <t t-raw="accounting_doc.document_date" />
+                        <t t-out="accounting_doc.document_date" />
                     </a>
                 </span>
             </div>
@@ -849,7 +849,7 @@
                         t-att-data-res-model="res_model"
                         class="o_account_financial_reports_web_action"
                     >
-                        <t t-raw="accounting_doc.partner_ref" />
+                        <t t-out="accounting_doc.partner_ref" />
                     </a>
                 </span>
             </div>
@@ -860,7 +860,7 @@
                         t-att-data-res-model="res_model"
                         class="o_account_financial_reports_web_action_multi"
                     >
-                        <t t-raw="''" />
+                        <t t-out="''" />
                     </a>
                 </span>
             </div>
@@ -871,7 +871,7 @@
                         t-att-data-res-model="res_model"
                         class="o_account_financial_reports_web_action_multi"
                     >
-                        <t t-raw="''" />
+                        <t t-out="''" />
                     </a>
                 </span>
             </div>
@@ -945,42 +945,42 @@
             </div>
             <div class="act_as_cell" name="amount_depreciable">
                 <span
-                    t-raw="totals_section.format_amount(totals_section.amount_depreciable_updated)"
+                    t-out="totals_section.format_amount(totals_section.amount_depreciable_updated)"
                 />
             </div>
             <div class="act_as_cell" name="amount_in_total">
                 <span
-                    t-raw="totals_section.format_amount(totals_section.amount_in_total)"
+                    t-out="totals_section.format_amount(totals_section.amount_in_total)"
                 />
             </div>
             <div class="act_as_cell" name="amount_out_total">
                 <span
-                    t-raw="totals_section.format_amount(totals_section.amount_out_total)"
+                    t-out="totals_section.format_amount(totals_section.amount_out_total)"
                 />
             </div>
             <div class="act_as_cell" name="dep_fund_prev_year">
                 <span
-                    t-raw="totals_section.format_amount(totals_section.amount_depreciation_fund_prev_year)"
+                    t-out="totals_section.format_amount(totals_section.amount_depreciation_fund_prev_year)"
                 />
             </div>
             <div class="act_as_cell" name="amount_depreciated">
                 <span
-                    t-raw="totals_section.format_amount(totals_section.amount_depreciated)"
+                    t-out="totals_section.format_amount(totals_section.amount_depreciated)"
                 />
             </div>
             <div class="act_as_cell" name="dep_fund_curr_year">
                 <span
-                    t-raw="totals_section.format_amount(totals_section.amount_depreciation_fund_curr_year)"
+                    t-out="totals_section.format_amount(totals_section.amount_depreciation_fund_curr_year)"
                 />
             </div>
             <div class="act_as_cell" name="amount_gain_loss_total">
                 <span
-                    t-raw="totals_section.format_amount(totals_section.gain_loss_total)"
+                    t-out="totals_section.format_amount(totals_section.gain_loss_total)"
                 />
             </div>
             <div class="act_as_cell" name="amount_residual">
                 <span
-                    t-raw="totals_section.format_amount(totals_section.amount_residual)"
+                    t-out="totals_section.format_amount(totals_section.amount_residual)"
                 />
             </div>
         </div>
