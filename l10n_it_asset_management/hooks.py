@@ -3,7 +3,8 @@
 from openupgradelib import openupgrade
 
 
-def pre_absorb_old_module(cr):
+def pre_absorb_old_module(env):
+    cr = env.cr
     if openupgrade.is_module_installed(cr, "assets_management"):
         openupgrade.update_module_names(
             cr,

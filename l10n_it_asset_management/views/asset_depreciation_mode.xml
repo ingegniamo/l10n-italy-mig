@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8" ?>
 <odoo>
 
     <record model="ir.ui.view" id="asset_depreciation_mode_tree_view">
@@ -35,14 +34,8 @@
                         <field name="from_nr" />
                         <field name="to_nr" />
                         <field name="application" />
-                        <field
-                            name="coefficient"
-                            attrs="{'readonly': [('application', '!=', 'coefficient')]}"
-                        />
-                        <field
-                            name="percentage"
-                            attrs="{'readonly': [('application', '!=', 'percentage')]}"
-                        />
+                        <field name="coefficient" readonly="application != &quot;coefficient&quot;" />
+                        <field name="percentage" readonly="application != &quot;percentage&quot;" />
                     </tree>
                 </field>
             </form>
@@ -57,12 +50,6 @@
         <field name="view_id" ref="asset_depreciation_mode_tree_view" />
     </record>
 
-    <menuitem
-        id="menu_asset_depreciation_mode"
-        action="action_asset_depreciation_mode"
-        name="Depreciation Modes"
-        parent="menu_asset_configuration"
-        sequence="10"
-    />
+    <menuitem id="menu_asset_depreciation_mode" action="action_asset_depreciation_mode" name="Depreciation Modes" parent="menu_asset_configuration" sequence="10" />
 
 </odoo>

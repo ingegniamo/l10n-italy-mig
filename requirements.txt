@@ -5,3 +5,4 @@ elementpath
 mock
 unidecode
 xmlschema
+git+https://github.com/OCA/openupgradelib.git@master

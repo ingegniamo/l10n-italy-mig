@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8" ?>
 <odoo>
 
     <record model="ir.ui.view" id="asset_dep_line_search_view">
@@ -8,41 +7,17 @@
             <search string="Depreciation Lines">
                 <field name="name" />
                 <separator />
-                <filter
-                    name="depreciation"
-                    string="Depreciations"
-                    domain="[('move_type','=','depreciated')]"
-                />
-                <filter
-                    name="historical"
-                    string="Historical"
-                    domain="[('move_type','=','historical')]"
-                />
+                <filter name="depreciation" string="Depreciations" domain="[('move_type','=','depreciated')]" />
+                <filter name="historical" string="Historical" domain="[('move_type','=','historical')]" />
                 <filter name="in" string="In" domain="[('move_type','=','in')]" />
                 <filter name="out" string="Out" domain="[('move_type','=','out')]" />
                 <filter name="loss" string="Loss" domain="[('move_type','=','loss')]" />
                 <filter name="gain" string="Gain" domain="[('move_type','=','gain')]" />
                 <group expand="0" string="Group By">
-                    <filter
-                        string="Asset"
-                        name="group_by_asset_id"
-                        context="{'group_by':'asset_id'}"
-                    />
-                    <filter
-                        string="Asset Depreciation"
-                        name="group_by_depreciation_id"
-                        context="{'group_by':'depreciation_id'}"
-                    />
-                    <filter
-                        string="Depreciation Type"
-                        name="group_by_depreciation_type_id"
-                        context="{'group_by':'depreciation_type_id'}"
-                    />
-                    <filter
-                        string="Company"
-                        name="group_by_company_id"
-                        context="{'group_by':'company_id'}"
-                    />
+                    <filter string="Asset" name="group_by_asset_id" context="{'group_by':'asset_id'}" />
+                    <filter string="Asset Depreciation" name="group_by_depreciation_id" context="{'group_by':'depreciation_id'}" />
+                    <filter string="Depreciation Type" name="group_by_depreciation_type_id" context="{'group_by':'depreciation_type_id'}" />
+                    <filter string="Company" name="group_by_company_id" context="{'group_by':'company_id'}" />
                 </group>
             </search>
         </field>
@@ -77,27 +52,9 @@
         <field name="arch" type="xml">
             <form>
                 <header>
-                    <button
-                        name="button_generate_account_move"
-                        string="Generate Move"
-                        type="object"
-                        attrs="{'invisible': ['|', '|', '|', ('amount', '=', 0), ('move_id', '!=', False), ('move_type', 'in', ('in', 'out')), ('requires_account_move', '=', False)]}"
-                        class="oe_highlight"
-                    />
-                    <button
-                        name="button_regenerate_account_move"
-                        string="Regenerate Move"
-                        type="object"
-                        attrs="{'invisible': ['|', '|', '|', ('amount', '=', 0), ('move_id', '=', False), ('move_type', 'in', ('in', 'out')), ('requires_account_move', '=', False)]}"
-                        class="oe_highlight"
-                    />
-                    <button
-                        name="button_remove_account_move"
-                        type="object"
-                        string="Remove Move"
-                        attrs="{'invisible': ['|', '|', '|', ('amount', '=', 0), ('move_id', '=', False), ('move_type', 'in', ('in', 'out')), ('requires_account_move', '=', False)]}"
-                        class="oe_highlight"
-                    />
+                    <button name="button_generate_account_move" string="Generate Move" type="object" class="oe_highlight" invisible="(((amount == 0 or move_id != False) or move_type in ('in', 'out')) or requires_account_move == False)" />
+                    <button name="button_regenerate_account_move" string="Regenerate Move" type="object" class="oe_highlight" invisible="(((amount == 0 or move_id == False) or move_type in ('in', 'out')) or requires_account_move == False)" />
+                    <button name="button_remove_account_move" type="object" string="Remove Move" class="oe_highlight" invisible="(((amount == 0 or move_id == False) or move_type in ('in', 'out')) or requires_account_move == False)" />
                 </header>
                 <sheet>
                     <group name="info" string="General Info">
@@ -106,11 +63,7 @@
                             <field name="name" />
                             <field name="date" />
                             <field name="move_type" />
-                            <field
-                                name="depreciation_line_type_id"
-                                attrs="{'invisible':[('move_type', 'not in', ('in', 'out'))]}"
-                                string="In/Out Amount Type"
-                            />
+                            <field name="depreciation_line_type_id" string="In/Out Amount Type" invisible="move_type not in ('in', 'out')" />
                             <field name="depreciation_nr" />
                         </group>
                         <group>
@@ -130,13 +83,7 @@
                             <field name="relation_type" />
                             <field name="move_id" />
                             <field name="move_line_id" />
-                            <button
-                                name="button_unlink"
-                                type="object"
-                                string="Remove"
-                                confirm="You confirm the removal of the current line? Depreciation line amounts will not be affected and will have to be updated manually."
-                                icon="fa-trash"
-                            />
+                            <button name="button_unlink" type="object" string="Remove" confirm="You confirm the removal of the current line? Depreciation line amounts will not be affected and will have to be updated manually." icon="fa-trash" />
                         </tree>
                     </field>
                 </sheet>
@@ -149,17 +96,9 @@
         <field name="res_model">asset.depreciation.line</field>
         <field name="view_id" ref="asset_dep_line_tree_view" />
         <field name="search_view_id" ref="asset_dep_line_search_view" />
-        <field
-            name="context"
-        >{'search_default_group_by_asset_id': 1, 'search_default_group_by_depreciation_id': 1}</field>
+        <field name="context">{'search_default_group_by_asset_id': 1, 'search_default_group_by_depreciation_id': 1}</field>
     </record>
 
-    <menuitem
-        id="menu_asset_dep_line"
-        name="Depreciation Lines"
-        parent="menu_asset_management"
-        action="action_asset_dep_line"
-        sequence="10"
-    />
+    <menuitem id="menu_asset_dep_line" name="Depreciation Lines" parent="menu_asset_management" action="action_asset_dep_line" sequence="10" />
 
 </odoo>

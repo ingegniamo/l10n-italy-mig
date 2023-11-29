@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8" ?>
 <odoo>
 
     <record model="ir.ui.view" id="asset_accounting_info_search_view">
@@ -6,27 +5,11 @@
         <field name="model">asset.accounting.info</field>
         <field name="arch" type="xml">
             <search>
-                <field
-                    name="asset_id"
-                    string="Asset"
-                    filter_domain="['|', ('asset_id.name', 'ilike', self), ('asset_id.code', 'ilike', self)]"
-                />
-                <field
-                    name="move_id"
-                    string="Move"
-                    filter_domain="['|', ('move_id.name', 'ilike', self), ('move_id.ref', 'ilike', self)]"
-                />
+                <field name="asset_id" string="Asset" filter_domain="['|', ('asset_id.name', 'ilike', self), ('asset_id.code', 'ilike', self)]" />
+                <field name="move_id" string="Move" filter_domain="['|', ('move_id.name', 'ilike', self), ('move_id.ref', 'ilike', self)]" />
                 <group expand="0" string="Group By">
-                    <filter
-                        string="Asset"
-                        name="group_by_asset"
-                        context="{'group_by': 'asset_id'}"
-                    />
-                    <filter
-                        string="Move"
-                        name="group_by_move"
-                        context="{'group_by': 'move_id'}"
-                    />
+                    <filter string="Asset" name="group_by_asset" context="{'group_by': 'asset_id'}" />
+                    <filter string="Move" name="group_by_move" context="{'group_by': 'move_id'}" />
                 </group>
             </search>
         </field>
@@ -55,31 +38,14 @@
                 <sheet>
                     <group>
                         <group name="asset_info">
-                            <field
-                                name="asset_id"
-                                options="{'no_create_edit': 1}"
-                                required="1"
-                            />
-                            <field
-                                name="dep_line_id"
-                                options="{'no_create_edit': 1}"
-                                domain="[('asset_id', '=', asset_id)]"
-                                attrs="{'invisible': [('asset_id', '=', False)]}"
-                            />
+                            <field name="asset_id" options="{'no_create_edit': 1}" required="1" />
+                            <field name="dep_line_id" options="{'no_create_edit': 1}" domain="[('asset_id', '=', asset_id)]" invisible="asset_id == False" />
                             <field name="relation_type" />
-                            <field
-                                name="company_id"
-                                groups="base.group_multi_company"
-                            />
+                            <field name="company_id" groups="base.group_multi_company" />
                         </group>
                         <group name="accounting_info">
                             <field name="move_id" options="{'no_create_edit': 1}" />
-                            <field
-                                name="move_line_id"
-                                options="{'no_create_edit': 1}"
-                                domain="[('move_id', '=', move_id)]"
-                                attrs="{'invisible': [('move_id', '=', False)]}"
-                            />
+                            <field name="move_line_id" options="{'no_create_edit': 1}" domain="[('move_id', '=', move_id)]" invisible="move_id == False" />
                         </group>
                     </group>
                 </sheet>
@@ -102,12 +68,6 @@
         </field>
     </record>
 
-    <menuitem
-        id="menu_asset_accounting_info"
-        action="action_asset_accounting_info"
-        name="Assets Accounting Info"
-        parent="menu_asset_technical_data"
-        sequence="1"
-    />
+    <menuitem id="menu_asset_accounting_info" action="action_asset_accounting_info" name="Assets Accounting Info" parent="menu_asset_technical_data" sequence="1" />
 
 </odoo>
