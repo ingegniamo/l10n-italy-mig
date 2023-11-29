@@ -88,12 +88,12 @@
                             <field
                                 name="company_id"
                                 attrs="{'readonly': [('state', '!=', 'non_depreciated')]}"
-                                groups="base.group_multi_company"
+                                force_save="1"
                             />
                             <field
                                 name="currency_id"
                                 attrs="{'readonly': [('state', '!=', 'non_depreciated')]}"
-                                groups="base.group_multi_currency"
+                                force_save="1"
                             />
                         </group>
                     </group>
