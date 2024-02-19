@@ -181,9 +181,7 @@ class DeclarationOfIntent(models.Model):
                     complete_name,
                     record.partner_document_number,
                 )
-            res.append(
-                (record.id, complete_name),
-            )
+            record.display_name = complete_name
         return res
 
     @api.depends("line_ids", "line_ids.amount", "limit_amount")
