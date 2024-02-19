@@ -98,6 +98,7 @@
                 <field name="date_end" />
                 <field name="available_amount" />
                 <field name="state" />
+                <field name="currency_id" />
             </tree>
         </field>
     </record>
