@@ -172,7 +172,7 @@ class DeclarationOfIntent(models.Model):
                     )
                 )
 
-    def name_get(self):
+    def _compute_display_name(self):
         res = []
         for record in self:
             complete_name = record.number

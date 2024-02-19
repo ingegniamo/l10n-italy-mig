@@ -5,6 +5,7 @@
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 from odoo.tools.misc import format_date
+from odoo.osv import expression
 
 
 class AccountMove(models.Model):
@@ -15,7 +16,28 @@ class AccountMove(models.Model):
         comodel_name="l10n_it_declaration_of_intent.declaration",
         string="Declarations of intent",
     )
-
+    allowed_declaration_of_intent_ids = fields.One2many('l10n_it_declaration_of_intent.declaration',compute='_compute_allowed_declaration_of_intent_ids')
+    def _compute_allowed_declaration_of_intent_ids(self):
+        for invoice in self:
+            declaration_model = self.env["l10n_it_declaration_of_intent.declaration"]
+            type_short = invoice.get_type_short()
+            allowed_declaration_of_intent_ids = declaration_model.browse()
+            if type_short:
+              
+                domain = [
+                    ("partner_id", "=", invoice.partner_id.commercial_partner_id.id),
+                    ("type", "=", type_short),
+                ]
+                if invoice.declaration_of_intent_ids:
+                    domain = expression.AND([domain, [('id','not in',invoice.declaration_of_intent_ids.ids)]])
+                if invoice.invoice_date:
+                    date_domain = [
+                        ("date_start", "<=", invoice.invoice_date),
+                        ("date_end", ">=", invoice.invoice_date),
+                    ]
+                    domain = expression.AND([domain, date_domain])
+                allowed_declaration_of_intent_ids = declaration_model.search(domain)
+            invoice.allowed_declaration_of_intent_ids = allowed_declaration_of_intent_ids
     def _set_fiscal_position(self):
         for invoice in self:
             if invoice.partner_id:

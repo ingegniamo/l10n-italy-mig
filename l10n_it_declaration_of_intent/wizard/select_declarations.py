@@ -17,6 +17,8 @@ class SelectManuallyDeclarations(models.TransientModel):
         if not invoice_id:
             return declaration_model.browse()
         invoice = self.env["account.move"].browse(invoice_id)
+        if invoice_id.declaration_of_intent_ids:
+            return declaration_model.browse()
         type_short = invoice.get_type_short()
         if not type_short:
             return declaration_model.browse()
