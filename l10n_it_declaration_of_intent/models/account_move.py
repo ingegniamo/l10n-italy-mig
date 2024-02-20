@@ -17,6 +17,7 @@ class AccountMove(models.Model):
         string="Declarations of intent",
     )
     allowed_declaration_of_intent_ids = fields.One2many('l10n_it_declaration_of_intent.declaration',compute='_compute_allowed_declaration_of_intent_ids')
+    @api.depends('partner_id',' invoice_date','declaration_of_intent_ids')
     def _compute_allowed_declaration_of_intent_ids(self):
         for invoice in self:
             declaration_model = self.env["l10n_it_declaration_of_intent.declaration"]
