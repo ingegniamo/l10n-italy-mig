@@ -41,7 +41,9 @@ class StockPicking(models.Model):
     )
 
     delivery_note_type_id = fields.Many2one(
-        "stock.delivery.note.type", related="delivery_note_id.type_id"
+              "stock.delivery.note.type",
+        related="delivery_note_id.type_id",
+        check_company=True,
     )
     delivery_note_type_code = fields.Selection(related="delivery_note_type_id.code")
     delivery_note_date = fields.Date(string="DN Date", related="delivery_note_id.date")
@@ -337,6 +339,7 @@ class StockPicking(models.Model):
         )
         return self.env["stock.delivery.note"].create(
             {
+                "company_id": self.company_id.id,
                 "partner_sender_id": partners[0].id,
                 "partner_id": self.sale_id.partner_id.id
                 if self.sale_id
@@ -375,6 +378,7 @@ class StockPicking(models.Model):
         partner_id = self.mapped("partner_id")
         src_location_id = self.mapped("location_id")
         dest_location_id = self.mapped("location_dest_id")
+        picking_type_code = self.mapped("picking_type_code")
 
         src_warehouse_id = src_location_id.warehouse_id
         dest_warehouse_id = dest_location_id.warehouse_id
@@ -383,16 +387,16 @@ class StockPicking(models.Model):
         dest_partner_id = dest_warehouse_id.partner_id
 
         if not src_partner_id:
-            src_partner_id = partner_id
+            if picking_type_code == ["outgoing"]:
+                src_partner_id = self.company_id.partner_id
+            else:
+                src_partner_id = partner_id or self.company_id.partner_id
 
-            if not dest_partner_id:
-                raise ValueError(
-                    "Fields 'src_partner_id' and 'dest_partner_id' "
-                    "cannot be both unset."
-                )
-
-        elif not dest_partner_id:
-            dest_partner_id = partner_id
+        if not dest_partner_id:
+            if picking_type_code == ["incoming"]:
+                dest_partner_id = self.company_id.partner_id
+            else:
+                dest_partner_id = partner_id or self.company_id.partner_id
 
         return (src_partner_id, dest_partner_id)
 

@@ -48,6 +48,7 @@ class StockDeliveryNote(models.Model):
     ]
     _description = "Delivery Note"
     _order = "date DESC, id DESC"
+    _check_company_auto = True
 
     def _default_company(self):
         return self.env.company
@@ -228,12 +229,16 @@ class StockDeliveryNote(models.Model):
     )
 
     picking_ids = fields.One2many(
-        "stock.picking", "delivery_note_id", string="Pickings"
+            "stock.picking",
+        "delivery_note_id",
+        string="Pickings",
+        check_company=True,
     )
     pickings_picker = fields.Many2many(
         "stock.picking",
         compute="_compute_get_pickings",
         inverse="_inverse_set_pickings",
+        check_company=True,
     )
 
     picking_type = fields.Selection(
@@ -569,7 +574,26 @@ class StockDeliveryNote(models.Model):
         return self.env.ref(
             "l10n_it_delivery_note.delivery_note_report_action"
         ).report_action(self)
-
+    
+    @api.model
+    def _get_sync_fields(self):
+        """
+        Returns a list of fields that can be used to
+         synchronize the state of the Delivery Note
+        """
+        return [
+            "date",
+            "transport_datetime",
+            "transport_condition_id",
+            "goods_appearance_id",
+            "transport_reason_id",
+            "transport_method_id",
+            "gross_weight",
+            "net_weight",
+            "packages",
+            "volume",
+        ]
+    
     def update_transport_datetime(self):
         self.transport_datetime = datetime.datetime.now()
 
@@ -588,7 +612,7 @@ class StockDeliveryNote(models.Model):
 
     def goto_sales(self, **kwargs):
         sales = self.mapped("sale_ids")
-        action = self.env.ref("sale.action_orders").read()[0]
+        action = self.env["ir.actions.act_window"]._for_xml_id("sale.action_orders")
         action.update(kwargs)
 
         if len(sales) > 1:

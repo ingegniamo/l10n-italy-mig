@@ -104,9 +104,18 @@ class SaleOrder(models.Model):
         )
 
         ready_delivery_note_lines.write({"invoice_status": DOMAIN_INVOICE_STATUSES[2]})
-        ready_delivery_notes.write(
-            {"invoice_ids": [(4, invoice_id) for invoice_id in invoice_ids]}
-        )
+        for dn in ready_delivery_notes:
+            linked_invoice_ids = dn.line_ids.mapped('sale_line_id.order_id.invoice_ids').filtered(lambda l: l.id in invoice_ids)
+            if linked_invoice_ids:
+                invoice_id_to_set = linked_invoice_ids - dn.invoice_ids 
+                dn.write(
+                {"invoice_ids": [(4, invoice_id) for invoice_id in invoice_id_to_set.ids]}
+            )
+            
+        
+        # ready_delivery_notes.write(
+        #     {"invoice_ids": [(4, invoice_id) for invoice_id in invoice_ids]}
+        # )
 
         ready_delivery_notes._compute_invoice_status()
 
