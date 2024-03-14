@@ -59,7 +59,9 @@ class WizardExportFatturapa(models.TransientModel):
             "name": "{}_{}.xml".format(vat, number),
             "datas": base64.encodebytes(attach_str),
         }
-        return attach_obj.create(attach_vals)
+        attachment = attach_obj.create(attach_vals)
+        attachment.ir_attachment_id.write({'res_id':attachment.id, 'res_model':'fatturapa.attachment.out'})
+        return attachment
 
     def getPartnerId(self, invoice_ids):
 

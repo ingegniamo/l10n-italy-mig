@@ -250,7 +250,7 @@ class MailThread(models.AbstractModel):
                                 % fatturapa_atts.mapped("name")
                             )
                         else:
-                            fatturapa_attachment_in.create(
+                            fattpa_attachment = fatturapa_attachment_in.create(
                                 {
                                     "name": file_name,
                                     "datas": base64.encodebytes(inv_file.read()),
@@ -258,6 +258,7 @@ class MailThread(models.AbstractModel):
                                     "e_invoice_received_date": received_date,
                                 }
                             )
+                            fattpa_attachment.ir_attachment_id.write({'res_id':fattpa_attachment.id, 'res_model':'fatturapa.attachment.in'})
         else:
             fatturapa_atts = fatturapa_attachment_in.search(
                 [("name", "=", attachment.name)]
@@ -268,10 +269,11 @@ class MailThread(models.AbstractModel):
                     % fatturapa_atts.mapped("name")
                 )
             else:
-                fatturapa_attachment_in.create(
+                fattpa_attachment = fatturapa_attachment_in.create(
                     {
                         "ir_attachment_id": attachment.id,
                         "company_id": company_id,
                         "e_invoice_received_date": received_date,
                     }
                 )
+                attachment.write({'res_id':fattpa_attachment.id, 'res_model':'fatturapa.attachment.in'})
