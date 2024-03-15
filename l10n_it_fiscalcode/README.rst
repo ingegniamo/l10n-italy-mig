@@ -86,7 +86,7 @@ Authors
 
 Contributors
 ~~~~~~~~~~~~
-
+* Michele Di Croce <dicroce.m@stesi.consulting>
 * Davide Corio
 * Luca Subiaco <subluca@gmail.com>
 * Simone Orsi <simone.orsi@domsense.com>

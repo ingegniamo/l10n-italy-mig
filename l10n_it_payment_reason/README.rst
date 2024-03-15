@@ -68,7 +68,7 @@ Authors
 
 Contributors
 ~~~~~~~~~~~~
-
+* Michele Di Croce <dicroce.m@stesi.consulting>
 * Lorenzo Battistini <lorenzo.battistini@agilebg.com>
 * Alex Comba <alex.comba@agilebg.com>
 * Marco Colombo <https://github.com/TheMule71>

@@ -61,7 +61,7 @@ Authors
 
 Contributors
 ~~~~~~~~~~~~
-
+* Michele Di Croce <dicroce.m@stesi.consulting>
 * Sergio Corato <info@efatto.it>
 * Lorenzo Battistini <https://github.com/eLBati>
 

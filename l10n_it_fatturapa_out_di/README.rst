@@ -61,7 +61,7 @@ Authors
 
 Contributors
 ~~~~~~~~~~~~
-
+* Michele Di Croce <dicroce.m@stesi.consulting>
 * Marco Colombo <https://github.com/TheMule71>
 * Giuseppe Borruso <gborruso@dinamicheaziendali.it>
 

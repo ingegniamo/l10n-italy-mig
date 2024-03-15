@@ -76,7 +76,7 @@ Authors
 
 Contributors
 ~~~~~~~~~~~~
-
+* Michele Di Croce <dicroce.m@stesi.consulting>
 * `TAKOBI <https://takobi.online>`_:
 
   * Simone Rubino <sir@takobi.online>

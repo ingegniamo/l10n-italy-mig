@@ -56,7 +56,7 @@ Authors
 
 Contributors
 ~~~~~~~~~~~~
-
+* Michele Di Croce <dicroce.m@stesi.consulting>
 * Lorenzo Battistini (`TAKOBI <https://takobi.online>`_)
 * `Nextev Srl <https://www.nextev.it>`_
 

@@ -130,7 +130,7 @@ Authors
 
 Contributors
 ~~~~~~~~~~~~
-
+* Michele Di Croce <dicroce.m@stesi.consulting>
 * Davide Corio <davide.corio@abstract.it>
 * Lorenzo Battistini <lorenzo.battistini@agilebg.com>
 * Alessio Gerace <alessio.gerace@agilebg.com>

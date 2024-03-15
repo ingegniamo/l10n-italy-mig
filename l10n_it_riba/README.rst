@@ -117,7 +117,7 @@ Credits
 
 Contributors
 ~~~~~~~~~~~~
-
+* Michele Di Croce <dicroce.m@stesi.consulting>
 * Lorenzo Battistini <lorenzo.battistini@agilebg.com>
 * Andrea Cometa <a.cometa@apuliasoftware.it>
 * Andrea Gallina <a.gallina@apuliasoftware.it>

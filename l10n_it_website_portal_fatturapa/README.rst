@@ -53,6 +53,10 @@ Do not contact contributors directly about support or help with technical issues
 Credits
 =======
 
+Contributors
+~~~~~~~~~~~~
+* Michele Di Croce <dicroce.m@stesi.consulting>
+
 Maintainers
 ~~~~~~~~~~~
 

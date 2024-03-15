@@ -127,7 +127,7 @@ Authors
 
 Contributors
 ~~~~~~~~~~~~
-
+* Michele Di Croce <dicroce.m@stesi.consulting>
 * Lorenzo Battistini <lorenzo.battistini@agilebg.com>
 * Sergio Corato <sergiocorato@gmail.com>
 * Elena Carlesso <ecarlesso@linkgroup.it>

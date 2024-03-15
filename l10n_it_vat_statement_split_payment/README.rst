@@ -95,7 +95,7 @@ Authors
 
 Contributors
 ~~~~~~~~~~~~
-
+* Michele Di Croce <dicroce.m@stesi.consulting>
 * Alessandro Camilli <alessandrocamilli@openforce.it>
 * Silvio Gregorini <silviogregorini@openforce.it>
 * Matteo Bilotta

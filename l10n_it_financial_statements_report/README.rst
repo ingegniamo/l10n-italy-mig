@@ -80,7 +80,7 @@ Authors
 
 Contributors
 ~~~~~~~~~~~~
-
+* Michele Di Croce <dicroce.m@stesi.consulting>
 * Silvio Gregorini <https://github.com/SilvioGregorini>
 * `Ooops <https://www.ooops404.com>`_
 * `TAKOBI <https://takobi.online>`_:

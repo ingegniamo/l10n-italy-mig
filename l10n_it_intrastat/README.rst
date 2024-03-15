@@ -184,7 +184,7 @@ Authors
 
 Contributors
 ~~~~~~~~~~~~
-
+* Michele Di Croce <dicroce.m@stesi.consulting>
 * Alessandro Camilli
 * Lorenzo Battistini
 * Lara Baggio <lbaggio@linkgroup.it>

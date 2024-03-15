@@ -144,7 +144,7 @@ Authors
 
 Contributors
 ~~~~~~~~~~~~
-
+* Michele Di Croce <dicroce.m@stesi.consulting>
 * Davide Corio
 * Lorenzo Battistini <https://github.com/eLBati>
 * Roberto Onnis

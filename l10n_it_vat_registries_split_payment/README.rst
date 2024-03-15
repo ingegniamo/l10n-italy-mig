@@ -63,7 +63,7 @@ Authors
 
 Contributors
 ~~~~~~~~~~~~
-
+* Michele Di Croce <dicroce.m@stesi.consulting>
 * Lorenzo Battistini <lorenzo.battistini@agilebg.com>
 * Matteo Bilotta <mbilotta@linkgroup.it>
 

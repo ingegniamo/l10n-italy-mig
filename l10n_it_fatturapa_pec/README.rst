@@ -145,7 +145,7 @@ Authors
 
 Contributors
 ~~~~~~~~~~~~
-
+* Michele Di Croce <dicroce.m@stesi.consulting>
 * Andrea Colangelo <andreacolangelo@openforce.it>
 * Sergio Corato <info@efatto.it>
 * Lorenzo Battistini <https://github.com/eLBati>

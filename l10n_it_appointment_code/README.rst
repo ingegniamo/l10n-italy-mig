@@ -89,7 +89,7 @@ Authors
 
 Contributors
 ~~~~~~~~~~~~
-
+* Michele Di Croce <dicroce.m@stesi.consulting>
 * Alessandro Camilli <alessandrocamilli@openforce.it>
 * Gianmarco Conte <gconte@dinamicheaziendali.it>
 * Stefano Consolaro <https://github.com/mymage>

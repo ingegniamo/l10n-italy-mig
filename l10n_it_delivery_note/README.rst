@@ -174,7 +174,7 @@ Authors
 
 Contributors
 ~~~~~~~~~~~~
-
+* Michele Di Croce <dicroce.m@stesi.consulting>
 * Riccardo Bellanova <r.bellanova@apuliasoftware.it>
 * Matteo Bilotta <mbilotta@linkeurope.it>
 * Giuseppe Borruso <gconte@dinamicheaziendali.it>

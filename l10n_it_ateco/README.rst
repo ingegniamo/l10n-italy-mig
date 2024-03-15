@@ -69,7 +69,8 @@ Authors
 
 Contributors
 ~~~~~~~~~~~~
-
+* Michele Di Croce <dicroce.m@stesi.consulting>
+* Arcadio Pinto <pinto.a@stesi.consulting>
 * `Odoo Italia Network <http://www.odoo-italia.net/>`_
 * Ciro Urselli <c.urselli@apuliasoftware.it>
 * Lorenzo Battistini https://takobi.online

@@ -59,6 +59,12 @@ Authors
 
 * Agile Business Group
 
+
+Contributors
+~~~~~~~~~~~~
+* Michele Di Croce <dicroce.m@stesi.consulting>
+
+
 Maintainers
 ~~~~~~~~~~~
 

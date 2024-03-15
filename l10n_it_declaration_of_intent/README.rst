@@ -94,7 +94,7 @@ Authors
 
 Contributors
 ~~~~~~~~~~~~
-
+* Michele Di Croce <dicroce.m@stesi.consulting>
 * Francesco Apruzzese <francescoapruzzese@openforce.it>
 * Sergio Corato <info@efatto.it>
 * Glauco Prina <gprina@linkeurope.it>

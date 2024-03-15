@@ -143,7 +143,7 @@ Authors
 
 Contributors
 ~~~~~~~~~~~~
-
+* Michele Di Croce <dicroce.m@stesi.consulting>
 * Lorenzo Battistini <https://github.com/eLBati>
 * Elena Carlesso
 * Marco Marchiori <marcomarkiori@gmail.com>

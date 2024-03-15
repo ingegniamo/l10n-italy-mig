@@ -218,7 +218,7 @@ Authors
 
 Contributors
 ~~~~~~~~~~~~
-
+* Michele Di Croce <dicroce.m@stesi.consulting>
 * Davide Corio
 * Alex Comba <alex.comba@agilebg.com>
 * Lorenzo Battistini <lorenzo.battistini@agilebg.com

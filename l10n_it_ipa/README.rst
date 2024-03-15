@@ -66,7 +66,7 @@ Authors
 
 Contributors
 ~~~~~~~~~~~~
-
+* Michele Di Croce <dicroce.m@stesi.consulting>
 * Luigi Di Naro <luigi.dinaro@ktec.it>
 * Alex Comba <alex.comba@agilebg.com>
 * Lorenzo Battistini <lb@takobi.online>

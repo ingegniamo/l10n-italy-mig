@@ -99,7 +99,7 @@ Authors
 
 Contributors
 ~~~~~~~~~~~~
-
+* Michele Di Croce <dicroce.m@stesi.consulting>
 * Apruzzese Francesco <f.apruzzese@apuliasoftware.it>
 * Lorenzo Battistini <lorenzo.battistini@agilebg.com>
 * Alex Comba <alex.comba@agilebg.com>

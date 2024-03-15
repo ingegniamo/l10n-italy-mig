@@ -62,6 +62,7 @@ Authors
 Contributors
 ~~~~~~~~~~~~
 
+* Michele Di Croce <dicroce.m@stesi.consulting>
 * `Odoo Italia Network <http://www.odoo-italia.net/>`_
 * Franco Tampieri <franco@tampieri.info>
 * Alessandro Camilli <alessandrocamilli@openforce.it>

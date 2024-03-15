@@ -67,7 +67,8 @@ Authors
 
 Contributors
 ~~~~~~~~~~~~
-
+* Michele Di Croce <dicroce.m@stesi.consulting>
+* De Falco Chiara <defalco.c@stesi.consulting>
 * Sergio Corato <info@efatto.it>
 * Lorenzo Battistini <https://github.com/eLBati>
 * Marco Colombo <https://github.com/TheMule71>

@@ -61,7 +61,7 @@ Authors
 
 Contributors
 ~~~~~~~~~~~~
-
+* Michele Di Croce <dicroce.m@stesi.consulting>
 * Agile Business Group
 * `Ooops <https://www.ooops404.com>`_:
 

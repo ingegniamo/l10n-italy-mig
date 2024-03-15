@@ -75,7 +75,7 @@ Authors
 
 Contributors
 ~~~~~~~~~~~~
-
+* Michele Di Croce <dicroce.m@stesi.consulting>
 * Alessio Gerace
 * Nicola Malcontenti <nicola.malcontenti@agilebg.com>
 * Lorenzo Battistini <https://github.com/eLBati>
