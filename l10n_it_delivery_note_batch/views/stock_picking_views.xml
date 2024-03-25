@@ -12,15 +12,15 @@
         </field>
     </record>
 
-    <record id="view_picking_tree_batch" model="ir.ui.view">
+    <!-- <record id="view_picking_tree_batch" model="ir.ui.view">
         <field name="name">stock_picking_batch.picking.tree.batch</field>
         <field name="model">stock.picking</field>
-        <field name="inherit_id" ref="stock_picking_batch.view_picking_tree_batch" />
+        <field name="inherit_id" ref="stock_picking_batch.stock_picking_batch_tree" />
         <field name="arch" type="xml">
             <xpath expr="//field[@name='origin']" position="after">
                 <field name="delivery_note_id" />
             </xpath>
         </field>
-    </record>
+    </record> -->
 
 </odoo>
