@@ -1,4 +1,4 @@
-odoo.define("l10n_it_website_portal_ipa", function (require) {
+odoo.define("l10n_it_website_portal_ipa",[], function (require) {
     "use strict";
     require("web.core");
 
