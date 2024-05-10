@@ -157,7 +157,9 @@ class FatturaPAAttachmentIn(models.Model):
                 "format": attach.FormatoAttachment or "",
                 "invoice_id": invoice_id,
             }
-            AttachModel.create(_attach_dict)
+            element = AttachModel.create(_attach_dict)
+            element.ir_attachment_id.write({'res_id':invoice_id,'res_model':'account.move'})
+            
 
     @api.depends("ir_attachment_id.datas")
     def _compute_linked_invoice_id_xml(self):
