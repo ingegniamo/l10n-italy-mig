@@ -4,6 +4,7 @@
         <field name="name">res.partner.fiscalcode.data</field>
         <field name="model">res.partner</field>
         <field name="inherit_id" ref="base.view_partner_form" />
+        <field name="priority">18</field>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='vat']/.." position="after">
                 <label for="fiscalcode" />
