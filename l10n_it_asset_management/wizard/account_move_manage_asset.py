@@ -6,6 +6,8 @@ from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
 from odoo.tools.float_utils import float_compare, float_is_zero
 
+class WizardAccountMoveManageAsset(models.TransientModel):
+    _name = "wizard.invoice.manage.asset"
 
 class WizardAccountMoveManageAsset(models.TransientModel):
     _name = "wizard.account.move.manage.asset"
