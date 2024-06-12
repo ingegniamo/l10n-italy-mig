@@ -45,7 +45,11 @@ class ProductTemplate(models.Model):
         res = {"intrastat_code_id": False, "intrastat_type": False}
         # From Product
         if self.intrastat_type:
-            res["intrastat_code_id"] = self.intrastat_code_id.id
+            if self.intrastat_code_id._name != 'report.intrastat.code':
+                intrastat_code_id = self.env['report.intrastat.code'].search([('name', '=', self.intrastat_code_id.code)], limit=1)
+            else:
+                intrastat_code_id = self.intrastat_code_id
+            res["intrastat_code_id"] = intrastat_code_id.id
             res["intrastat_type"] = self.intrastat_type
         elif self.categ_id and self.categ_id.intrastat_code_id:
             res["intrastat_code_id"] = self.categ_id.intrastat_code_id.id
