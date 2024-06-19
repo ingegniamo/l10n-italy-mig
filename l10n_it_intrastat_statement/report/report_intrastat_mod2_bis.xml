@@ -55,7 +55,6 @@
                                 <strong><span t-esc="o.company_id.vat" /></strong>
                             </div>
                             <div class="row col-12">
-                                <p />
                             <table class="table table-bordered">
                                 <thead class="fondo">
                                     <tr>
