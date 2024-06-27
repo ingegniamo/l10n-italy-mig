@@ -45,8 +45,8 @@
                         <field name="account_ids" nolabel="1" widget="many2many_tags" options="{'no_create': True}" colspan="4" />
                     </group>
                 </div>
-                <div invisible="only_one_unaffected_earnings_account  == False">
-                    <field name="only_one_unaffected_earnings_account " invisible="1" />
+                <div invisible="only_one_unaffected_earnings_account == False">
+                    <field name="only_one_unaffected_earnings_account" invisible="1" />
                     <group />
                     <h4>
                         Financial Statements can be computed only if selected
@@ -55,7 +55,7 @@
                     <group />
                 </div>
                 <footer>
-                    <div invisible="only_one_unaffected_earnings_account  == True">
+                    <div invisible="only_one_unaffected_earnings_account == True">
                         <button name="button_export_html" string="View" type="object" default_focus="1" class="oe_highlight" />
                         or
                         <button name="button_export_pdf" string="Export PDF" type="object" class="oe_highlight" />
