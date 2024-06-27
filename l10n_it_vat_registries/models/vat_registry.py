@@ -105,7 +105,6 @@ class ReportRegistroIva(models.AbstractModel):
                 tax_amount = abs(tax_amount)
             if (
                 "receivable" in move.financial_type
-                or "payable_refund" == move.financial_type
             ):
                 # otherwise refund would be positive and invoices
                 # negative.
