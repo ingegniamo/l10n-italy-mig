@@ -17,13 +17,13 @@ ITA - Imposta di bollo
     :target: http://www.gnu.org/licenses/lgpl-3.0-standalone.html
     :alt: License: LGPL-3
 .. |badge3| image:: https://img.shields.io/badge/github-OCA%2Fl10n--italy-lightgray.png?logo=github
-    :target: https://github.com/OCA/l10n-italy/tree/16.0/l10n_it_account_stamp
+    :target: https://github.com/OCA/l10n-italy/tree/18.0/l10n_it_account_stamp
     :alt: OCA/l10n-italy
 .. |badge4| image:: https://img.shields.io/badge/weblate-Translate%20me-F47D42.png
-    :target: https://translation.odoo-community.org/projects/l10n-italy-16-0/l10n-italy-16-0-l10n_it_account_stamp
+    :target: https://translation.odoo-community.org/projects/l10n-italy-18-0/l10n-italy-18-0-l10n_it_account_stamp
     :alt: Translate me on Weblate
 .. |badge5| image:: https://img.shields.io/badge/runboat-Try%20me-875A7B.png
-    :target: https://runboat.odoo-community.org/builds?repo=OCA/l10n-italy&target_branch=16.0
+    :target: https://runboat.odoo-community.org/builds?repo=OCA/l10n-italy&target_branch=18.0
     :alt: Try me on Runboat
 
 |badge1| |badge2| |badge3| |badge4| |badge5|
@@ -35,7 +35,7 @@ fatture e nelle ricevute.
 
 **English**
 
-This module adds Italian Tax Stamp support in invoices and receipts.
+This module adds Italian Stamp Duty support in invoices and receipts.
 
 **Table of contents**
 
@@ -58,7 +58,7 @@ necessario abilitare le funzioni complete per la contabilità:
 Modalità automatica:
 
 -  andare sul prodotto "Imposta di bollo 2 euro" e configurare "Imposte
-   marca da bollo" (Imposte in esenzione).
+   per bollo" (Imposte in esenzione).
 -  per ciascuna fattura o ricevuta, l'applicabilità dell'imposta di
    bollo verrà calcolata in modo automatico in base alla somma degli
    imponibili relativi alle imposte selezionate.
@@ -77,7 +77,7 @@ generalmente ricavo="Debiti per bolli" e costo="Valori bollati".
 
 **English**
 
-In order to change Tax Stamp 2 euro product settings, enable full
+In order to change 'Stamp duty 2 euro' product settings, enable full
 accounting features:
 
 1. Settings -> Users & Companies -> Groups
@@ -86,7 +86,7 @@ accounting features:
 
 Automatic mode:
 
--  Go to 'Tax Stamp 2 euro' product and configure 'Stamp taxes'
+-  Go to 'Stamp duty 2 euro' product and configure 'Stamp taxes'
    (exemption taxes).
 -  For each invoice or receipt, the base amount for each selected tax
    will be added up and used to determine the application of the account
@@ -94,9 +94,9 @@ Automatic mode:
 
 Manual mode:
 
--  Go to 'Tax Stamp 2 euro' product and deselect 'Auto-compute'
+-  Go to 'Stamp duty 2 euro' product and deselect 'Auto-compute'
    checkbox.
--  For each invoice or receipt, manually enable 'Tax Stamp' checkbox.
+-  For each invoice or receipt, manually enable 'Stamp Duty' checkbox.
 
 Also set income/expense accounts, typically income = 'Debiti per bolli'
 and expense = 'Valori bollati'.
@@ -115,11 +115,24 @@ verrà addebitata al cliente.
 
 **English**
 
-In invoice or receipt form, when applicable, click 'Add tax stamp line'
-button to add tax stamp as invoice line, thus charging customer.
+In invoice or receipt form, when applicable, click 'Add stamp duty line'
+button to add stamp duty as invoice line, thus charging customer.
 
-Otherwise, tax stamp will be anyway accounted, without charging
+Otherwise, stamp duty will be anyway accounted, without charging
 customer.
+
+Known issues / Roadmap
+======================
+
+\*\* Italiano \*\*
+
+Sono stati aggiunti gli script di migrazione, da provare quando saranno
+rilasciati quelli relativi ad ``account``.
+
+\*\* English \*\*
+
+Migration scripts have been added, to be tested when ``account`` related
+ones will be released.
 
 Bug Tracker
 ===========
@@ -127,7 +140,7 @@ Bug Tracker
 Bugs are tracked on `GitHub Issues <https://github.com/OCA/l10n-italy/issues>`_.
 In case of trouble, please check there if your issue has already been reported.
 If you spotted it first, help us to smash it by providing a detailed and welcomed
-`feedback <https://github.com/OCA/l10n-italy/issues/new?body=module:%20l10n_it_account_stamp%0Aversion:%2016.0%0A%0A**Steps%20to%20reproduce**%0A-%20...%0A%0A**Current%20behavior**%0A%0A**Expected%20behavior**>`_.
+`feedback <https://github.com/OCA/l10n-italy/issues/new?body=module:%20l10n_it_account_stamp%0Aversion:%2018.0%0A%0A**Steps%20to%20reproduce**%0A-%20...%0A%0A**Current%20behavior**%0A%0A**Expected%20behavior**>`_.
 
 Do not contact contributors directly about support or help with technical issues.
 
@@ -169,6 +182,6 @@ OCA, or the Odoo Community Association, is a nonprofit organization whose
 mission is to support the collaborative development of Odoo features and
 promote its widespread use.
 
-This module is part of the `OCA/l10n-italy <https://github.com/OCA/l10n-italy/tree/16.0/l10n_it_account_stamp>`_ project on GitHub.
+This module is part of the `OCA/l10n-italy <https://github.com/OCA/l10n-italy/tree/18.0/l10n_it_account_stamp>`_ project on GitHub.
 
 You are welcome to contribute. To learn how please visit https://odoo-community.org/page/Contribute.
