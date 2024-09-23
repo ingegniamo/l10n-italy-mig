@@ -1,5 +1,3 @@
-#  Copyright 2022 Simone Rubino - TAKOBI
-#  License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
 import logging
 import re
@@ -31,9 +29,9 @@ class WizardImportFatturapa(models.TransientModel):
         res = super().invoiceCreate(fatt, fatturapa_attachment, FatturaBody, partner_id)
         move_lines_product = res.invoice_line_ids.filtered(lambda f: f.display_type in ['product'])
         account_id = False
-        if res.move_type in ['out_invoice'] and res.partner_id.revenues_account_id:
+        if res.move_type in ['out_invoice', 'out_refund'] and res.partner_id.revenues_account_id:
             account_id =  res.partner_id.revenues_account_id.id
-        elif res.move_type in ['in_invoice'] and res.partner_id.costs_account_id:
+        elif res.move_type in ['in_invoice', 'in_refund'] and res.partner_id.costs_account_id:
             account_id = res.partner_id.costs_account_id.id
         if account_id:
             move_lines_product.write({'account_id': account_id})
