@@ -118,6 +118,8 @@ class EFatturaOut:
             if partner.vat:
                 if id_paese == "IT" and partner.vat.startswith("IT"):
                     id_codice = partner.vat[2:]
+                elif partner.vat.startswitch(id_paese):
+                    id_codice = partner.vat[2:]
                 else:
                     id_codice = partner.vat
             elif partner.fiscalcode or id_paese == "IT":
