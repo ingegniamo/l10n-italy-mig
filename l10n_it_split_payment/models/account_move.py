@@ -20,11 +20,26 @@ class AccountMove(models.Model):
     split_payment = fields.Boolean(
         string="Is Split Payment", related="fiscal_position_id.split_payment"
     )
-
+    
+    def action_post(self):
+        for invoice in self.filtered(lambda l: l.split_payment):
+            tax_line = invoice.line_ids.filtered(lambda l: l.display_type =='tax')[:1]
+            if tax_line:
+                write_off_line_vals = tax_line._build_writeoff_line()
+                invoice.line_ids = [(0, 0, write_off_line_vals)]
+                invoice._sync_dynamic_lines(
+                    container={"records": invoice, "self": invoice}
+                )
+        super().action_post()
+    def button_draft(self):
+            # ---- Delete Collection Fees Line of invoice when set Back to Draft
+            # ---- line was added on new validate
+            res = super().button_draft()
+            self.line_ids.with_context(check_move_validity=False, dynamic_unlink=True).filtered(lambda l: l.is_split_payment).unlink()
     def _compute_amount(self):
         res = super()._compute_amount()
         for move in self:
-            if move.split_payment:
+            if move.split_payment and move.state =='posted':
                 if move.is_purchase_document():
                     continue
                 if move.tax_totals:
