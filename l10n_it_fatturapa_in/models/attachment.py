@@ -5,13 +5,9 @@ SELF_INVOICE_TYPES = ("TD16", "TD17", "TD18", "TD19", "TD20", "TD21", "TD27", "T
 
 
 class FatturaPAAttachmentIn(models.Model):
+    _inherit = "fatturapa.attachment"
     _name = "fatturapa.attachment.in"
-    _description = "E-bill import file"
-    _inherits = {"ir.attachment": "ir_attachment_id"}
-    _inherit = [
-        "mail.thread",
-        "l10n_it_fatturapa.attachment.e_invoice.link",
-    ]
+    _description = "Electronic Invoice"
     _order = "id desc"
 
     ir_attachment_id = fields.Many2one(
@@ -185,5 +181,3 @@ class FatturaPAAttachmentIn(models.Model):
                                 ].IdDocumento
                             )
 
-    def ftpa_preview(self):
-        return self.env["ir.attachment"].ftpa_preview(self)

@@ -6,10 +6,9 @@ from odoo.exceptions import UserError
 
 
 class FatturaPAAttachment(models.Model):
+    _inherit = "fatturapa.attachment"
     _name = "fatturapa.attachment.out"
-    _description = "E-invoice Export File"
-    _inherits = {"ir.attachment": "ir_attachment_id"}
-    _inherit = ["mail.thread"]
+    _description = "Electronic Invoice"
     _order = "id desc"
 
     ir_attachment_id = fields.Many2one(
@@ -117,8 +116,6 @@ class FatturaPAAttachment(models.Model):
                 # one attachment having is_pdf_invoice_print = True
                 attachment_out.has_pdf_invoice_print = True
 
-    def ftpa_preview(self):
-        return self.env["ir.attachment"].ftpa_preview(self)
 
     def reset_to_ready(self):
         for attachment_out in self:
