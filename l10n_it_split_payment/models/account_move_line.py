@@ -15,7 +15,7 @@ class AccountMoveLine(models.Model):
     is_split_payment = fields.Boolean()
     
     def _build_writeoff_line(self):
-        self.ensure_one()
+        #self.ensure_one()
 
         if not self.move_id.company_id.sp_account_id:
             raise UserError(
@@ -24,6 +24,7 @@ class AccountMoveLine(models.Model):
                     " accounting configuration"
                 )
             )
+        
         vals = {
             "name": _("Split Payment Write Off"),
             "partner_id": self.move_id.partner_id.id,
@@ -31,17 +32,17 @@ class AccountMoveLine(models.Model):
             "journal_id": self.move_id.journal_id.id,
             "date": self.move_id.invoice_date,
             "date_maturity": self.move_id.invoice_date,
-            "price_unit": -self.credit,
-            "amount_currency": self.credit,
-            "debit": self.credit,
-            "credit": self.debit,
+            "price_unit": -sum(self.mapped('credit')),
+            "amount_currency": sum(self.mapped('credit')),
+            "debit": sum(self.mapped('credit')),
+            "credit": sum(self.mapped('debit')),
             "display_type": "tax",
             "is_split_payment": True,
         }
         if self.move_id.move_type == "out_refund":
-            vals["amount_currency"] = -self.debit
-            vals["debit"] = self.credit
-            vals["credit"] = self.debit
+            vals["amount_currency"] = -sum(self.mapped('debit'))
+            vals["debit"] = sum(self.mapped('credit'))
+            vals["credit"] = self.mapped('debit')
         return vals
 
     # @api.model_create_multi
