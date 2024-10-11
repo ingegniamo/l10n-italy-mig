@@ -13,7 +13,7 @@ class AssetCategory(models.Model):
 
     @api.model
     def get_default_company_id(self):
-        return self.env.user.company_id
+        return self.env.company
 
     @api.model
     def get_default_type_ids(self):
