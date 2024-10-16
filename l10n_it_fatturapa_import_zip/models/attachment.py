@@ -187,8 +187,7 @@ class FatturaPAAttachmentOut(models.Model):
         readonly=True,
         ondelete="restrict",
     )
-
-"""     def get_invoice_obj(self, fatturapa_attachment):
+    
+    def get_invoice_obj(self, fatturapa_attachment):
         xml_string = fatturapa_attachment.get_xml_string()
         return efattura.CreateFromDocument(xml_string)
- """
