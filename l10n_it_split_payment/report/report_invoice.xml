@@ -3,7 +3,6 @@
        <template
         id="document_tax_totals_wt"
         inherit_id="account.document_tax_totals"
-        primary="True"
     >
 <xpath expr="//tr[hasclass('o_total')]" position="after">
                 <t t-if="o.amount_sp">
