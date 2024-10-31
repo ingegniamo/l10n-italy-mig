@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo>
        <template
-        id="document_tax_totals_wt"
+        id="document_tax_totals_sp"
         inherit_id="account.document_tax_totals"
     >
 <xpath expr="//tr[hasclass('o_total')]" position="after">

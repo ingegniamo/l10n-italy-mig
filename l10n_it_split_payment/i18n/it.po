@@ -25,12 +25,12 @@ msgstr ""
 "                        <span class=\"fa fa-lg fa-building-o\" title=\"I valori impostati qui sono specifici per azienda.\" aria-label=\"I valori impostati qui sono specifici per azienda.\" groups=\"base.group_multi_company\" role=\"img\"/>"
 
 #. module: l10n_it_split_payment
-#: model_terms:ir.ui.view,arch_db:l10n_it_split_payment.document_tax_totals_wt
+#: model_terms:ir.ui.view,arch_db:l10n_it_split_payment.document_tax_totals_sp
 msgid "<span>Split payment</span>"
 msgstr ""
 
 #. module: l10n_it_split_payment
-#: model_terms:ir.ui.view,arch_db:l10n_it_split_payment.document_tax_totals_wt
+#: model_terms:ir.ui.view,arch_db:l10n_it_split_payment.document_tax_totals_sp
 msgid "<strong>Net To Pay</strong>"
 msgstr "<strong>Netto a pagare</strong>"
 
