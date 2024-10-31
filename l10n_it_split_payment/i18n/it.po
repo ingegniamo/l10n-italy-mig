@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-31 13:55+0000\n"
-"PO-Revision-Date: 2024-10-31 13:55+0000\n"
+"POT-Creation-Date: 2024-10-31 14:08+0000\n"
+"PO-Revision-Date: 2024-10-31 14:08+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -23,16 +23,6 @@ msgid ""
 msgstr ""
 "<span class=\"o_form_label\">Configurazione per il modulo di scissione dei pagamenti</span>\n"
 "                        <span class=\"fa fa-lg fa-building-o\" title=\"I valori impostati qui sono specifici per azienda.\" aria-label=\"I valori impostati qui sono specifici per azienda.\" groups=\"base.group_multi_company\" role=\"img\"/>"
-
-#. module: l10n_it_split_payment
-#: model_terms:ir.ui.view,arch_db:l10n_it_split_payment.document_tax_totals_sp
-msgid "<span>Split payment</span>"
-msgstr ""
-
-#. module: l10n_it_split_payment
-#: model_terms:ir.ui.view,arch_db:l10n_it_split_payment.document_tax_totals_sp
-msgid "<strong>Net To Pay</strong>"
-msgstr "<strong>Netto a pagare</strong>"
 
 #. module: l10n_it_split_payment
 #: model:ir.model.fields,help:l10n_it_split_payment.field_res_company__sp_account_id
@@ -84,6 +74,11 @@ msgid "Journal Item"
 msgstr "Movimento contabile"
 
 #. module: l10n_it_split_payment
+#: model_terms:ir.ui.view,arch_db:l10n_it_split_payment.document_tax_totals_sp
+msgid "Net To Pay"
+msgstr "Netto a pagare"
+
+#. module: l10n_it_split_payment
 #: model_terms:ir.ui.view,arch_db:l10n_it_split_payment.view_account_config_settings
 msgid "SP account"
 msgstr "Conto SP"
@@ -107,6 +102,11 @@ msgstr "Conto storno scissione pagamenti"
 #: model_terms:ir.ui.view,arch_db:l10n_it_split_payment.view_account_config_settings
 msgid "Split Payment Write-off account"
 msgstr "Conto storno scissione pagamenti"
+
+#. module: l10n_it_split_payment
+#: model_terms:ir.ui.view,arch_db:l10n_it_split_payment.document_tax_totals_sp
+msgid "Split payment"
+msgstr "Scissione pagamenti"
 
 #. module: l10n_it_split_payment
 #: model:ir.model,name:l10n_it_split_payment.model_account_tax
