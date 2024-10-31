@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 17.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-31 13:46+0000\n"
-"PO-Revision-Date: 2024-10-31 13:46+0000\n"
+"POT-Creation-Date: 2024-10-31 13:55+0000\n"
+"PO-Revision-Date: 2024-10-31 13:55+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -25,12 +25,12 @@ msgstr ""
 "                        <span class=\"fa fa-lg fa-building-o\" title=\"I valori impostati qui sono specifici per azienda.\" aria-label=\"I valori impostati qui sono specifici per azienda.\" groups=\"base.group_multi_company\" role=\"img\"/>"
 
 #. module: l10n_it_split_payment
-#: model_terms:ir.ui.view,arch_db:l10n_it_split_payment.document_tax_totals_sp
+#: model_terms:ir.ui.view,arch_db:l10n_it_split_payment.document_tax_totals_wt
 msgid "<span>Split payment</span>"
 msgstr ""
 
 #. module: l10n_it_split_payment
-#: model_terms:ir.ui.view,arch_db:l10n_it_split_payment.document_tax_totals_sp
+#: model_terms:ir.ui.view,arch_db:l10n_it_split_payment.document_tax_totals_wt
 msgid "<strong>Net To Pay</strong>"
 msgstr "<strong>Netto a pagare</strong>"
 

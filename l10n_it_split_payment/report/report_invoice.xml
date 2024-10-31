@@ -14,7 +14,7 @@
                             <span t-field="o.amount_sp" t-options="{'widget': 'monetary', 'display_currency': o.currency_id}"/>
                         </td>
                     </tr>
-                    <tr class="border-black">
+                    <tr >
                         <td>
                             <strong>Net To Pay</strong>
                         </td>
