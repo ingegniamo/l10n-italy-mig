@@ -7,7 +7,7 @@ from io import BytesIO
 import lxml.etree as ET
 import os
 from odoo import api, fields, models
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 from odoo.tools.translate import _
 from odoo.tools.misc import file_path
 from odoo.modules import get_module_resource
