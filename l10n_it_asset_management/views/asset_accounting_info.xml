@@ -42,6 +42,7 @@
                             <field name="dep_line_id" options="{'no_create_edit': 1}" domain="[('asset_id', '=', asset_id)]" invisible="asset_id == False" />
                             <field name="relation_type" />
                             <field name="company_id" groups="base.group_multi_company" />
+                            <field name="company_id" invisible="True" groups="!base.group_multi_company" />
                         </group>
                         <group name="accounting_info">
                             <field name="move_id" options="{'no_create_edit': 1}" />

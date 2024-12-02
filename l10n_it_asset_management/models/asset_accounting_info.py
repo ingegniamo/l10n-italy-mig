@@ -1,5 +1,6 @@
 # Author(s): Silvio Gregorini (silviogregorini@openforce.it)
 # Copyright 2019 Openforce Srls Unipersonale (www.openforce.it)
+# Copyright 2023 Simone Rubino - Aion Tech
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
 from odoo import _, api, fields, models
@@ -59,9 +60,12 @@ class AssetAccountingInfo(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
-        info = super().create(vals_list)
-        info.check_and_normalize()
-        return info
+        all_info = self.browse()
+        for vals in vals_list:
+            info = super().create(vals)
+            info.check_and_normalize()
+            all_info |= info
+        return all_info
 
     def write(self, vals):
         fnames = self.get_main_fields()

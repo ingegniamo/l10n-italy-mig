@@ -1,9 +1,11 @@
 # Author(s): Silvio Gregorini (silviogregorini@openforce.it)
 # Copyright 2019 Openforce Srls Unipersonale (www.openforce.it)
+# Copyright 2023 Simone Rubino - Aion Tech
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
+from odoo.fields import Command
 
 
 class AssetDepreciationLine(models.Model):
@@ -25,7 +27,10 @@ class AssetDepreciationLine(models.Model):
         string="Asset",
     )
 
-    balance = fields.Monetary(compute="_compute_balance", store=True)
+    balance = fields.Monetary(
+        compute="_compute_balance",
+        store=True,
+    )
 
     base = fields.Float()
 
@@ -41,7 +46,9 @@ class AssetDepreciationLine(models.Model):
         related="depreciation_id.currency_id",
     )
 
-    date = fields.Date(required=True)
+    date = fields.Date(
+        required=True,
+    )
 
     depreciation_id = fields.Many2one(
         "asset.depreciation",
@@ -88,7 +95,9 @@ class AssetDepreciationLine(models.Model):
         required=True,
     )
 
-    name = fields.Char(required=True)
+    name = fields.Char(
+        required=True,
+    )
 
     partial_dismissal = fields.Boolean()
 
@@ -110,17 +119,19 @@ class AssetDepreciationLine(models.Model):
     _numbered_move_types = ("depreciated", "historical")
     # Non-default parameter: set which `move_types` do not concur to
     # asset.depreciation's `amount_residual` field compute
-    _non_residual_move_types = ("gain",)
+    _non_residual_move_types = ("gain", "loss")
     # Non-default parameter: set which `move_types` get to update the
     # depreciable amount
     _update_move_types = ("in", "out")
 
     @api.model_create_multi
     def create(self, vals_list):
-        lines = super().create(vals_list)
-        for line in lines:
+        lines = self.browse()
+        for vals in vals_list:
+            line = super().create(vals)
             if line.need_normalize_depreciation_nr():
                 line.normalize_depreciation_nr(force=True)
+            lines |= line
         return lines
 
     def write(self, vals):
@@ -131,7 +142,10 @@ class AssetDepreciationLine(models.Model):
                 line.normalize_depreciation_nr(force=True)
         return res
 
-    def unlink(self):
+    @api.ondelete(
+        at_uninstall=False,
+    )
+    def _unlink_except_open_move(self):
         if any([m.state != "draft" for m in self.mapped("move_id")]):
             lines = self.filtered(
                 lambda line: line.move_id and line.move_id.state != "draft"
@@ -144,6 +158,8 @@ class AssetDepreciationLine(models.Model):
                 )
                 + name_list
             )
+
+    def unlink(self):
         self.mapped("asset_accounting_info_ids").unlink()
         self.mapped("move_id").unlink()
         return super().unlink()
@@ -157,9 +173,10 @@ class AssetDepreciationLine(models.Model):
             if len(comp) > 1 or (comp and comp != dep_line.company_id):
                 raise ValidationError(
                     _(
-                        "`{}`: cannot change depreciation line's company once"
-                        " it's already related to an asset."
-                    ).format(dep_line.make_name())
+                        "`%(dep_line)s`: cannot change depreciation line's company once"
+                        " it's already related to an asset.",
+                        dep_line=dep_line.make_name(),
+                    )
                 )
 
     @api.constrains("depreciation_nr")
@@ -255,7 +272,7 @@ class AssetDepreciationLine(models.Model):
 
     def make_name(self):
         self.ensure_one()
-        return "{} ({})".format(self.name, self.depreciation_id.make_name())
+        return f"{self.name} ({self.depreciation_id.make_name()})"
 
     def need_normalize_depreciation_nr(self):
         """Check if numbers need to be normalized"""
@@ -297,7 +314,6 @@ class AssetDepreciationLine(models.Model):
         :param force: force normalization for every depreciations' lines
         """
         for dep in self.mapped("depreciation_id"):
-
             # Avoid if user chooses to use custom numbers
             if dep.force_all_dep_nr:
                 continue
@@ -327,7 +343,7 @@ class AssetDepreciationLine(models.Model):
         self.mapped("move_id").unlink()
 
     def generate_account_move(self):
-        for line in self.filtered(lambda l: l.needs_account_move()):
+        for line in self.filtered(lambda line: line.needs_account_move()):
             line.generate_account_move_single()
 
     def generate_account_move_single(self):
@@ -340,16 +356,20 @@ class AssetDepreciationLine(models.Model):
 
         line_vals = self.get_account_move_line_vals()
         for v in line_vals:
-            vals["line_ids"].append((0, 0, v))
+            vals["line_ids"].append(Command.create(v))
 
         self.move_id = am_obj.create(vals)
 
     def get_account_move_vals(self):
         self.ensure_one()
+        journal = self.env.context.get(
+            "l10n_it_asset_override_journal",
+            self.asset_id.category_id.journal_id,
+        )
         return {
             "company_id": self.company_id.id,
             "date": self.date,
-            "journal_id": self.asset_id.category_id.journal_id.id,
+            "journal_id": journal.id,
             "line_ids": [],
             "ref": _("Asset: ") + self.asset_id.make_name(),
             "move_type": "entry",
@@ -370,7 +390,7 @@ class AssetDepreciationLine(models.Model):
         Maps line `move_type` to its own method for generating move lines.
         """
         return {
-            t: getattr(self, "get_{}_account_move_line_vals".format(t), False)
+            t: getattr(self, f"get_{t}_account_move_line_vals", False)
             for t in dict(self._fields["move_type"].selection).keys()
         }
 
@@ -380,7 +400,7 @@ class AssetDepreciationLine(models.Model):
         # Asset depreciation
         if not self.partial_dismissal:
             credit_account_id = self.asset_id.category_id.fund_account_id.id
-            debit_account_id = self.asset_id.category_id.depreciation_account_id.id
+            debit_account_id = self.depreciation_id.depreciation_account_id.id
 
         # Asset partial dismissal
         else:
@@ -407,7 +427,7 @@ class AssetDepreciationLine(models.Model):
     def get_gain_account_move_line_vals(self):
         self.ensure_one()
         credit_line_vals = {
-            "account_id": self.asset_id.category_id.gain_account_id.id,
+            "account_id": self.depreciation_id.gain_account_id.id,
             "credit": self.amount,
             "debit": 0.0,
             "currency_id": self.currency_id.id,
@@ -442,7 +462,7 @@ class AssetDepreciationLine(models.Model):
             "name": " - ".join((self.asset_id.make_name(), self.name)),
         }
         debit_line_vals = {
-            "account_id": self.asset_id.category_id.loss_account_id.id,
+            "account_id": self.depreciation_id.loss_account_id.id,
             "credit": 0.0,
             "debit": self.amount,
             "currency_id": self.currency_id.id,
@@ -464,7 +484,7 @@ class AssetDepreciationLine(models.Model):
         dep.ensure_one()
         types = ("gain", "loss")
         gain_or_loss = self.filtered(
-            lambda l: l.needs_account_move() and l.move_type in types
+            lambda line: line.needs_account_move() and line.move_type in types
         )
         if gain_or_loss:
             gain_or_loss.generate_account_move_single()
@@ -475,7 +495,7 @@ class AssetDepreciationLine(models.Model):
         dep.ensure_one()
         types = ("depreciated", "gain", "loss")
         to_create_move = self.filtered(
-            lambda l: l.needs_account_move() and l.move_type in types
+            lambda line: line.needs_account_move() and line.move_type in types
         )
         if to_create_move:
             to_create_move.generate_account_move()

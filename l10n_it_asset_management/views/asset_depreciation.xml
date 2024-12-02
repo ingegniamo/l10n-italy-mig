@@ -20,6 +20,10 @@
                         <field name="pro_rata_temporis" readonly="state != &quot;non_depreciated&quot;" />
                         <field name="percentage" readonly="state != &quot;non_depreciated&quot;" />
                         <field name="base_coeff" readonly="state != &quot;non_depreciated&quot;" />
+                        <field name="base_max_amount" readonly="state != &quot;non_depreciated&quot;" />
+                        <field name="depreciation_account_id" readonly="state != &quot;non_depreciated&quot;" />
+                        <field name="gain_account_id" readonly="state != &quot;non_depreciated&quot;" />
+                        <field name="loss_account_id" readonly="state != &quot;non_depreciated&quot;" />
                     </group>
                     <group>
                         <field name="amount_depreciable" widget="monetary" force_save="1" readonly="state != &quot;non_depreciated&quot;" />
@@ -32,7 +36,9 @@
                         <field name="amount_gain" widget="monetary" />
                         <field name="amount_residual" widget="monetary" />
                         <field name="currency_id" groups="base.group_multi_currency" />
+                        <field name="currency_id" invisible="True" groups="!base.group_multi_currency" />
                         <field name="company_id" groups="base.group_multi_company" />
+                        <field name="company_id" invisible="True" groups="!base.group_multi_company" />
                         <field name="dismiss_move_id" />
                     </group>
                 </group>

@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8" ?>
+<!--
+  ~ Copyright 2023 Simone Rubino - Aion Tech
+  ~ License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
+  -->
 <odoo>
 
     <template id="template_asset_previsional_report">
         <div class="o_account_financial_reports_page">
-            <t t-call="account_financial_report.report_buttons" />
             <t t-call="l10n_it_asset_management.template_asset_previsional_base" />
         </div>
     </template>
@@ -35,6 +38,11 @@
             <t t-if="o.show_sold_assets">
                 <div style="width: 100%; text-align:center;">
                     Sold assets: show
+                </div>
+            </t>
+            <t t-if="o.show_dismissed_assets">
+                <div style="width: 100%; text-align:center;">
+                    Dismissed assets: show
                 </div>
             </t>
         </div>
@@ -88,8 +96,8 @@
                 <span style="margin: 5px; font-weight: bold;">
                     <span>Asset Category: </span>
                     <a
-                        t-att-data-domain="domain"
-                        t-att-data-res-model="'asset.asset'"
+                        t-att-domain="domain"
+                        res-model="asset.asset"
                         class="o_account_financial_reports_web_action_multi"
                     >
                         <t t-out="category_section.category_name" />
@@ -189,8 +197,9 @@
                 <span style="margin: 5px;">
                     <span>Asset: </span>
                     <a
-                        t-att-data-active-id="active_id"
-                        t-att-data-res-model="'asset.asset'"
+                        t-att-res-id="active_id"
+                        view-type="form"
+                        res-model="asset.asset"
                         class="o_account_financial_reports_web_action"
                     >
                         <t t-out="asset_section.asset_name" />
@@ -224,8 +233,9 @@
             <div class="act_as_cell" style="width: 25%;" name="code">
                 <span>
                     <a
-                        t-att-data-active-id="active_id"
-                        t-att-data-res-model="res_model"
+                        t-att-res-id="active_id"
+                        view-type="form"
+                        t-att-res-model="res_model"
                         class="o_account_financial_reports_web_action"
                     >
                         <t t-out="asset_section.asset_code" />
@@ -235,8 +245,9 @@
             <div class="act_as_cell" style="width: 25%;" name="amount">
                 <span>
                     <a
-                        t-att-data-active-id="active_id"
-                        t-att-data-res-model="res_model"
+                        t-att-res-id="active_id"
+                        view-type="form"
+                        t-att-res-model="res_model"
                         class="o_account_financial_reports_web_action"
                     >
                         <t
@@ -248,8 +259,9 @@
             <div class="act_as_cell" style="width: 25%;" name="used">
                 <span>
                     <a
-                        t-att-data-active-id="active_id"
-                        t-att-data-res-model="res_model"
+                        t-att-res-id="active_id"
+                        view-type="form"
+                        t-att-res-model="res_model"
                         class="o_account_financial_reports_web_action"
                     >
                         <t t-out="asset_section.asset_used" />
@@ -259,8 +271,9 @@
             <div class="act_as_cell" style="width: 25%;" name="status">
                 <span>
                     <a
-                        t-att-data-active-id="active_id"
-                        t-att-data-res-model="res_model"
+                        t-att-res-id="active_id"
+                        view-type="form"
+                        t-att-res-model="res_model"
                         class="o_account_financial_reports_web_action"
                     >
                         <t t-out="asset_section.asset_state" />
@@ -301,8 +314,9 @@
             <div class="act_as_cell" style="width: 20%;" name="partner_name">
                 <span>
                     <a
-                        t-att-data-active-id="active_id"
-                        t-att-data-res-model="res_model"
+                        t-att-res-id="active_id"
+                        view-type="form"
+                        t-att-res-model="res_model"
                         class="o_account_financial_reports_web_action"
                     >
                         <t t-out="accounting_doc.partner_name" />
@@ -312,8 +326,9 @@
             <div class="act_as_cell" style="width: 20%;" name="partner_vat">
                 <span>
                     <a
-                        t-att-data-active-id="active_id"
-                        t-att-data-res-model="res_model"
+                        t-att-res-id="active_id"
+                        view-type="form"
+                        t-att-res-model="res_model"
                         class="o_account_financial_reports_web_action"
                     >
                         <t t-out="accounting_doc.partner_vat" />
@@ -323,8 +338,9 @@
             <div class="act_as_cell" style="width: 20%;" name="account_doc_nr">
                 <span>
                     <a
-                        t-att-data-active-id="active_id"
-                        t-att-data-res-model="res_model"
+                        t-att-res-id="active_id"
+                        view-type="form"
+                        t-att-res-model="res_model"
                         class="o_account_financial_reports_web_action"
                     >
                         <t t-out="accounting_doc.document_nr" />
@@ -334,8 +350,9 @@
             <div class="act_as_cell" style="width: 20%;" name="account_doc_date">
                 <span>
                     <a
-                        t-att-data-active-id="active_id"
-                        t-att-data-res-model="res_model"
+                        t-att-res-id="active_id"
+                        view-type="form"
+                        t-att-res-model="res_model"
                         class="o_account_financial_reports_web_action"
                     >
                         <t t-out="accounting_doc.document_date" />
@@ -349,8 +366,9 @@
             >
                 <span>
                     <a
-                        t-att-data-active-id="active_id"
-                        t-att-data-res-model="res_model"
+                        t-att-res-id="active_id"
+                        view-type="form"
+                        t-att-res-model="res_model"
                         class="o_account_financial_reports_web_action"
                     >
                         <t t-out="accounting_doc.partner_ref" />
@@ -426,8 +444,9 @@
             <div class="act_as_cell" style="width: 16.667%;" name="type">
                 <span>
                     <a
-                        t-att-data-active-id="active_id"
-                        t-att-data-res-model="res_model"
+                        t-att-res-id="active_id"
+                        view-type="form"
+                        t-att-res-model="res_model"
                         class="o_account_financial_reports_web_action"
                     >
                         <t t-out="dep_section.type_name" />
@@ -437,8 +456,9 @@
             <div class="act_as_cell" style="width: 16.667%;" name="mode">
                 <span>
                     <a
-                        t-att-data-active-id="active_id"
-                        t-att-data-res-model="res_model"
+                        t-att-res-id="active_id"
+                        view-type="form"
+                        t-att-res-model="res_model"
                         class="o_account_financial_reports_web_action"
                     >
                         <t t-out="dep_section.mode_name" />
@@ -448,8 +468,9 @@
             <div class="act_as_cell" style="width: 16.667%;" name="depreciable_amount">
                 <span>
                     <a
-                        t-att-data-active-id="active_id"
-                        t-att-data-res-model="res_model"
+                        t-att-res-id="active_id"
+                        view-type="form"
+                        t-att-res-model="res_model"
                         class="o_account_financial_reports_web_action"
                     >
                         <t
@@ -461,8 +482,9 @@
             <div class="act_as_cell" style="width: 16.667%;" name="date_start">
                 <span>
                     <a
-                        t-att-data-active-id="active_id"
-                        t-att-data-res-model="res_model"
+                        t-att-res-id="active_id"
+                        view-type="form"
+                        t-att-res-model="res_model"
                         class="o_account_financial_reports_web_action"
                     >
                         <t t-out="dep_section.dep_date_start" />
@@ -472,8 +494,9 @@
             <div class="act_as_cell" style="width: 16.667%;" name="percentage">
                 <span>
                     <a
-                        t-att-data-active-id="active_id"
-                        t-att-data-res-model="res_model"
+                        t-att-res-id="active_id"
+                        view-type="form"
+                        t-att-res-model="res_model"
                         class="o_account_financial_reports_web_action"
                     >
                         <t t-out="dep_section.dep_percentage" />
@@ -483,8 +506,9 @@
             <div class="act_as_cell" style="width: 16.667%;" name="pro_rata_temporis">
                 <span>
                     <a
-                        t-att-data-active-id="active_id"
-                        t-att-data-res-model="res_model"
+                        t-att-res-id="active_id"
+                        view-type="form"
+                        t-att-res-model="res_model"
                         class="o_account_financial_reports_web_action"
                     >
                         <t t-out="dep_section.dep_pro_rata_temporis" />
@@ -537,8 +561,8 @@
             <div class="act_as_cell" name="year">
                 <span>
                     <a
-                        t-att-data-domain="domain"
-                        t-att-data-res-model="res_model"
+                        t-att-domain="domain"
+                        t-att-res-model="res_model"
                         class="o_account_financial_reports_web_action_multi"
                     >
                         <t t-out="year_section.year" />
@@ -548,8 +572,8 @@
             <div class="act_as_cell" name="amount_depreciable">
                 <span>
                     <a
-                        t-att-data-domain="domain"
-                        t-att-data-res-model="res_model"
+                        t-att-domain="domain"
+                        t-att-res-model="res_model"
                         class="o_account_financial_reports_web_action_multi"
                     >
                         <t
@@ -561,8 +585,8 @@
             <div class="act_as_cell" name="amount_in">
                 <span>
                     <a
-                        t-att-data-domain="domain"
-                        t-att-data-res-model="res_model"
+                        t-att-domain="domain"
+                        t-att-res-model="res_model"
                         class="o_account_financial_reports_web_action_multi"
                     >
                         <t t-out="year_section.format_amount(year_section.amount_in)" />
@@ -572,8 +596,8 @@
             <div class="act_as_cell" name="amount_out">
                 <span>
                     <a
-                        t-att-data-domain="domain"
-                        t-att-data-res-model="res_model"
+                        t-att-domain="domain"
+                        t-att-res-model="res_model"
                         class="o_account_financial_reports_web_action_multi"
                     >
                         <t
@@ -585,8 +609,8 @@
             <div class="act_as_cell" name="dep_fund_prev_year">
                 <span>
                     <a
-                        t-att-data-domain="domain"
-                        t-att-data-res-model="res_model"
+                        t-att-domain="domain"
+                        t-att-res-model="res_model"
                         class="o_account_financial_reports_web_action_multi"
                     >
                         <t
@@ -598,8 +622,8 @@
             <div class="act_as_cell" name="amount_depreciated">
                 <span>
                     <a
-                        t-att-data-domain="domain"
-                        t-att-data-res-model="res_model"
+                        t-att-domain="domain"
+                        t-att-res-model="res_model"
                         class="o_account_financial_reports_web_action_multi"
                     >
                         <t
@@ -611,8 +635,8 @@
             <div class="act_as_cell" name="dep_fund_curr_year">
                 <span>
                     <a
-                        t-att-data-domain="domain"
-                        t-att-data-res-model="res_model"
+                        t-att-domain="domain"
+                        t-att-res-model="res_model"
                         class="o_account_financial_reports_web_action_multi"
                     >
                         <t
@@ -624,8 +648,8 @@
             <div class="act_as_cell" name="amount_gain_loss">
                 <span>
                     <a
-                        t-att-data-domain="domain"
-                        t-att-data-res-model="res_model"
+                        t-att-domain="domain"
+                        t-att-res-model="res_model"
                         class="o_account_financial_reports_web_action_multi"
                     >
                         <t t-out="year_section.format_amount(year_section.gain_loss)" />
@@ -635,8 +659,8 @@
             <div class="act_as_cell" name="amount_residual">
                 <span>
                     <a
-                        t-att-data-domain="domain"
-                        t-att-data-res-model="res_model"
+                        t-att-domain="domain"
+                        t-att-res-model="res_model"
                         class="o_account_financial_reports_web_action_multi"
                     >
                         <t
@@ -651,8 +675,8 @@
                 <div class="act_as_cell" name="amount_details_empty_cell">
                     <span>
                         <a
-                            t-att-data-domain="domain"
-                            t-att-data-res-model="res_model"
+                            t-att-domain="domain"
+                            t-att-res-model="res_model"
                             class="o_account_financial_reports_web_action_multi"
                         >
                             <t t-out="year_section.year" /><br />
@@ -663,8 +687,8 @@
                 <div class="act_as_cell" name="amount_details_empty_cell">
                     <span>
                         <a
-                            t-att-data-domain="domain"
-                            t-att-data-res-model="res_model"
+                            t-att-domain="domain"
+                            t-att-res-model="res_model"
                             class="o_account_financial_reports_web_action_multi"
                         >
                             <t t-out="''" />
@@ -678,8 +702,8 @@
                     />
                     <span>
                         <a
-                            t-att-data-domain="amount_in_detail_domain"
-                            t-att-data-res-model="res_model"
+                            t-att-domain="amount_in_detail_domain"
+                            t-att-res-model="res_model"
                             class="o_account_financial_reports_web_action_multi"
                         >
                             <t t-out="year_section.amount_in_detail" />
@@ -693,8 +717,8 @@
                     />
                     <span>
                         <a
-                            t-att-data-domain="amount_out_detail_domain"
-                            t-att-data-res-model="res_model"
+                            t-att-domain="amount_out_detail_domain"
+                            t-att-res-model="res_model"
                             class="o_account_financial_reports_web_action_multi"
                         >
                             <t t-out="year_section.amount_out_detail" />
@@ -704,8 +728,8 @@
                 <div class="act_as_cell" name="amount_details_empty_cell">
                     <span>
                         <a
-                            t-att-data-domain="domain"
-                            t-att-data-res-model="res_model"
+                            t-att-domain="domain"
+                            t-att-res-model="res_model"
                             class="o_account_financial_reports_web_action_multi"
                         >
                             <t t-out="''" />
@@ -715,8 +739,8 @@
                 <div class="act_as_cell" name="amount_details_empty_cell">
                     <span>
                         <a
-                            t-att-data-domain="domain"
-                            t-att-data-res-model="res_model"
+                            t-att-domain="domain"
+                            t-att-res-model="res_model"
                             class="o_account_financial_reports_web_action_multi"
                         >
                             <t t-out="''" />
@@ -726,8 +750,8 @@
                 <div class="act_as_cell" name="amount_details_empty_cell">
                     <span>
                         <a
-                            t-att-data-domain="domain"
-                            t-att-data-res-model="res_model"
+                            t-att-domain="domain"
+                            t-att-res-model="res_model"
                             class="o_account_financial_reports_web_action_multi"
                         >
                             <t t-out="''" />
@@ -737,8 +761,8 @@
                 <div class="act_as_cell" name="amount_details_empty_cell">
                     <span>
                         <a
-                            t-att-data-domain="domain"
-                            t-att-data-res-model="res_model"
+                            t-att-domain="domain"
+                            t-att-res-model="res_model"
                             class="o_account_financial_reports_web_action_multi"
                         >
                             <t t-out="''" />
@@ -748,8 +772,8 @@
                 <div class="act_as_cell" name="amount_details_empty_cell">
                     <span>
                         <a
-                            t-att-data-domain="domain"
-                            t-att-data-res-model="res_model"
+                            t-att-domain="domain"
+                            t-att-res-model="res_model"
                             class="o_account_financial_reports_web_action_multi"
                         >
                             <t t-out="''" />

@@ -1,5 +1,6 @@
 # Author(s): Silvio Gregorini (silviogregorini@openforce.it)
 # Copyright 2019 Openforce Srls Unipersonale (www.openforce.it)
+# Copyright 2023 Simone Rubino - Aion Tech
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
 from odoo import api, fields, models
@@ -8,7 +9,7 @@ from odoo import api, fields, models
 class AssetDepreciationModeLine(models.Model):
     _name = "asset.depreciation.mode.line"
     _description = "Asset Depreciation Mode Line"
-    _order = "from_nr asc, to_nr asc"
+    _order = "from_year_nr asc, to_year_nr asc"
 
     application = fields.Selection(
         [("coefficient", "Coefficient"), ("percentage", "Percentage")],
@@ -23,7 +24,13 @@ class AssetDepreciationModeLine(models.Model):
         "res.company", readonly=True, related="mode_id.company_id", string="Company"
     )
 
-    from_nr = fields.Integer(required=True)
+    from_year_nr = fields.Integer(
+        required=True,
+        string="From Year",
+        help="Minimum number of fiscal years passed "
+        "from asset purchase date "
+        "to apply this line.",
+    )
 
     mode_id = fields.Many2one(
         "asset.depreciation.mode",
@@ -35,7 +42,12 @@ class AssetDepreciationModeLine(models.Model):
 
     percentage = fields.Float()
 
-    to_nr = fields.Integer()
+    to_year_nr = fields.Integer(
+        string="To Year",
+        help="Maximum number of fiscal years passed "
+        "from asset purchase date "
+        "to apply this line.",
+    )
 
     @api.onchange("application")
     def onchange_application(self):
@@ -50,13 +62,14 @@ class AssetDepreciationModeLine(models.Model):
 
     def get_depreciation_amount_multiplier(self):
         multiplier = 1
-        nr = self._context.get("dep_nr")
-        if nr is None:
+        passed_fiscal_years = self._context.get("passed_fiscal_years")
+        if passed_fiscal_years is None:
             # Cannot compare to any line
             return multiplier
 
         lines = self.filtered(
-            lambda l: l.from_nr <= nr and (not l.to_nr or l.to_nr >= nr)
+            lambda line: line.from_year_nr <= passed_fiscal_years
+            and (not line.to_year_nr or line.to_year_nr >= passed_fiscal_years)
         )
         if not lines:
             return multiplier

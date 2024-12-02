@@ -1,13 +1,13 @@
 # Author(s): Silvio Gregorini (silviogregorini@openforce.it)
 # Copyright 2019 Openforce Srls Unipersonale (www.openforce.it)
+# Copyright 2023 Simone Rubino - Aion Tech
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
+from odoo.fields import Command
 from odoo.tools.float_utils import float_compare, float_is_zero
 
-# class WizardAccountMoveManageAssetInvoiceTest(models.TransientModel):
-#     _name = "wizard.invoice.manage.asset"
 
 class WizardAccountMoveManageAsset(models.TransientModel):
     _name = "wizard.account.move.manage.asset"
@@ -15,7 +15,7 @@ class WizardAccountMoveManageAsset(models.TransientModel):
 
     @api.model
     def get_default_company_id(self):
-        return self.env.user.company_id
+        return self.env.company
 
     @api.model
     def get_default_move_ids(self):
@@ -30,7 +30,9 @@ class WizardAccountMoveManageAsset(models.TransientModel):
         string="Category",
     )
 
-    code = fields.Char(default="")
+    code = fields.Char(
+        default="",
+    )
 
     company_id = fields.Many2one(
         "res.company",
@@ -51,11 +53,15 @@ class WizardAccountMoveManageAsset(models.TransientModel):
         "asset.depreciation.type", string="Depreciation Types"
     )
 
-    dismiss_date = fields.Date(default=fields.Date.today())
+    dismiss_date = fields.Date(
+        default=fields.Date.today(),
+    )
 
     is_move_state_ok = fields.Boolean(
         string="Move State",
     )
+
+    dismiss_asset_without_sale = fields.Boolean()
 
     management_type = fields.Selection(
         [
@@ -92,7 +98,9 @@ class WizardAccountMoveManageAsset(models.TransientModel):
 
     name = fields.Char()
 
-    purchase_date = fields.Date(default=fields.Date.today())
+    purchase_date = fields.Date(
+        default=fields.Date.today(),
+    )
 
     used = fields.Boolean()
 
@@ -174,6 +182,11 @@ class WizardAccountMoveManageAsset(models.TransientModel):
             else:
                 self.move_type = "general"
                 self.management_type = "update"
+        else:
+            if self._context.get("remove_asset_without_sale"):
+                self.dismiss_asset_without_sale = True
+                self.management_type = "dismiss"
+                self.asset_id = self._context.get("asset_ids")[0]
 
     def link_asset(self):
         self.ensure_one()
@@ -184,15 +197,16 @@ class WizardAccountMoveManageAsset(models.TransientModel):
             raise ValidationError(
                 _(
                     "Could not determine how to link move lines to asset"
-                    " in mode `{}`."
-                ).format(self.management_type)
+                    " in mode `%(management_type)s`.",
+                    management_type=self.management_type,
+                )
             )
         # As written above: method defined in here must return an asset
         asset = method(self)
 
         if self._context.get("show_asset"):
             act_xmlid = "l10n_it_asset_management.action_asset"
-            act = self.env.ref(act_xmlid).read()[0]
+            act = self.env["ir.actions.act_window"]._for_xml_id(act_xmlid)
             form_xmlid = "l10n_it_asset_management.asset_form_view"
             form = self.env.ref(form_xmlid)
             act.update(
@@ -233,10 +247,12 @@ class WizardAccountMoveManageAsset(models.TransientModel):
             acc_name = self.category_id.asset_account_id.name_get()[0][-1]
             raise ValidationError(
                 _(
-                    "You need to choose move lines with account `{}`"
+                    "You need to choose move lines with account `%(acc_name)s`"
                     " if you need them to create an asset for"
-                    " category `{}`!"
-                ).format(acc_name, categ_name)
+                    " category `%(categ_name)s`!",
+                    acc_name=acc_name,
+                    categ_name=categ_name,
+                )
             )
 
     def check_pre_dismiss_asset(self):
@@ -244,12 +260,15 @@ class WizardAccountMoveManageAsset(models.TransientModel):
         if not self.asset_id:
             raise ValidationError(_("Please choose an asset before continuing!"))
 
-        if not self.move_line_ids:
+        if not self.move_line_ids and not self.dismiss_asset_without_sale:
             raise ValidationError(
                 _("At least one move line is mandatory to dismiss" " an asset!")
             )
 
-        if not len(self.move_line_ids.mapped("move_id")) == 1:
+        if (
+            not len(self.move_line_ids.mapped("move_id")) == 1
+            and not self.dismiss_asset_without_sale
+        ):
             raise ValidationError(
                 _(
                     "Cannot dismiss asset if move lines come from different"
@@ -257,19 +276,24 @@ class WizardAccountMoveManageAsset(models.TransientModel):
                 )
             )
 
-        if not all(
-            [
-                line.account_id == self.asset_id.category_id.asset_account_id
-                for line in self.move_line_ids
-            ]
+        if (
+            not all(
+                [
+                    line.account_id == self.asset_id.category_id.asset_account_id
+                    for line in self.move_line_ids
+                ]
+            )
+            and not self.dismiss_asset_without_sale
         ):
             ass_name = self.asset_id.make_name()
             ass_acc = self.asset_id.category_id.asset_account_id.name_get()[0][-1]
             raise ValidationError(
                 _(
-                    "You need to choose move lines with account `{}`"
-                    " if you need them to dismiss asset `{}`!"
-                ).format(ass_acc, ass_name)
+                    "You need to choose move lines with account `%(ass_acc)s`"
+                    " if you need them to dismiss asset `%(ass_name)s`!",
+                    ass_acc=ass_acc,
+                    ass_name=ass_name,
+                )
             )
 
     def check_pre_link_asset(self):
@@ -303,9 +327,11 @@ class WizardAccountMoveManageAsset(models.TransientModel):
             ass_acc = self.asset_id.category_id.asset_account_id.name_get()[0][-1]
             raise ValidationError(
                 _(
-                    "You need to choose move lines with account `{}`"
-                    " if you need them to update asset `{}`!"
-                ).format(ass_acc, ass_name)
+                    "You need to choose move lines with account `%(ass_acc)s`"
+                    " if you need them to update asset `%(ass_name)s`!",
+                    ass_acc=ass_acc,
+                    ass_name=ass_name,
+                )
             )
 
     def create_asset(self):
@@ -322,7 +348,9 @@ class WizardAccountMoveManageAsset(models.TransientModel):
         self.asset_id.write(self.get_dismiss_asset_vals())
 
         for dep in self.asset_id.depreciation_ids:
-            (dep.line_ids - old_dep_lines).post_dismiss_asset()
+            (dep.line_ids - old_dep_lines).with_context(
+                **{"dismiss_date": self.dismiss_date}
+            ).post_dismiss_asset()
 
         return self.asset_id
 
@@ -338,13 +366,16 @@ class WizardAccountMoveManageAsset(models.TransientModel):
         move = self.move_line_ids.mapped("move_id")
         return {
             "asset_accounting_info_ids": [
-                (0, 0, {"move_line_id": line.id, "relation_type": self.management_type})
+                Command.create(
+                    {"move_line_id": line.id, "relation_type": self.management_type}
+                )
                 for line in self.move_line_ids
             ],
             "category_id": self.category_id.id,
             "code": self.code,
             "company_id": self.company_id.id,
             "currency_id": self.currency_id.id,
+            "dismiss_date": False,
             "name": self.name,
             "purchase_amount": purchase_amount,
             "purchase_date": self.purchase_date,
@@ -371,51 +402,77 @@ class WizardAccountMoveManageAsset(models.TransientModel):
                     _(
                         "Cannot dismiss an asset earlier than the last depreciation"
                         " date.\n"
-                        "(Dismiss date: {}, last depreciation date: {})."
-                    ).format(dismiss_date, max_date)
+                        "(Dismiss date: %(dismiss_date)s,"
+                        " last depreciation date: %(max_date)s).",
+                        dismiss_date=dismiss_date,
+                        max_date=max_date,
+                    )
                 )
 
-        move = self.move_line_ids.mapped("move_id")
-        move_nums = move.name
+        if self.dismiss_asset_without_sale:
+            move_nums = _("Dismiss Asset without Sale")
+            writeoff = 0
+            vals = {
+                "depreciation_ids": [],
+                "sale_amount": writeoff,
+                "dismiss_date": self.dismiss_date,
+                "dismissed": True,
+            }
+        else:
+            move = self.move_line_ids.mapped("move_id")
+            move_nums = move.name
 
-        writeoff = 0
-        for line in self.move_line_ids:
-            writeoff += line.currency_id._convert(
-                line.credit - line.debit, currency, line.company_id, line.date
-            )
-        writeoff = round(writeoff, digits)
+            writeoff = 0
+            for line in self.move_line_ids:
+                writeoff += line.currency_id._convert(
+                    line.credit - line.debit, currency, line.company_id, line.date
+                )
+            writeoff = round(writeoff, digits)
 
-        vals = {
-            "customer_id": move.partner_id.id,
-            "depreciation_ids": [],
-            "sale_amount": writeoff,
-            "sale_date": move.invoice_date or move.date,
-            "sale_move_id": move.id,
-            "sold": True,
-        }
+            vals = {
+                "customer_id": move.partner_id.id,
+                "depreciation_ids": [],
+                "sale_amount": writeoff,
+                "sale_date": move.invoice_date or move.date,
+                "sale_move_id": move.id,
+                "sold": True,
+            }
         for dep in asset.depreciation_ids:
             residual = dep.amount_residual
             dep_vals = {"line_ids": []}
             dep_writeoff = writeoff
+            base_coeff = dep.base_coeff
+            if base_coeff:
+                dep_writeoff *= base_coeff
 
-            dep_line_vals = {
-                "asset_accounting_info_ids": [
-                    (
-                        0,
-                        0,
+            if self.dismiss_asset_without_sale and not self.move_line_ids:
+                asset_accounting_info_ids = [
+                    Command.create(
+                        {
+                            "relation_type": self.management_type,
+                        },
+                    )
+                ]
+                dep_name = _("Direct dismiss")
+            else:
+                asset_accounting_info_ids = [
+                    Command.create(
                         {
                             "move_line_id": line.id,
                             "relation_type": self.management_type,
                         },
                     )
                     for line in self.move_line_ids
-                ],
+                ]
+                dep_name = _("From move(s) ") + move_nums
+            dep_line_vals = {
+                "asset_accounting_info_ids": asset_accounting_info_ids,
                 "amount": min(residual, dep_writeoff),
                 "date": dismiss_date,
                 "move_type": "out",
-                "name": _("From move(s) ") + move_nums,
+                "name": dep_name,
             }
-            dep_vals["line_ids"].append((0, 0, dep_line_vals))
+            dep_vals["line_ids"].append(Command.create(dep_line_vals))
 
             balance = dep_writeoff - residual
             if not float_is_zero(balance, digits):
@@ -423,9 +480,7 @@ class WizardAccountMoveManageAsset(models.TransientModel):
                 move_type = "gain" if balance > 0 else "loss"
                 dep_balance_vals = {
                     "asset_accounting_info_ids": [
-                        (
-                            0,
-                            0,
+                        Command.create(
                             {
                                 "move_line_id": line.id,
                                 "relation_type": self.management_type,
@@ -438,7 +493,7 @@ class WizardAccountMoveManageAsset(models.TransientModel):
                     "move_type": move_type,
                     "name": _("From move(s) ") + move_nums,
                 }
-                dep_vals["line_ids"].append((0, 0, dep_balance_vals))
+                dep_vals["line_ids"].append(Command.create(dep_balance_vals))
 
             vals["depreciation_ids"].append((1, dep.id, dep_vals))
 
@@ -461,15 +516,22 @@ class WizardAccountMoveManageAsset(models.TransientModel):
         fund_amt = self.depreciated_fund_amount
         purchase_amt = self.asset_purchase_amount
 
-        max_date = max(asset.depreciation_ids.mapped("last_depreciation_date"))
-        if max_date and max_date > dismiss_date:
-            raise ValidationError(
-                _(
-                    "Cannot dismiss an asset earlier than the last depreciation"
-                    " date.\n"
-                    "(Dismiss date: {}, last depreciation date: {})."
-                ).format(dismiss_date, max_date)
-            )
+        last_depreciation_dates = asset.depreciation_ids.filtered(
+            "last_depreciation_date"
+        ).mapped("last_depreciation_date")
+        if last_depreciation_dates:
+            max_date = max(last_depreciation_dates)
+            if max_date > dismiss_date:
+                raise ValidationError(
+                    _(
+                        "Cannot dismiss an asset earlier than the last depreciation"
+                        " date.\n"
+                        "(Dismiss date: %(dismiss_date)s,"
+                        " last depreciation date: %(max_date)s).",
+                        dismiss_date=dismiss_date,
+                        max_date=max_date,
+                    )
+                )
 
         move = self.move_line_ids.mapped("move_id")
         move_nums = move.name
@@ -490,13 +552,22 @@ class WizardAccountMoveManageAsset(models.TransientModel):
             else:
                 dep_writeoff = writeoff
 
-            name = _("Partial dismissal from move(s) {}").format(move_nums)
+            dep_fund_amount = fund_amt
+            dep_purchase_amt = purchase_amt
+            base_coeff = dep.base_coeff
+            if base_coeff:
+                dep_fund_amount *= base_coeff
+                dep_purchase_amt *= base_coeff
+                dep_writeoff *= base_coeff
+
+            name = _(
+                "Partial dismissal from move(s) %(move_nums)s",
+                move_nums=move_nums,
+            )
 
             out_line_vals = {
                 "asset_accounting_info_ids": [
-                    (
-                        0,
-                        0,
+                    Command.create(
                         {
                             "move_line_id": line.id,
                             "relation_type": self.management_type,
@@ -504,7 +575,7 @@ class WizardAccountMoveManageAsset(models.TransientModel):
                     )
                     for line in self.move_line_ids
                 ],
-                "amount": purchase_amt,
+                "amount": dep_purchase_amt,
                 "date": dismiss_date,
                 "move_type": "out",
                 "name": name,
@@ -512,9 +583,7 @@ class WizardAccountMoveManageAsset(models.TransientModel):
             }
             dep_line_vals = {
                 "asset_accounting_info_ids": [
-                    (
-                        0,
-                        0,
+                    Command.create(
                         {
                             "move_line_id": line.id,
                             "relation_type": self.management_type,
@@ -522,22 +591,25 @@ class WizardAccountMoveManageAsset(models.TransientModel):
                     )
                     for line in self.move_line_ids
                 ],
-                "amount": -fund_amt,
+                "amount": -dep_fund_amount,
                 "date": dismiss_date,
                 "move_type": "depreciated",
                 "name": name,
                 "partial_dismissal": True,
             }
 
-            dep_vals = {"line_ids": [(0, 0, out_line_vals), (0, 0, dep_line_vals)]}
+            dep_vals = {
+                "line_ids": [
+                    Command.create(out_line_vals),
+                    Command.create(dep_line_vals),
+                ]
+            }
 
-            balance = (fund_amt + dep_writeoff) - purchase_amt
+            balance = (dep_fund_amount + dep_writeoff) - dep_purchase_amt
             if not float_is_zero(balance, digits):
                 loss_gain_vals = {
                     "asset_accounting_info_ids": [
-                        (
-                            0,
-                            0,
+                        Command.create(
                             {
                                 "move_line_id": line.id,
                                 "relation_type": self.management_type,
@@ -551,7 +623,7 @@ class WizardAccountMoveManageAsset(models.TransientModel):
                     "name": name,
                     "partial_dismissal": True,
                 }
-                dep_vals["line_ids"].append((0, 0, loss_gain_vals))
+                dep_vals["line_ids"].append(Command.create(loss_gain_vals))
 
             vals["depreciation_ids"].append((1, dep.id, dep_vals))
 
@@ -581,15 +653,6 @@ class WizardAccountMoveManageAsset(models.TransientModel):
             for move, lines in grouped_move_lines.items():
                 move_num = move.name
 
-                move_type = "in" if move.is_outbound() else "out"
-                if not move_type:
-                    raise ValidationError(
-                        _(
-                            "Could not retrieve depreciation line type from"
-                            " move `{}` (type `{}`)."
-                        ).format(move_num, move_type)
-                    )
-
                 # Compute amount and sign to preview how much the line
                 # balance will be: if it's going to write off the
                 # whole residual amount and more, making it become lower
@@ -597,40 +660,45 @@ class WizardAccountMoveManageAsset(models.TransientModel):
                 # todo probabilmente si può evitare questo calcolo
                 amount = 0
                 if lines:
-                    amount = abs(
-                        sum(
-                            line.currency_id._convert(
-                                line.debit - line.credit,
-                                dep.currency_id,
-                                line.company_id,
-                                line.date,
-                            )
-                            for line in lines
+                    amount = sum(
+                        line.currency_id._convert(
+                            line.debit - line.credit,
+                            dep.currency_id,
+                            line.company_id,
+                            line.date,
                         )
+                        for line in lines
                     )
-                sign = 1
-                if move_type == "out":
-                    sign = -1
+                base_coeff = dep.base_coeff
+                if base_coeff:
+                    amount *= base_coeff
+
+                sign = 1 if float_compare(amount, 0, digits) > 0 else -1
                 # Block updates if the amount to be written off is higher than
                 # the residual amount
-                if sign < 0 and float_compare(residual, amount, digits) < 0:
+                if sign < 0 and float_compare(residual, abs(amount), digits) < 0:
                     raise ValidationError(
                         _(
-                            "Could not update `{}`: not enough residual amount"
-                            " to write off move `{}`.\n"
-                            "(Amount to write off: {}; residual amount: {}.)\n"
+                            "Could not update `%(asset_name)s`:"
+                            " not enough residual amount"
+                            " to write off move `%(move_num)s`.\n"
+                            "(Amount to write off: %(amount)s;"
+                            " residual amount: %(residual)s.)\n"
                             "Maybe you should try to dismiss this asset"
-                            " instead?"
-                        ).format(asset_name, move_num, -amount, residual)
+                            " instead?",
+                            asset_name=asset_name,
+                            move_num=move_num,
+                            amount=-amount,
+                            residual=residual,
+                        )
                     )
-                balances += sign * amount
+                balances += amount
                 # end todo
 
+                dep_type = "in" if sign > 0 else "out"
                 dep_line_vals = {
                     "asset_accounting_info_ids": [
-                        (
-                            0,
-                            0,
+                        Command.create(
                             {
                                 "move_line_id": line.id,
                                 "relation_type": self.management_type,
@@ -638,21 +706,26 @@ class WizardAccountMoveManageAsset(models.TransientModel):
                         )
                         for line in lines
                     ],
-                    "amount": amount,
+                    "amount": abs(amount),
                     "date": move.date,
-                    "move_type": move_type,
+                    "move_type": dep_type,
                     "name": _("From move(s) ") + move_num,
                 }
-                dep_vals["line_ids"].append((0, 0, dep_line_vals))
+                dep_vals["line_ids"].append(Command.create(dep_line_vals))
 
             if balances < 0 and residual + balances < 0:
                 raise ValidationError(
                     _(
-                        "Could not update `{}`: not enough residual amount to"
+                        "Could not update `%(asset_name)s`:"
+                        " not enough residual amount to"
                         " write off.\n"
-                        "(Amount to write off: {}; residual amount: {}.)\n"
-                        "Maybe you should try to dismiss this asset instead?"
-                    ).format(asset_name, balances, residual)
+                        "(Amount to write off: %(balances)s;"
+                        " residual amount: %(residual)s.)\n"
+                        "Maybe you should try to dismiss this asset instead?",
+                        asset_name=asset_name,
+                        balances=balances,
+                        residual=residual,
+                    )
                 )
 
             vals["depreciation_ids"].append((1, dep.id, dep_vals))

@@ -1,14 +1,17 @@
 # Author(s): Silvio Gregorini (silviogregorini@openforce.it)
 # Copyright 2019 Openforce Srls Unipersonale (www.openforce.it)
+# Copyright 2023 Simone Rubino - Aion Tech
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
 from odoo import _, api, fields, models
 from odoo.exceptions import ValidationError
+from odoo.fields import Command
 from odoo.tools import float_compare, float_is_zero
 
 
 class AssetDepreciation(models.Model):
     _name = "asset.depreciation"
+    _inherit = "l10n_it_asset_management.compute.depreciable_amount"
     _description = "Assets Depreciations"
 
     amount_depreciable = fields.Monetary(string="Initial Depreciable Amount")
@@ -69,12 +72,6 @@ class AssetDepreciation(models.Model):
         string="Asset",
     )
 
-    base_coeff = fields.Float(
-        default=1,
-        help="Coeff to compute amount depreciable from purchase amount",
-        string="Depreciable Base Coeff",
-    )
-
     company_id = fields.Many2one(
         "res.company", readonly=True, related="asset_id.company_id", string="Company"
     )
@@ -117,7 +114,9 @@ class AssetDepreciation(models.Model):
     pro_rata_temporis = fields.Boolean(string="Pro-rata Temporis")
 
     requires_account_move = fields.Boolean(
-        readonly=True, related="type_id.requires_account_move"
+        readonly=True,
+        related="type_id.requires_account_move",
+        string="Requires Account Move",
     )
 
     state = fields.Selection(
@@ -135,16 +134,63 @@ class AssetDepreciation(models.Model):
 
     zero_depreciation_until = fields.Date(string="Zero Depreciation Up To")
 
+    depreciation_account_id = fields.Many2one(
+        comodel_name="account.account",
+        compute="_compute_depreciation_account_id",
+        readonly=False,
+        store=True,
+        string="Depreciation Account",
+    )
+    gain_account_id = fields.Many2one(
+        comodel_name="account.account",
+        compute="_compute_gain_account_id",
+        readonly=False,
+        store=True,
+        string="Capital Gain Account",
+    )
+    loss_account_id = fields.Many2one(
+        comodel_name="account.account",
+        compute="_compute_loss_account_id",
+        readonly=False,
+        store=True,
+        string="Capital Loss Account",
+    )
+
+    @api.depends(
+        "asset_id.category_id",
+    )
+    def _compute_depreciation_account_id(self):
+        for dep in self:
+            dep.depreciation_account_id = (
+                dep.asset_id.category_id.depreciation_account_id
+            )
+
+    @api.depends(
+        "asset_id.category_id",
+    )
+    def _compute_gain_account_id(self):
+        for dep in self:
+            dep.gain_account_id = dep.asset_id.category_id.gain_account_id
+
+    @api.depends(
+        "asset_id.category_id",
+    )
+    def _compute_loss_account_id(self):
+        for dep in self:
+            dep.loss_account_id = dep.asset_id.category_id.loss_account_id
+
     @api.model_create_multi
     def create(self, vals_list):
-        deps = super().create(vals_list)
-        deps.normalize_first_dep_nr()
-        for dep in deps:
+        depreciations = self.browse()
+        for vals in vals_list:
+            dep = super().create(vals)
+            dep.normalize_first_dep_nr()
             if dep.line_ids:
                 num_lines = dep.line_ids.filtered("requires_depreciation_nr")
                 if num_lines:
                     num_lines.normalize_depreciation_nr()
-        return deps
+            depreciations |= dep
+        return depreciations
 
     def write(self, vals):
         res = super().write(vals)
@@ -157,7 +203,10 @@ class AssetDepreciation(models.Model):
                 num_lines.normalize_depreciation_nr(force=True)
         return res
 
-    def unlink(self):
+    @api.ondelete(
+        at_uninstall=False,
+    )
+    def _unlink_except_open_move(self):
         if self.mapped("line_ids"):
             raise ValidationError(
                 _(
@@ -174,10 +223,10 @@ class AssetDepreciation(models.Model):
             raise ValidationError(
                 _(
                     "Following lines are linked to posted account moves, and"
-                    " cannot be deleted:\n{}"
-                ).format(name_list)
+                    " cannot be deleted:\n%(name_list)s",
+                    name_list=name_list,
+                )
             )
-        return super().unlink()
 
     def name_get(self):
         return [(dep.id, dep.make_name()) for dep in self]
@@ -187,10 +236,14 @@ class AssetDepreciation(models.Model):
         for dep in self:
             dep.state = dep.get_depreciation_state()
 
-    @api.onchange("asset_id", "base_coeff")
-    def onchange_base_coeff(self):
+    @api.onchange(
+        "asset_id",
+        "base_coeff",
+        "base_max_amount",
+    )
+    def onchange_depreciable_amount_computation(self):
         purchase_amount = self.asset_id.purchase_amount
-        self.amount_depreciable = self.base_coeff * purchase_amount
+        self.amount_depreciable = self._get_depreciable_amount(purchase_amount)
 
     @api.onchange("first_dep_nr")
     def onchange_normalize_first_dep_nr(self):
@@ -227,6 +280,7 @@ class AssetDepreciation(models.Model):
         "line_ids.balance",
         "line_ids.move_type",
         "asset_id.sold",
+        "asset_id.dismissed",
     )
     def _compute_amounts(self):
         for dep in self:
@@ -273,28 +327,44 @@ class AssetDepreciation(models.Model):
             raise ValidationError(
                 _(
                     "Cannot update the following assets which contain"
-                    " draft depreciation for the chosen date and types:\n{}"
-                ).format(draft_names)
+                    " draft depreciation for the"
+                    " chosen date and types:\n%(draft_names)s",
+                    draft_names=draft_names,
+                )
             )
 
-    def generate_depreciation_lines(self, dep_date):
+    def generate_depreciation_lines(self, dep_date, period=None, period_count=None):
         # Set new date within context if necessary
         self.check_before_generate_depreciation_lines(dep_date)
 
         new_lines = self.env["asset.depreciation.line"]
         for dep in self:
-            new_lines |= dep.generate_depreciation_lines_single(dep_date)
+            new_line = dep.generate_depreciation_lines_single(
+                dep_date, period=period, period_count=period_count
+            )
+            if new_line:
+                new_lines |= new_line
 
         return new_lines
 
-    def generate_depreciation_lines_single(self, dep_date):
+    def generate_depreciation_lines_single(
+        self, dep_date, period=None, period_count=None
+    ):
         self.ensure_one()
         res = self.env["asset.depreciation.line"]
         if self.last_depreciation_date and self.last_depreciation_date > dep_date:
             return res
-        dep_nr = self.get_max_depreciation_nr() + 1
-        dep = self.with_context(dep_nr=dep_nr, used_asset=self.asset_id.used)
-        dep_amount = dep.get_depreciation_amount(dep_date)
+        passed_fiscal_years = self.env["account.fiscal.year"]._get_passed_years(
+            self.asset_id.purchase_date, dep_date
+        )
+        dep = self.with_context(
+            passed_fiscal_years=passed_fiscal_years, used_asset=self.asset_id.used
+        )
+        dep_amount = dep.get_depreciation_amount(
+            dep_date, period=period, period_count=period_count
+        )
+        if not dep_amount:
+            return res
         dep = dep.with_context(dep_amount=dep_amount)
 
         vals = dep.prepare_depreciation_line_vals(dep_date)
@@ -311,19 +381,19 @@ class AssetDepreciation(models.Model):
 
         line_vals = self.get_dismiss_account_move_line_vals()
         for v in line_vals:
-            vals["line_ids"].append((0, 0, v))
+            vals["line_ids"].append(Command.create(v))
 
         self.dismiss_move_id = am_obj.create(vals)
 
     def get_computed_amounts(self):
         self.ensure_one()
         vals = {
-            "amount_{}".format(k): abs(v)
+            f"amount_{k}": abs(v)
             for k, v in self.line_ids.get_balances_grouped().items()
-            if "amount_{}".format(k) in self._fields
+            if f"amount_{k}" in self._fields
         }
 
-        if self.asset_id.sold:
+        if self.asset_id.sold or self.asset_id.dismissed:
             vals.update({"amount_depreciable_updated": 0, "amount_residual": 0})
         else:
             non_residual_types = self.line_ids.get_non_residual_move_types()
@@ -377,7 +447,7 @@ class AssetDepreciation(models.Model):
             depreciable_amount = 0
         return depreciable_amount
 
-    def get_depreciation_amount(self, dep_date):
+    def get_depreciation_amount(self, dep_date, period=None, period_count=None):
         self.ensure_one()
         zero_dep_date = self.zero_depreciation_until
         if zero_dep_date and dep_date <= zero_dep_date:
@@ -385,7 +455,9 @@ class AssetDepreciation(models.Model):
 
         # Get depreciable amount, multiplier and digits
         amount = self.get_depreciable_amount(dep_date)
-        multiplier = self.get_depreciation_amount_multiplier(dep_date)
+        multiplier = self.get_depreciation_amount_multiplier(
+            dep_date, period=period, period_count=period_count
+        )
         digits = self.env["decimal.precision"].precision_get("Account")
         dep_amount = round(amount * multiplier, digits)
 
@@ -395,11 +467,19 @@ class AssetDepreciation(models.Model):
 
         return dep_amount
 
-    def get_depreciation_amount_multiplier(self, dep_date):
+    def get_depreciation_amount_multiplier(
+        self, dep_date, period=None, period_count=None
+    ):
         self.ensure_one()
 
         # Base multiplier
         multiplier = self.percentage / 100
+
+        if period == "month":
+            multiplier /= 12
+
+        if period_count:
+            multiplier *= period_count
 
         # Update multiplier from depreciation mode data
         multiplier *= self.mode_id.get_depreciation_amount_multiplier()
@@ -409,7 +489,10 @@ class AssetDepreciation(models.Model):
         if dep_date < date_start:
             dt_start_str = fields.Date.from_string(date_start).strftime("%d-%m-%Y")
             raise ValidationError(
-                _("Depreciations cannot start before {}.").format(dt_start_str)
+                _(
+                    "Depreciations cannot start before %(start_date)s.",
+                    start_date=dt_start_str,
+                )
             )
 
         if self.pro_rata_temporis or self._context.get("force_prorata"):
@@ -477,20 +560,12 @@ class AssetDepreciation(models.Model):
         self.ensure_one()
         return {
             "company_id": self.company_id.id,
-            "date": self.asset_id.sale_date,
+            "date": self._context.get("dismiss_date") or self.asset_id.sale_date,
             "journal_id": self.asset_id.category_id.journal_id.id,
             "line_ids": [],
             "ref": _("Asset dismissal: ") + self.asset_id.make_name(),
             "move_type": "entry",
         }
-
-    def get_max_depreciation_nr(self):
-        self.ensure_one()
-        num_lines = self.line_ids.filtered("requires_depreciation_nr")
-        nums = num_lines.mapped("depreciation_nr")
-        if not nums:
-            nums = [0]
-        return max(nums)
 
     def get_pro_rata_temporis_dates(self, date):
         """
@@ -514,7 +589,12 @@ class AssetDepreciation(models.Model):
         )
         if not fiscal_year:
             date_str = fields.Date.from_string(date).strftime("%d/%m/%Y")
-            raise ValidationError(_("No fiscal year defined for date {}") + date_str)
+            raise ValidationError(
+                _(
+                    "No fiscal year defined for date %(date)s",
+                    date=date_str,
+                )
+            )
 
         return (
             fields.Date.from_string(fiscal_year.date_from),
@@ -545,7 +625,10 @@ class AssetDepreciation(models.Model):
             return ((dt_end - dt).days + 1) / lapse
         elif mode:
             raise NotImplementedError(
-                _("Cannot get pro rata temporis multiplier for mode `{}`").format(mode)
+                _(
+                    "Cannot get pro rata temporis multiplier for mode `%(mode)s`",
+                    mode=mode,
+                )
             )
         raise NotImplementedError(
             _("Cannot get pro rata temporis multiplier for unspecified mode")
@@ -596,5 +679,8 @@ class AssetDepreciation(models.Model):
             "date": dep_date,
             "depreciation_id": self.id,
             "move_type": "depreciated",
-            "name": _("{} - Depreciation").format(dep_year),
+            "name": _(
+                "%(year)s - Depreciation",
+                year=dep_year,
+            ),
         }

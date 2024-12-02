@@ -20,6 +20,7 @@
                             <field name="purchase_amount" widget="monetary" />
                             <field name="currency_id" invisible="1" />
                             <field name="company_id" groups="base.group_multi_company" />
+                            <field name="company_id" invisible="True" groups="!base.group_multi_company" />
                         </tree>
                     </field>
                 </page>
@@ -44,6 +45,7 @@
                                 <field name="purchase_amount" widget="monetary" />
                                 <field name="currency_id" invisible="1" />
                                 <field name="company_id" groups="base.group_multi_company" />
+                                <field name="company_id" invisible="True" groups="!base.group_multi_company" />
                             </tree>
                         </field>
                     </group>

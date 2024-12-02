@@ -6,7 +6,7 @@
         <field name="arch" type="xml">
             <form>
                 <sheet>
-                    <div name="wrong_state_alert" class="alert alert-info" role="alert" style="margin-bottom:10px;" invisible="is_move_state_ok == True">
+                    <div name="wrong_state_alert" class="alert alert-info" role="alert" style="margin-bottom:10px;" invisible="(is_move_state_ok == True or dismiss_asset_without_sale == True)">
                         Only posted moves can be used to create, update or dismiss assets!<br />
                         Please select posted moves only.
                     </div>
@@ -36,6 +36,7 @@
                             <field name="move_ids" invisible="1" />
                             <field name="move_type" invisible="1" />
                             <field name="is_move_state_ok" invisible="1" />
+                            <field name="dismiss_asset_without_sale" invisible="1" />
                         </group>
                     </group>
                     <group name="update_asset_settings" invisible="((move_type == &quot;wrong&quot; or is_move_state_ok == False) or management_type != &quot;update&quot;)" required="management_type == &quot;update&quot;">
@@ -56,7 +57,7 @@
                         </group>
                     </group>
                     <group name="move_lines" string="Move Lines" invisible="(move_type == &quot;wrong&quot; or is_move_state_ok == False)">
-                        <field name="move_line_ids" domain="[('move_id', 'in', move_ids), ('asset_accounting_info_ids', '=', False)]" nolabel="1">
+                        <field name="move_line_ids" domain="[('move_id', 'in', move_ids), ('asset_accounting_info_ids', '=', False)]" colspan="2" nolabel="1">
                             <tree editable="bottom">
                                 <field name="partner_id" options="{'no_open':1}" readonly="1" />
                                 <field name="company_id" options="{'no_open':1, 'no_create_edit': True}" invisible="1" readonly="1" />
