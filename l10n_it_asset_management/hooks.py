@@ -18,20 +18,20 @@ RENAMED_MODELS = [
 ]
 
 
-def migrate_old_module(cr):
+def migrate_old_module(env):
     openupgrade.rename_models(
-        cr,
+        env.cr,
         RENAMED_MODELS,
     )
 
 
-def pre_absorb_old_module(cr):
-    if openupgrade.is_module_installed(cr, OLD_MODULE_NAME):
+def pre_absorb_old_module(env):
+    if openupgrade.is_module_installed(env.cr, OLD_MODULE_NAME):
         openupgrade.update_module_names(
-            cr,
+            env.cr,
             [
                 (OLD_MODULE_NAME, NEW_MODULE_NAME),
             ],
             merge_modules=True,
         )
-        migrate_old_module(cr)
+        migrate_old_module(env)

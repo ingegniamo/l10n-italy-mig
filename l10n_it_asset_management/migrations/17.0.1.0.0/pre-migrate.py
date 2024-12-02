@@ -11,4 +11,4 @@ from odoo.addons.l10n_it_asset_management import hooks
 
 def migrate(env, version):
     # Used by OpenUpgrade when module is in `apriori`
-    hooks.migrate_old_module(env.cr)
+    hooks.migrate_old_module(env)

@@ -1,10 +1,10 @@
 /** @odoo-module **/
 import {ReportAction} from "@web/webclient/actions/reports/report_action";
-import {patch} from "web.utils";
+import {patch} from "@web/core/utils/patch";
 
 const MODULE_NAME = "l10n_it_asset_management";
 
-patch(ReportAction.prototype, "l10n_it_asset_management.ReportAction", {
+patch(ReportAction.prototype,  {
     setup() {
         this._super.apply(this, arguments);
         this.isAssetReport = this.props.report_name.startsWith(`${MODULE_NAME}.`);
