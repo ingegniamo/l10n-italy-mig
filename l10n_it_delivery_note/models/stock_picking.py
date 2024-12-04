@@ -324,15 +324,15 @@ class StockPicking(models.Model):
         if delivery_note_to_create and not self.delivery_note_id:
             delivery_note = self._create_delivery_note()
             self.write({"delivery_note_id": delivery_note.id})
-            if self.sale_id:
-                self.sale_id._assign_delivery_notes_invoices(self.sale_id.invoice_ids)
+            if self.mapped('sale_id'):
+                 self.mapped('sale_id')._assign_delivery_notes_invoices(self.mapped('sale_id').invoice_ids)
         return res
 
     def _create_delivery_note(self):
         partners = self._get_partners()
         type_id = self.env["stock.delivery.note.type"].search(
             [
-                ("code", "=", self.picking_type_code),
+                ("code", "=", self[0].picking_type_code),
                 ("company_id", "=", self.company_id.id),
             ],
             limit=1,
@@ -341,30 +341,30 @@ class StockPicking(models.Model):
             {
                 "company_id": self.company_id.id,
                 "partner_sender_id": partners[0].id,
-                "partner_id": self.sale_id.partner_id.id
+                "partner_id": self[0].sale_id.partner_id.id
                 if self.sale_id
                 else partners[0].id,
                 "partner_shipping_id": partners[1].id,
                 "type_id": type_id.id,
-                "date": self.date_done,
-                "delivery_method_id": self.partner_id.property_delivery_carrier_id.id,
+                "date": self[0].date_done,
+                "delivery_method_id": partners[0].property_delivery_carrier_id.id,
                 "transport_condition_id": (
-                    self.sale_id.default_transport_condition_id.id
+                    self[0].sale_id.default_transport_condition_id.id
                     or partners[1].default_transport_condition_id.id
                     or type_id.default_transport_condition_id.id
                 ),
                 "goods_appearance_id": (
-                    self.sale_id.default_goods_appearance_id.id
+                    self[0].sale_id.default_goods_appearance_id.id
                     or partners[1].default_goods_appearance_id.id
                     or type_id.default_goods_appearance_id.id
                 ),
                 "transport_reason_id": (
-                    self.sale_id.default_transport_reason_id.id
+                    self[0].sale_id.default_transport_reason_id.id
                     or partners[1].default_transport_reason_id.id
                     or type_id.default_transport_reason_id.id
                 ),
                 "transport_method_id": (
-                    self.sale_id.default_transport_method_id.id
+                    self[0].sale_id.default_transport_method_id.id
                     or partners[1].default_transport_method_id.id
                     or type_id.default_transport_method_id.id
                 ),
