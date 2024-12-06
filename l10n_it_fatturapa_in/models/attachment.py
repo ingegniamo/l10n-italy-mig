@@ -55,8 +55,9 @@ class FatturaPAAttachmentIn(models.Model):
         store=True,
     )
     is_self_invoice = fields.Boolean(
-        "Contains self invoices", compute="_compute_xml_data", store=True
+        "Contains self invoices", compute="_compute_is_self_invoice", store=True
     )
+
 
     inconsistencies = fields.Text(compute="_compute_xml_data", store=True)
 
@@ -128,6 +129,21 @@ class FatturaPAAttachmentIn(models.Model):
         else:
             self.e_invoice_parsing_error = False
         return invoice_obj
+    @api.depends("ir_attachment_id.datas")
+    def _compute_is_self_invoice(self):
+        for att in self:
+            att.is_self_invoice = False
+            if not att.datas:
+                return
+            fatt = att.get_invoice_obj()
+            if fatt:
+                for invoice_body in fatt.FatturaElettronicaBody:
+                    document_type = (
+                        invoice_body.DatiGenerali.DatiGeneraliDocumento.TipoDocumento
+                    )
+                    if document_type in SELF_INVOICE_TYPES:
+                        att.is_self_invoice = True
+                        break
     @api.depends("ir_attachment_id.datas")
     def _compute_e_invoice_parsing_error(self):
         for att in self:
