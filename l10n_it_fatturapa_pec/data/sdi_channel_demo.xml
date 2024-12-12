@@ -4,6 +4,7 @@
 <odoo>
     <record id="sdi_channel_pec" model="sdi.channel">
         <field name="name">PEC</field>
+        <field name="email_exchange_system">change@email.com</field>
         <field name="channel_type">pec</field>
     </record>
 </odoo>
