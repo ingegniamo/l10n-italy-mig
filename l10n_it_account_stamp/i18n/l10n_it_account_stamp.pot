@@ -4,10 +4,8 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 17.5alpha1\n"
+"Project-Id-Version: Odoo Server 18.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-23 15:50+0000\n"
-"PO-Revision-Date: 2024-09-23 15:50+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -34,14 +32,12 @@ msgstr ""
 #. module: l10n_it_account_stamp
 #: model:ir.model.fields,field_description:l10n_it_account_stamp.field_account_bank_statement_line__l10n_it_account_stamp_manually_apply_stamp_duty
 #: model:ir.model.fields,field_description:l10n_it_account_stamp.field_account_move__l10n_it_account_stamp_manually_apply_stamp_duty
-#: model:ir.model.fields,field_description:l10n_it_account_stamp.field_account_payment__l10n_it_account_stamp_manually_apply_stamp_duty
 msgid "Apply stamp duty"
 msgstr ""
 
 #. module: l10n_it_account_stamp
 #: model:ir.model.fields,field_description:l10n_it_account_stamp.field_account_bank_statement_line__l10n_it_account_stamp_auto_compute_stamp_duty
 #: model:ir.model.fields,field_description:l10n_it_account_stamp.field_account_move__l10n_it_account_stamp_auto_compute_stamp_duty
-#: model:ir.model.fields,field_description:l10n_it_account_stamp.field_account_payment__l10n_it_account_stamp_auto_compute_stamp_duty
 #: model:ir.model.fields,field_description:l10n_it_account_stamp.field_product_product__l10n_it_account_stamp_auto_compute
 #: model:ir.model.fields,field_description:l10n_it_account_stamp.field_product_template__l10n_it_account_stamp_auto_compute
 msgid "Auto-compute"
@@ -134,7 +130,6 @@ msgstr ""
 #. module: l10n_it_account_stamp
 #: model:ir.model.fields,field_description:l10n_it_account_stamp.field_account_bank_statement_line__l10n_it_account_stamp_is_stamp_duty_applied
 #: model:ir.model.fields,field_description:l10n_it_account_stamp.field_account_move__l10n_it_account_stamp_is_stamp_duty_applied
-#: model:ir.model.fields,field_description:l10n_it_account_stamp.field_account_payment__l10n_it_account_stamp_is_stamp_duty_applied
 #: model_terms:ir.ui.view,arch_db:l10n_it_account_stamp.account_move_form_stamp
 #: model_terms:ir.ui.view,arch_db:l10n_it_account_stamp.product_template_form_view_account_stamp
 msgid "Stamp Duty"
@@ -172,7 +167,6 @@ msgstr ""
 #. module: l10n_it_account_stamp
 #: model:ir.model.fields,help:l10n_it_account_stamp.field_account_bank_statement_line__l10n_it_account_stamp_is_stamp_duty_applied
 #: model:ir.model.fields,help:l10n_it_account_stamp.field_account_move__l10n_it_account_stamp_is_stamp_duty_applied
-#: model:ir.model.fields,help:l10n_it_account_stamp.field_account_payment__l10n_it_account_stamp_is_stamp_duty_applied
 msgid "Stamp duty is applied to this invoice."
 msgstr ""
 
@@ -199,7 +193,6 @@ msgstr ""
 #. module: l10n_it_account_stamp
 #: model:ir.model.fields,field_description:l10n_it_account_stamp.field_account_bank_statement_line__l10n_it_account_stamp_is_stamp_duty_present
 #: model:ir.model.fields,field_description:l10n_it_account_stamp.field_account_move__l10n_it_account_stamp_is_stamp_duty_present
-#: model:ir.model.fields,field_description:l10n_it_account_stamp.field_account_payment__l10n_it_account_stamp_is_stamp_duty_present
 msgid "Stamp line is present in invoice"
 msgstr ""
 
