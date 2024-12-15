@@ -44,14 +44,12 @@ msgstr ""
 #. module: l10n_it_account_stamp
 #: model:ir.model.fields,field_description:l10n_it_account_stamp.field_account_bank_statement_line__l10n_it_account_stamp_manually_apply_stamp_duty
 #: model:ir.model.fields,field_description:l10n_it_account_stamp.field_account_move__l10n_it_account_stamp_manually_apply_stamp_duty
-#: model:ir.model.fields,field_description:l10n_it_account_stamp.field_account_payment__l10n_it_account_stamp_manually_apply_stamp_duty
 msgid "Apply stamp duty"
 msgstr "Applica imposta di bollo"
 
 #. module: l10n_it_account_stamp
 #: model:ir.model.fields,field_description:l10n_it_account_stamp.field_account_bank_statement_line__l10n_it_account_stamp_auto_compute_stamp_duty
 #: model:ir.model.fields,field_description:l10n_it_account_stamp.field_account_move__l10n_it_account_stamp_auto_compute_stamp_duty
-#: model:ir.model.fields,field_description:l10n_it_account_stamp.field_account_payment__l10n_it_account_stamp_auto_compute_stamp_duty
 #: model:ir.model.fields,field_description:l10n_it_account_stamp.field_product_product__l10n_it_account_stamp_auto_compute
 #: model:ir.model.fields,field_description:l10n_it_account_stamp.field_product_template__l10n_it_account_stamp_auto_compute
 msgid "Auto-compute"
@@ -151,7 +149,6 @@ msgstr "Prodotto usato come imposta di bollo nelle fatture cliente."
 #. module: l10n_it_account_stamp
 #: model:ir.model.fields,field_description:l10n_it_account_stamp.field_account_bank_statement_line__l10n_it_account_stamp_is_stamp_duty_applied
 #: model:ir.model.fields,field_description:l10n_it_account_stamp.field_account_move__l10n_it_account_stamp_is_stamp_duty_applied
-#: model:ir.model.fields,field_description:l10n_it_account_stamp.field_account_payment__l10n_it_account_stamp_is_stamp_duty_applied
 #: model_terms:ir.ui.view,arch_db:l10n_it_account_stamp.account_move_form_stamp
 #: model_terms:ir.ui.view,arch_db:l10n_it_account_stamp.product_template_form_view_account_stamp
 msgid "Stamp Duty"
@@ -189,7 +186,6 @@ msgstr "Imposta di bollo 2 euro"
 #. module: l10n_it_account_stamp
 #: model:ir.model.fields,help:l10n_it_account_stamp.field_account_bank_statement_line__l10n_it_account_stamp_is_stamp_duty_applied
 #: model:ir.model.fields,help:l10n_it_account_stamp.field_account_move__l10n_it_account_stamp_is_stamp_duty_applied
-#: model:ir.model.fields,help:l10n_it_account_stamp.field_account_payment__l10n_it_account_stamp_is_stamp_duty_applied
 msgid "Stamp duty is applied to this invoice."
 msgstr "L'imposta di bollo è applicata a questa fattura."
 
@@ -221,7 +217,6 @@ msgstr ""
 #. module: l10n_it_account_stamp
 #: model:ir.model.fields,field_description:l10n_it_account_stamp.field_account_bank_statement_line__l10n_it_account_stamp_is_stamp_duty_present
 #: model:ir.model.fields,field_description:l10n_it_account_stamp.field_account_move__l10n_it_account_stamp_is_stamp_duty_present
-#: model:ir.model.fields,field_description:l10n_it_account_stamp.field_account_payment__l10n_it_account_stamp_is_stamp_duty_present
 msgid "Stamp line is present in invoice"
 msgstr "La riga bollo è presente in fattura"
 
