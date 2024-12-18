@@ -6,7 +6,7 @@ const MODULE_NAME = "l10n_it_asset_management";
 
 patch(ReportAction.prototype,  {
     setup() {
-        this._super.apply(this, arguments);
+        super.setup(...arguments);
         this.isAssetReport = this.props.report_name.startsWith(`${MODULE_NAME}.`);
     },
 
@@ -17,7 +17,7 @@ patch(ReportAction.prototype,  {
      * @returns {String}
      */
     _get_xlsx_name(str) {
-        if (!this.isAssetReport) return this._super.apply(this, arguments);
+        if (!this.isAssetReport) return super._get_xlsx_name(...arguments);
 
         if (!_.isString(str)) {
             return str;
