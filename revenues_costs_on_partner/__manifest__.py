@@ -4,11 +4,7 @@
     'license': 'OPL-1',
     'cathegory': 'Accounting',
     'website': 'https://www.stesi.srl',
-    'version': '17.0.0.1',
-    'depends': [
-        'contacts',
-        'account'
-    ],
+    'depends': ['contacts', 'account'],
     'data': [
         'views/res_partner.xml',
         # 'views/account_type.xml',

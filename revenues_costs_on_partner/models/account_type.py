@@ -20,3 +20,4 @@ class AccountAccount(models.Model):
 
     cost = fields.Boolean(string="Cost", default=_default_cost_type)
     revenue = fields.Boolean(string="Revenue", default=_default_revenue_type)
+
