@@ -36,7 +36,7 @@ class MailThread(models.AbstractModel):
     _inherit = "mail.thread"
 
     def clean_message_dict(self, message_dict):
-        list_fields_to_clean = ["attachments","cc","from","to","recipients","in_reply_to","bounced_email","references","bounced_partner","bounced_msg_id","bounced_message","is_bounce"]
+        list_fields_to_clean = ["attachments","cc","from","to","recipients","in_reply_to","bounced_email","references","bounced_partner","bounced_msg_id","bounced_message","is_bounce","x_odoo_message_id"]
         for field in list_fields_to_clean:
             message_dict.pop(field, None)
 
