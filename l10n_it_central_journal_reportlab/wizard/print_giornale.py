@@ -335,9 +335,10 @@ class WizardGiornaleReportlab(models.TransientModel):
             date = Paragraph(format_date(self.env, line["date"]), style_name)
             move = Paragraph(line["move_name"], style_name)
             account_name = (
-                line["account_code"] + " - " + line["account_name"]
+                line["account_code"] + " - " + line["account_name"].get(self.env.lang,list(line["account_name"].values())[0]
+                                                                        )
                 if line["account_code"]
-                else line["account_name"]
+                else line["account_name"].get(self.env.lang,list(line["account_name"].values())[0])
             )
             account = Paragraph(account_name, style_name)
             name = Paragraph(line["name"], style_name)
