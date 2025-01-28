@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <!-- Copyright 2018 Simone Rubino - Agile Business Group
      License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
-<odoo>
+<odoo noupdate="1">
     <record id="sdi_channel_pec" model="sdi.channel">
         <field name="name">PEC</field>
         <field name="email_exchange_system">change@email.com</field>
