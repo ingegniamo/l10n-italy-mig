@@ -20,7 +20,15 @@ class AccountMove(models.Model):
     split_payment = fields.Boolean(
         string="Is Split Payment", related="fiscal_position_id.split_payment"
     )
-    
+    @api.returns('self', lambda value: value.id)
+    def copy(self, default=None):
+        res = super().copy(default)
+        for invoice in res:
+            if invoice.split_payment:
+                invoice.line_ids.filtered(lambda l: l.is_split_payment).write({'is_split_payment':False})
+              
+        return res
+
     def action_post(self):
         for invoice in self.filtered(lambda l: l.split_payment):
             tax_line = invoice.line_ids.filtered(lambda l: l.display_type =='tax')[:1]
