@@ -42,7 +42,7 @@ class AccountMoveLine(models.Model):
         if self.move_id.move_type == "out_refund":
             vals["amount_currency"] = -sum(self.mapped('debit'))
             vals["debit"] = sum(self.mapped('credit'))
-            vals["credit"] = self.mapped('debit')
+            vals["credit"] = sum(self.mapped('debit'))
         return vals
 
     # @api.model_create_multi
