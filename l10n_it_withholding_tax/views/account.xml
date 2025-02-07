@@ -71,7 +71,12 @@
             <field name="inherit_id" ref="account.view_invoice_tree" />
             <field name="arch" type="xml">
                     <field name="amount_residual_signed" position="after">
-                        <field name="amount_net_pay" widget="monetary" options="{'currency_field': 'currency_id'}" sum="Net to pay" />
+                         <field
+                    name="amount_net_pay_signed"
+                    widget="monetary"
+                    options="{'currency_field': 'company_currency_id'}"
+                    sum="Net to pay signed"
+                />
                     </field>
             </field>
         </record>
