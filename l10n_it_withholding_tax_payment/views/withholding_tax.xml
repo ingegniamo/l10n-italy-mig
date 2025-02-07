@@ -28,7 +28,8 @@
             <field name="model">withholding.tax.move.payment</field>
             <field name="arch" type="xml">
                 <tree>
-                    <field name="name" />
+                    <field name="name" optional="show" />
+                    <field name="description" optional="show" />
                     <field name="date" />
                     <field name="date_start" />
                     <field name="date_stop" />
@@ -56,6 +57,7 @@
                         </div>
                         <group>
                             <field name="date" />
+                            <field name="description" />
                             <field name="company_id" groups="base.group_multi_company" readonly="1" />
                         </group>
                         <newline />
@@ -72,16 +74,14 @@
                             </group>
                         </group>
                         <newline />
-                        <group>
-                            <field name="line_ids" nolabel="1">
-                                <tree delete="false">
-                                    <field name="date" />
-                                    <field name="partner_id" />
-                                    <field name="withholding_tax_id" />
-                                    <field name="amount" sum="Tot" />
-                                </tree>
-                            </field>
-                        </group>
+                        <field name="line_ids" nolabel="1">
+                            <tree delete="false">
+                                <field name="date" />
+                                <field name="partner_id" />
+                                <field name="withholding_tax_id" />
+                                <field name="amount" sum="Tot" />
+                            </tree>
+                        </field>
                     </sheet>
                 </form>
             </field>

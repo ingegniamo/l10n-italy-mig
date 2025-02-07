@@ -101,7 +101,7 @@ class WithholdingTax(models.Model):
         default = dict(default or {})
         if "code" not in default:
             default["code"] = _("%s (copy)") % self.code
-        return super(WithholdingTax, self).copy(default=default)
+        return super().copy(default=default)
 
     @api.constrains("rate_ids")
     def _check_rate_ids(self):
@@ -242,7 +242,6 @@ class WithholdingTaxStatement(models.Model):
         string="WT amount paid", store=True, readonly=True, compute="_compute_total"
     )
     move_ids = fields.One2many("withholding.tax.move", "statement_id", "Moves")
-    display_name = fields.Char(compute="_compute_display_name")
 
     @api.depends("move_id.line_ids.account_id.account_type")
     def _compute_type(self):
@@ -285,8 +284,12 @@ class WithholdingTaxStatement(models.Model):
                 amount_wt = tax_data["tax"]
             return amount_wt
 
-    def _compute_display_name(self):
-        self.display_name = self.partner_id.name + " - " + self.withholding_tax_id.name
+    def name_get(self):
+        res = []
+        for record in self:
+            name = record.partner_id.name + " - " + record.withholding_tax_id.name
+            res.append((record.id, name))
+        return res
 
 
 class WithholdingTaxMove(models.Model):
@@ -341,7 +344,6 @@ class WithholdingTaxMove(models.Model):
         "account.move", "Payment Move", ondelete="cascade"
     )
     wt_account_move_id = fields.Many2one("account.move", "WT Move", ondelete="cascade")
-    display_name = fields.Char(compute="_compute_display_name")
     full_reconcile_id = fields.Many2one(
         "account.full.reconcile",
         compute="_compute_full_reconcile_id",
@@ -356,7 +358,7 @@ class WithholdingTaxMove(models.Model):
                         "Warning! You can not delete withholding tax move in state: {}"
                     ).format(rec.state)
                 )
-        return super(WithholdingTaxMove, self).unlink()
+        return super().unlink()
 
     def generate_account_move(self):
         """
@@ -369,8 +371,10 @@ class WithholdingTaxMove(models.Model):
             )
         # Move - head
         move_vals = {
-            "ref": _("WT {0} - {1}").format(
-                self.withholding_tax_id.code, self.credit_debit_line_id.move_id.name
+            "ref": _(
+                "WT %(code)s - %(move)s",
+                code=self.withholding_tax_id.code,
+                move=self.credit_debit_line_id.move_id.name,
             ),
             "journal_id": self.withholding_tax_id.journal_id.id,
             "date": self.payment_line_id.move_id.date,
@@ -379,10 +383,11 @@ class WithholdingTaxMove(models.Model):
         move_lines = []
         for _type in ("partner", "tax"):
             ml_vals = {
-                "ref": _("WT {0} - {1} - {2}").format(
-                    self.withholding_tax_id.code,
-                    self.partner_id.name,
-                    self.credit_debit_line_id.move_id.name,
+                "ref": _(
+                    "WT %(code)s - %(partner)s - %(move)s",
+                    code=self.withholding_tax_id.code,
+                    partner=self.partner_id.name,
+                    move=self.credit_debit_line_id.move_id.name,
                 ),
                 "name": "%s" % (self.credit_debit_line_id.move_id.name),
                 "date": move_vals["date"],
@@ -476,8 +481,12 @@ class WithholdingTaxMove(models.Model):
                 }
             )
 
-    def _compute_display_name(self):
-        self.display_name = self.partner_id.name + " - " + self.withholding_tax_id.name
+    def name_get(self):
+        res = []
+        for record in self:
+            name = record.partner_id.name + " - " + record.withholding_tax_id.name
+            res.append((record.id, name))
+        return res
 
     def action_paid(self):
         for move in self:

@@ -25,7 +25,7 @@
                 </xpath>
 
                 <xpath expr="//field[@name='narration']" position="before">
-                    <field name="withholding_tax_line_ids" invisible="withholding_tax == False" readonly="state !='draft'">
+                    <field name="withholding_tax_line_ids"  readonly="state != 'draft'" invisible="withholding_tax == False">
                         <tree>
                             <field name="withholding_tax_id" />
                             <field name="base" />
@@ -58,7 +58,7 @@
 
                 <xpath expr="//page[@name='other_info']/group[1]/group[last()]" position="after"><group name="withholding_tax_info"><field name="withholding_tax_in_print" /></group></xpath>
 
-                <xpath expr="//group/group/field[@name='payment_reference']" position="after">
+                <xpath expr="//group/group/field[@name='partner_bank_id']" position="before">
                     <field name="withholding_tax" invisible="1" />
                 </xpath>
 

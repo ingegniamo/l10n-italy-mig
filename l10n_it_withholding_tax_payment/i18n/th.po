@@ -87,6 +87,11 @@ msgid "Date"
 msgstr "วันที่"
 
 #. module: l10n_it_withholding_tax_payment
+#: model:ir.model.fields,field_description:l10n_it_withholding_tax_payment.field_withholding_tax_move_payment__description
+msgid "Description"
+msgstr ""
+
+#. module: l10n_it_withholding_tax_payment
 #: model:ir.model.fields,field_description:l10n_it_withholding_tax_payment.field_withholding_tax_move_payment__display_name
 #: model:ir.model.fields,field_description:l10n_it_withholding_tax_payment.field_wizard_wt_move_payment_create__display_name
 msgid "Display Name"
@@ -209,14 +214,16 @@ msgstr ""
 #. odoo-python
 #: code:addons/l10n_it_withholding_tax_payment/models/withholding_tax.py:0
 #, python-format
-msgid "WT move already in a payment move! Paym. move {} - Ref WT: {} - {} - {}"
+msgid ""
+"WT move already in a payment move! Paym. move %(move)s - Ref WT: %(partner)s "
+"- %(date)s - %(amount)s"
 msgstr ""
 
 #. module: l10n_it_withholding_tax_payment
 #. odoo-python
 #: code:addons/l10n_it_withholding_tax_payment/models/withholding_tax.py:0
 #, python-format
-msgid "WT move already paid! - {} - {} - {}"
+msgid "WT move already paid! - %(partner)s - %(date)s - %(amount)s"
 msgstr ""
 
 #. module: l10n_it_withholding_tax_payment
