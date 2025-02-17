@@ -58,7 +58,7 @@
                     </group>
                     <group name="move_lines" string="Move Lines" invisible="(move_type == &quot;wrong&quot; or is_move_state_ok == False)">
                         <field name="move_line_ids" domain="[('move_id', 'in', move_ids), ('asset_accounting_info_ids', '=', False)]" colspan="2" nolabel="1">
-                            <tree editable="bottom">
+                            <list editable="bottom">
                                 <field name="partner_id" options="{'no_open':1}" readonly="1" />
                                 <field name="company_id" options="{'no_open':1, 'no_create_edit': True}" invisible="1" readonly="1" />
                                 <field name="account_id" options="{'no_open':1}" groups="account.group_account_user" readonly="1" />
@@ -66,7 +66,7 @@
                                 <field name="debit" widget="monetary" readonly="1" />
                                 <field name="credit" widget="monetary" readonly="1" />
                                 <field name="currency_id" options="{'no_open':1}" invisible="1" readonly="1" />
-                            </tree>
+                            </list>
                         </field>
                     </group>
                 </sheet>

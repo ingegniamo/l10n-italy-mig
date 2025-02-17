@@ -45,7 +45,7 @@
                 <notebook>
                     <page name="depreciation_lines" string="Depreciation Lines">
                         <field name="line_ids" context="{'default_depreciation_id':id}" nolabel="1">
-                            <tree editable="bottom">
+                            <list editable="bottom">
                                 <field name="id" invisible="1" />
                                 <field name="depreciation_id" invisible="1" />
                                 <field name="name" />
@@ -64,7 +64,7 @@
                                 <button name="button_generate_account_move" type="object" string="Generate Move" icon="fa-money" invisible="(((amount == 0 or move_id != False) or move_type in ('in', 'out')) or requires_account_move == False)" />
                                 <button name="button_regenerate_account_move" type="object" string="Regenerate Move" icon="fa-refresh" invisible="(((amount == 0 or move_id == False) or move_type in ('in', 'out')) or requires_account_move == False)" />
                                 <button name="button_remove_account_move" type="object" string="Remove Move" icon="fa-times-circle" invisible="(((amount == 0 or move_id == False) or move_type in ('in', 'out')) or requires_account_move == False)" />
-                            </tree>
+                            </list>
                         </field>
                         <group>
                             <group>
@@ -83,7 +83,7 @@
         <field name="name">view.asset.depreciation.tree</field>
         <field name="model">asset.depreciation</field>
         <field name="arch" type="xml">
-            <tree>
+            <list>
                 <field name="type_id" />
                 <field name="date_start" />
                 <field name="pro_rata_temporis" />
@@ -96,7 +96,7 @@
                 <field name="amount_residual" widget="monetary" />
                 <field name="currency_id" groups="base.group_multi_currency" />
                 <field name="company_id" groups="base.group_multi_company" />
-            </tree>
+            </list>
         </field>
     </record>
 

@@ -21,7 +21,7 @@
         <field name="name">asset.tree.view</field>
         <field name="model">asset.asset</field>
         <field name="arch" type="xml">
-            <tree>
+            <list>
                 <field name="name" />
                 <field name="code" />
                 <field name="category_id" />
@@ -29,7 +29,7 @@
                 <field name="purchase_amount" widget="monetary" />
                 <field name="currency_id" invisible="1" />
                 <field name="company_id" groups="base.group_multi_company" />
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -86,48 +86,15 @@
                     <notebook>
                         <page string="Depreciations" name="depreciations">
                             <group>
-                                <field name="depreciation_ids" context="{'default_asset_id':id}" colspan="2" nolabel="1">
-                                    <tree>
-                                        <field name="asset_id" invisible="1" />
-                                        <field name="type_id" />
-                                        <field name="mode_id" />
-                                        <field name="pro_rata_temporis" />
-                                        <field name="date_start" />
-                                        <field name="percentage" />
-                                        <field name="base_coeff" />
-                                        <field name="base_max_amount" />
-                                        <field name="amount_depreciable" />
-                                        <field name="amount_depreciable_updated" />
-                                        <field name="amount_depreciated" />
-                                        <field name="last_depreciation_date" />
-                                        <field name="amount_residual" />
-                                        <field name="state" invisible="1" force_save="1" />
-                                        <field name="currency_id" invisible="1" />
-                                        <field name="company_id" invisible="1" />
-                                    </tree>
-                                </field>
+                                <field name="depreciation_ids" context="{'default_asset_id':id}" colspan="2" nolabel="1"/>
                             </group>
                         </page>
                         <page name="accounting_info" string="Accounting Info">
-                            <field name="asset_accounting_info_ids" readonly="1" nolabel="1">
-                                <tree>
-                                    <field name="asset_id" />
-                                    <field name="dep_line_id" />
-                                    <field name="relation_type" />
-                                    <field name="move_id" />
-                                    <field name="move_type" />
-                                    <field name="move_line_id" />
-                                    <button name="button_unlink" type="object" string="Remove" icon="fa-trash" />
-                                </tree>
-                            </field>
+                            <field name="asset_accounting_info_ids" readonly="1" nolabel="1"/>
                         </page>
                     </notebook>
                 </sheet>
-                <div class="oe_chatter">
-                    <field name="message_follower_ids" widget="mail_followers" />
-                    <field name="activity_ids" widget="mail_activity" />
-                    <field name="message_ids" widget="mail_thread" />
-                </div>
+                <chatter/>
             </form>
         </field>
     </record>

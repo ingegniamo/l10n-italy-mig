@@ -27,7 +27,7 @@
         <field name="name">asset.dep.line.tree.view</field>
         <field name="model">asset.depreciation.line</field>
         <field name="arch" type="xml">
-            <tree>
+            <list>
                 <field name="asset_id" />
                 <field name="depreciation_id" />
                 <field name="name" />
@@ -42,7 +42,7 @@
                 <field name="requires_account_move" invisible="1" />
                 <field name="currency_id" invisible="1" />
                 <field name="company_id" invisible="1" />
-            </tree>
+            </list>
         </field>
     </record>
 
@@ -77,14 +77,14 @@
                     </group>
                     <group name="accounting_info" string="Accounting Info">
                         <field name="asset_accounting_info_ids" readonly="1" colspan="2" nolabel="1">
-                            <tree>
+                            <list>
                                 <field name="asset_id" />
                                 <field name="dep_line_id" />
                                 <field name="relation_type" />
                                 <field name="move_id" />
                                 <field name="move_line_id" />
                                 <button name="button_unlink" type="object" string="Remove" confirm="You confirm the removal of the current line? Depreciation line amounts will not be affected and will have to be updated manually." icon="fa-trash" />
-                            </tree>
+                            </list>
                         </field>
                     </group>
                 </sheet>
