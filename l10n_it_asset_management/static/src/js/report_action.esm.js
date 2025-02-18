@@ -6,7 +6,7 @@ const MODULE_NAME = "l10n_it_asset_management";
 
 patch(ReportAction.prototype,  {
     setup() {
-        this._super.apply(this, arguments);
+        super.setup(...arguments);
         this.isAssetReport = this.props.report_name.startsWith(`${MODULE_NAME}.`);
     },
 
