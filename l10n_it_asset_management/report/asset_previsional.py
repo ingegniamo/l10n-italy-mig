@@ -287,7 +287,7 @@ class Report(models.TransientModel):
                         dict(
                             v,
                             name=_("General Total"),
-                            type_name=t.name_get()[0][-1],
+                            type_name=t.display_name,
                             type_id=t.id,
                         ),
                     )
@@ -440,8 +440,8 @@ class ReportCategory(models.TransientModel):
                         Command.create(
                             dict(
                                 v,
-                                name=categ.category_id.name_get()[0][-1],
-                                type_name=t.name_get()[0][-1],
+                                name=categ.category_id.display_name,
+                                type_name=t.display_name,
                                 type_id=t.id,
                             ),
                         )
@@ -656,8 +656,8 @@ class ReportDepreciation(models.TransientModel):
             "dep_date_start": format_date(dep, "date_start", "%d-%m-%Y"),
             "dep_percentage": dep.percentage,
             "dep_pro_rata_temporis": dep_pro_rata_temporis,
-            "mode_name": dep.mode_id.name_get()[0][-1] if dep.mode_id else "",
-            "type_name": dep.type_id.name_get()[0][-1] if dep.type_id else "",
+            "mode_name": dep.mode_id.display_name if dep.mode_id else "",
+            "type_name": dep.type_id.display_name if dep.type_id else "",
         }
 
 

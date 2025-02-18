@@ -243,8 +243,8 @@ class WizardAccountMoveManageAsset(models.TransientModel):
                 for line in self.move_line_ids
             ]
         ):
-            categ_name = self.category_id.name_get()[0][-1]
-            acc_name = self.category_id.asset_account_id.name_get()[0][-1]
+            categ_name = self.category_id.display_name
+            acc_name = self.category_id.asset_account_id.display_name
             raise ValidationError(
                 _(
                     "You need to choose move lines with account `%(acc_name)s`"
@@ -286,7 +286,7 @@ class WizardAccountMoveManageAsset(models.TransientModel):
             and not self.dismiss_asset_without_sale
         ):
             ass_name = self.asset_id.make_name()
-            ass_acc = self.asset_id.category_id.asset_account_id.name_get()[0][-1]
+            ass_acc = self.asset_id.category_id.asset_account_id.display_name
             raise ValidationError(
                 _(
                     "You need to choose move lines with account `%(ass_acc)s`"
@@ -324,7 +324,7 @@ class WizardAccountMoveManageAsset(models.TransientModel):
             ]
         ):
             ass_name = self.asset_id.make_name()
-            ass_acc = self.asset_id.category_id.asset_account_id.name_get()[0][-1]
+            ass_acc = self.asset_id.category_id.asset_account_id.display_name
             raise ValidationError(
                 _(
                     "You need to choose move lines with account `%(ass_acc)s`"

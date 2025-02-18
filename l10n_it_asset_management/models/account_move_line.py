@@ -35,7 +35,7 @@ class AccountMoveLine(models.Model):
                     _(
                         "`%(move_line)s`: cannot change move line's company once it's"
                         " already related to an asset.",
-                        move_line=move_line.name_get()[0][-1],
+                        move_line=move_line.display_name,
                     )
                 )
 

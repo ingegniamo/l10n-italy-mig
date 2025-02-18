@@ -41,7 +41,7 @@ class AccountMove(models.Model):
                     _(
                         "`%(move)s`: cannot change move's company once it's already"
                         " related to an asset.",
-                        move=move.name_get()[0][-1],
+                        move=move.display_name,
                     )
                 )
 
