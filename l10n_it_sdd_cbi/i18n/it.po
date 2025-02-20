@@ -6,49 +6,55 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 14.0\n"
 "Report-Msgid-Bugs-To: \n"
-"Last-Translator: Automatically generated\n"
+"PO-Revision-Date: 2025-02-20 13:06+0000\n"
+"Last-Translator: Francesco Foresti <francesco.foresti@ooops404.com>\n"
 "Language-Team: none\n"
 "Language: it\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 5.6.2\n"
 
 #. module: l10n_it_sdd_cbi
 #: model:ir.model.fields.selection,name:l10n_it_sdd_cbi.selection__account_payment_order__scheme__core
 #: model:ir.model.fields.selection,name:l10n_it_sdd_cbi.selection__res_company__sepa_payment_order_schema__core
 msgid "Basic (CORE)"
-msgstr ""
+msgstr "Base (CORE)"
 
 #. module: l10n_it_sdd_cbi
 #: model:account.payment.method,name:l10n_it_sdd_cbi.cbi_sdd_italy_00_01_00
+#, fuzzy
 msgid "CBI SDD Italy for customers (00.01.00)"
-msgstr ""
+msgstr "CBI SDD Italy for customers (00.01.00)"
 
 #. module: l10n_it_sdd_cbi
 #: model:account.payment.method,name:l10n_it_sdd_cbi.cbi_sdd_italy_00_01_01
+#, fuzzy
 msgid "CBI SDD Italy for customers (00.01.01)"
-msgstr ""
+msgstr "CBI SDD Italy for customers (00.01.01)"
 
 #. module: l10n_it_sdd_cbi
 #: model:ir.model.fields.selection,name:l10n_it_sdd_cbi.selection__account_payment_method__pain_version__cbibdysddreq_00_01_00
+#, fuzzy
 msgid "CBIBdySDDReq.00.01.00 (CBI SDD Italy)"
-msgstr ""
+msgstr "CBIBdySDDReq.00.01.00 (CBI SDD Italy)"
 
 #. module: l10n_it_sdd_cbi
 #: model:ir.model.fields.selection,name:l10n_it_sdd_cbi.selection__account_payment_method__pain_version__cbibdysddreq_00_01_01
+#, fuzzy
 msgid "CBIBdySDDReq.00.01.01 (CBI SDD Italy)"
-msgstr ""
+msgstr "CBIBdySDDReq.00.01.01 (CBI SDD Italy)"
 
 #. module: l10n_it_sdd_cbi
 #: model:ir.model,name:l10n_it_sdd_cbi.model_res_company
 msgid "Companies"
-msgstr ""
+msgstr "Aziende"
 
 #. module: l10n_it_sdd_cbi
 #: model:ir.model,name:l10n_it_sdd_cbi.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "Impostazioni configurazione"
 
 #. module: l10n_it_sdd_cbi
 #: model:ir.model.fields,field_description:l10n_it_sdd_cbi.field_account_payment_line__display_name
@@ -57,13 +63,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:l10n_it_sdd_cbi.field_res_company__display_name
 #: model:ir.model.fields,field_description:l10n_it_sdd_cbi.field_res_config_settings__display_name
 msgid "Display Name"
-msgstr ""
+msgstr "Nome visualizzato"
 
 #. module: l10n_it_sdd_cbi
 #: model:ir.model.fields.selection,name:l10n_it_sdd_cbi.selection__account_payment_order__scheme__b2b
 #: model:ir.model.fields.selection,name:l10n_it_sdd_cbi.selection__res_company__sepa_payment_order_schema__b2b
 msgid "Enterprise (B2B)"
-msgstr ""
+msgstr "Enterprise (B2B)"
 
 #. module: l10n_it_sdd_cbi
 #: model:ir.model.fields,field_description:l10n_it_sdd_cbi.field_account_payment_line__id
@@ -72,7 +78,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:l10n_it_sdd_cbi.field_res_company__id
 #: model:ir.model.fields,field_description:l10n_it_sdd_cbi.field_res_config_settings__id
 msgid "ID"
-msgstr ""
+msgstr "ID"
 
 #. module: l10n_it_sdd_cbi
 #: model:ir.model.fields,field_description:l10n_it_sdd_cbi.field_account_payment_line____last_update
@@ -81,35 +87,35 @@ msgstr ""
 #: model:ir.model.fields,field_description:l10n_it_sdd_cbi.field_res_company____last_update
 #: model:ir.model.fields,field_description:l10n_it_sdd_cbi.field_res_config_settings____last_update
 msgid "Last Modified on"
-msgstr ""
+msgstr "Ultima modifica il"
 
 #. module: l10n_it_sdd_cbi
 #: model:ir.model.fields,field_description:l10n_it_sdd_cbi.field_account_payment_method__pain_version
 msgid "PAIN Version"
-msgstr ""
+msgstr "Versione PAIN"
 
 #. module: l10n_it_sdd_cbi
 #: model:ir.model,name:l10n_it_sdd_cbi.model_account_payment_line
 msgid "Payment Lines"
-msgstr ""
+msgstr "Righe di pagamento"
 
 #. module: l10n_it_sdd_cbi
 #: model:ir.model,name:l10n_it_sdd_cbi.model_account_payment_method
 msgid "Payment Methods"
-msgstr ""
+msgstr "Metodi di pagamento"
 
 #. module: l10n_it_sdd_cbi
 #: model:ir.model,name:l10n_it_sdd_cbi.model_account_payment_order
 msgid "Payment Order"
-msgstr ""
+msgstr "Ordine di pagamento"
 
 #. module: l10n_it_sdd_cbi
 #: model:ir.model.fields,field_description:l10n_it_sdd_cbi.field_res_company__sepa_payment_order_schema
 #: model:ir.model.fields,field_description:l10n_it_sdd_cbi.field_res_config_settings__sepa_payment_order_schema
 msgid "Payment Order Scheme"
-msgstr ""
+msgstr "Schema ordine di pagamento"
 
 #. module: l10n_it_sdd_cbi
 #: model:ir.model.fields,field_description:l10n_it_sdd_cbi.field_account_payment_order__scheme
 msgid "Scheme"
-msgstr ""
+msgstr "Schema"
