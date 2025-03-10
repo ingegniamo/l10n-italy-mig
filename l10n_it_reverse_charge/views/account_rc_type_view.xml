@@ -22,11 +22,11 @@
                         <field name="payment_journal_id" readonly="method != &quot;selfinvoice&quot;" required="method == &quot;selfinvoice&quot;" />
                         <field name="transitory_account_id" readonly="method != &quot;selfinvoice&quot;" required="method == &quot;selfinvoice&quot;" />
                         <field name="tax_ids" widget="one2many_list" readonly="method != &quot;selfinvoice&quot;" required="method == &quot;selfinvoice&quot;">
-                            <tree editable="bottom">
+                            <list editable="bottom">
                                 <field name="original_purchase_tax_id" />
                                 <field name="purchase_tax_id" />
                                 <field name="sale_tax_id" />
-                            </tree>
+                            </list>
                         </field>
                     </group>
                     <group string="Text on Self Invoice">
@@ -37,25 +37,25 @@
         </field>
     </record>
 
-    <record id="view_rc_type_tree" model="ir.ui.view">
-        <field name="name">account.rc.type.tree</field>
+    <record id="view_rc_type_list" model="ir.ui.view">
+        <field name="name">account.rc.type.list</field>
         <field name="model">account.rc.type</field>
-        <field name="type">tree</field>
+        <field name="type">list</field>
         <field name="arch" type="xml">
-            <tree>
+            <list>
                 <field name="name" />
                 <field name="method" />
                 <field name="partner_type" />
                 <field name="journal_id" />
                 <field name="payment_journal_id" />
-            </tree>
+            </list>
         </field>
     </record>
 
     <record id="action_rc_type" model="ir.actions.act_window">
         <field name="name">Reverse Charge Types</field>
         <field name="res_model">account.rc.type</field>
-        <field name="view_mode">tree,form</field>
+        <field name="view_mode">list,form</field>
     </record>
 
     <menuitem action="action_rc_type" id="menu_action_rc_type" sequence="20" parent="account.account_account_menu" groups="account.group_account_manager" />

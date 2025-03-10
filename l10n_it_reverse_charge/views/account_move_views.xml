@@ -23,7 +23,7 @@
                 <field name="rc_payment_move_id" />
             </group>
             <xpath
-                expr="//field[@name='invoice_line_ids']/tree/field[@name='price_subtotal']"
+                expr="//field[@name='invoice_line_ids']/list/field[@name='price_subtotal']"
                 position="after"
             >
                 <field name="rc" />
