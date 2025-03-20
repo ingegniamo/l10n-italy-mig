@@ -91,18 +91,6 @@
                         />
                     </group>
                 </div>
-                <div>
-                    <field
-                        name="not_only_one_unaffected_earnings_account"
-                        invisible="1"
-                    />
-                    <group />
-                    <h4>
-                        Financial Statements can be computed only if selected
-                        company have only one unaffected earnings account.
-                    </h4>
-                    <group />
-                </div>
                 <footer>
                     <div>
                         <button
