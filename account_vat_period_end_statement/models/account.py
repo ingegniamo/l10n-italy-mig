@@ -11,7 +11,6 @@ import math
 from odoo import api, fields, models
 from odoo.exceptions import UserError
 from odoo.tools import float_is_zero
-from odoo.tools.translate import _
 
 
 class AccountVatPeriodEndStatement(models.Model):
@@ -130,19 +129,9 @@ class AccountVatPeriodEndStatement(models.Model):
         "account.account",
         "Previous Credits VAT",
         help="Credit VAT from previous periods",
-        states={
-            "confirmed": [("readonly", True)],
-            "paid": [("readonly", True)],
-            "draft": [("readonly", False)],
-        },
     )
     previous_credit_vat_amount = fields.Float(
         "Previous Credits VAT Amount",
-        states={
-            "confirmed": [("readonly", True)],
-            "paid": [("readonly", True)],
-            "draft": [("readonly", False)],
-        },
         digits="Account",
     )
     previous_year_credit = fields.Boolean("Previous year credits")
@@ -150,74 +139,34 @@ class AccountVatPeriodEndStatement(models.Model):
         "account.account",
         "Previous Debits VAT",
         help="Debit VAT from previous periods",
-        states={
-            "confirmed": [("readonly", True)],
-            "paid": [("readonly", True)],
-            "draft": [("readonly", False)],
-        },
     )
     previous_debit_vat_amount = fields.Float(
         "Previous Debits VAT Amount",
-        states={
-            "confirmed": [("readonly", True)],
-            "paid": [("readonly", True)],
-            "draft": [("readonly", False)],
-        },
         digits="Account",
     )
     interests_debit_vat_account_id = fields.Many2one(
         "account.account",
         "Due interests",
         help="Due interests for three-monthly statments",
-        states={
-            "confirmed": [("readonly", True)],
-            "paid": [("readonly", True)],
-            "draft": [("readonly", False)],
-        },
     )
     interests_debit_vat_amount = fields.Float(
         "Due interests Amount",
-        states={
-            "confirmed": [("readonly", True)],
-            "paid": [("readonly", True)],
-            "draft": [("readonly", False)],
-        },
         digits="Account",
     )
     tax_credit_account_id = fields.Many2one(
         "account.account",
         "Tax credits",
-        states={
-            "confirmed": [("readonly", True)],
-            "paid": [("readonly", True)],
-            "draft": [("readonly", False)],
-        },
     )
     tax_credit_amount = fields.Float(
         "Tax credits Amount",
-        states={
-            "confirmed": [("readonly", True)],
-            "paid": [("readonly", True)],
-            "draft": [("readonly", False)],
-        },
         digits="Account",
     )
     advance_account_id = fields.Many2one(
         "account.account",
         "Down payment",
-        states={
-            "confirmed": [("readonly", True)],
-            "paid": [("readonly", True)],
-            "draft": [("readonly", False)],
-        },
     )
     advance_amount = fields.Float(
         "Down payment Amount",
-        states={
-            "confirmed": [("readonly", True)],
-            "paid": [("readonly", True)],
-            "draft": [("readonly", False)],
-        },
         digits="Account",
     )
     advance_computation_method = fields.Selection(
@@ -228,39 +177,19 @@ class AccountVatPeriodEndStatement(models.Model):
             ("4", '"4" (soggetti particolari)'),
         ],
         string="Down payment computation method",
-        states={
-            "confirmed": [("readonly", True)],
-            "paid": [("readonly", True)],
-            "draft": [("readonly", False)],
-        },
     )
     generic_vat_account_line_ids = fields.One2many(
         "statement.generic.account.line",
         "statement_id",
         "Other VAT Credits / Debits or Tax Compensations",
-        states={
-            "confirmed": [("readonly", True)],
-            "paid": [("readonly", True)],
-            "draft": [("readonly", False)],
-        },
     )
     authority_partner_id = fields.Many2one(
         "res.partner",
         "Tax Authority Partner",
-        states={
-            "confirmed": [("readonly", True)],
-            "paid": [("readonly", True)],
-            "draft": [("readonly", False)],
-        },
     )
     authority_vat_account_id = fields.Many2one(
         "account.account",
         "Tax Authority VAT Account",
-        states={
-            "confirmed": [("readonly", True)],
-            "paid": [("readonly", True)],
-            "draft": [("readonly", False)],
-        },
     )
     authority_vat_amount = fields.Float(
         "Authority VAT Amount",
@@ -277,19 +206,9 @@ class AccountVatPeriodEndStatement(models.Model):
         "account.journal",
         "Journal",
         required=True,
-        states={
-            "confirmed": [("readonly", True)],
-            "paid": [("readonly", True)],
-            "draft": [("readonly", False)],
-        },
     )
     date = fields.Date(
         required=True,
-        states={
-            "confirmed": [("readonly", True)],
-            "paid": [("readonly", True)],
-            "draft": [("readonly", False)],
-        },
         default=fields.Date.context_today,
     )
     move_id = fields.Many2one("account.move", "VAT statement move", readonly=True)
@@ -305,11 +224,6 @@ class AccountVatPeriodEndStatement(models.Model):
     payment_term_id = fields.Many2one(
         "account.payment.term",
         "Payment Term",
-        states={
-            "confirmed": [("readonly", True)],
-            "paid": [("readonly", True)],
-            "draft": [("readonly", False)],
-        },
     )
     reconciled = fields.Boolean(
         "Paid/Reconciled",
@@ -358,7 +272,9 @@ class AccountVatPeriodEndStatement(models.Model):
     def unlink(self):
         for statement in self:
             if statement.state == "confirmed" or statement.state == "paid":
-                raise UserError(_("You cannot delete a confirmed or paid statement"))
+                raise UserError(
+                    self.env._("You cannot delete a confirmed or paid statement")
+                )
         res = super().unlink()
         return res
 
@@ -419,7 +335,7 @@ class AccountVatPeriodEndStatement(models.Model):
         for statement in self:
             statement_date = fields.Date.to_string(statement.date)
             move_data = {
-                "name": _("VAT statement") + " - " + statement_date,
+                "name": self.env._("VAT statement") + " - " + statement_date,
                 "date": statement_date,
                 "journal_id": statement.journal_id.id,
             }
@@ -481,7 +397,7 @@ class AccountVatPeriodEndStatement(models.Model):
             untaxed_amount_currency,
         )
         payment_term_lines = []
-        for term in due_list:
+        for term in due_list.get("line_ids"):
             current_line = end_debit_vat_data.copy()
             current_line["credit"] = term["company_amount"]
             current_line["date_maturity"] = term["date"]
@@ -490,7 +406,7 @@ class AccountVatPeriodEndStatement(models.Model):
 
     def _add_end_debit_vat_data(self, lines_to_create, move, statement, statement_date):
         end_debit_vat_data = self._prepare_account_move_line(
-            name=_("Tax Authority VAT"),
+            name=self.env._("Tax Authority VAT"),
             account_id=statement.authority_vat_account_id.id,
             move_id=move.id,
             statement=statement,
@@ -517,7 +433,7 @@ class AccountVatPeriodEndStatement(models.Model):
     def _add_generic_vat_data(self, lines_to_create, move, statement, statement_date):
         for generic_line in statement.generic_vat_account_line_ids:
             generic_vat_data = self._prepare_account_move_line(
-                name=_("Other VAT Credits / Debits"),
+                name=self.env._("Other VAT Credits / Debits"),
                 account_id=generic_line.account_id.id,
                 move_id=move.id,
                 statement=statement,
@@ -532,7 +448,7 @@ class AccountVatPeriodEndStatement(models.Model):
     def _add_interests_data(self, lines_to_create, move, statement, statement_date):
         if statement.interests_debit_vat_amount:
             interests_data = self._prepare_account_move_line(
-                name=_("Due interests"),
+                name=self.env._("Due interests"),
                 account_id=statement.interests_debit_vat_account_id.id,
                 move_id=move.id,
                 statement=statement,
@@ -553,7 +469,7 @@ class AccountVatPeriodEndStatement(models.Model):
     ):
         if statement.previous_debit_vat_amount:
             previous_debit_vat_data = self._prepare_account_move_line(
-                name=_("Previous Debits VAT"),
+                name=self.env._("Previous Debits VAT"),
                 account_id=statement.previous_debit_vat_account_id.id,
                 move_id=move.id,
                 statement=statement,
@@ -572,7 +488,7 @@ class AccountVatPeriodEndStatement(models.Model):
     def _add_advance_vat_data(self, lines_to_create, move, statement, statement_date):
         if statement.advance_amount:
             advance_vat_data = self._prepare_account_move_line(
-                name=_("Tax Credits"),
+                name=self.env._("Tax Credits"),
                 account_id=statement.advance_account_id.id,
                 move_id=move.id,
                 statement=statement,
@@ -587,7 +503,7 @@ class AccountVatPeriodEndStatement(models.Model):
     def _add_tax_credit_data(self, lines_to_create, move, statement, statement_date):
         if statement.tax_credit_amount:
             tax_credit_vat_data = self._prepare_account_move_line(
-                name=_("Tax Credits"),
+                name=self.env._("Tax Credits"),
                 account_id=statement.tax_credit_account_id.id,
                 move_id=move.id,
                 statement=statement,
@@ -604,7 +520,7 @@ class AccountVatPeriodEndStatement(models.Model):
     ):
         if statement.previous_credit_vat_amount:
             previous_credit_vat_data = self._prepare_account_move_line(
-                name=_("Previous Credits VAT"),
+                name=self.env._("Previous Credits VAT"),
                 account_id=statement.previous_credit_vat_account_id.id,
                 move_id=move.id,
                 statement=statement,
@@ -624,7 +540,7 @@ class AccountVatPeriodEndStatement(models.Model):
         for credit_line in statement.credit_vat_account_line_ids:
             if credit_line.amount != 0.0:
                 credit_vat_data = self._prepare_account_move_line(
-                    name=_("Credit VAT"),
+                    name=self.env._("Credit VAT"),
                     account_id=credit_line.account_id.id,
                     move_id=move.id,
                     statement=statement,
@@ -640,7 +556,7 @@ class AccountVatPeriodEndStatement(models.Model):
         for debit_line in statement.debit_vat_account_line_ids:
             if debit_line.amount != 0.0:
                 debit_vat_data = self._prepare_account_move_line(
-                    name=_("Debit VAT"),
+                    name=self.env._("Debit VAT"),
                     account_id=debit_line.account_id.id,
                     move_id=move.id,
                     statement=statement,
@@ -826,7 +742,9 @@ class AccountVatPeriodEndStatement(models.Model):
             [s.interest for s in self]
         ):
             if not company.of_account_end_vat_statement_interest_account_id:
-                raise UserError(_("The account for vat interest must be configurated"))
+                raise UserError(
+                    self.env._("The account for vat interest must be configurated")
+                )
 
         return company.of_account_end_vat_statement_interest_account_id
 
