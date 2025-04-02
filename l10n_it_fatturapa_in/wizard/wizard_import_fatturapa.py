@@ -257,19 +257,19 @@ class WizardImportFatturapa(models.TransientModel):
                 filtered_partners = partners.filtered_domain(domain)
                 if filtered_partners:
                     partners = filtered_partners
-            elif (
+            else:
+                if(
                 self.env.context.get("from_attachment")
                 and res_partner_rule
-                and res_partner_rule.active
-            ):
-                att = self.env.context.get("from_attachment")
-                domain.extend(
-                    [
-                        "|",
-                        ("company_id", "child_of", att.company_id.id),
-                        ("company_id", "=", False),
-                    ]
-                )
+                and res_partner_rule.active):
+                    att = self.env.context.get("from_attachment")
+                    domain.extend(
+                        [
+                            "|",
+                            ("company_id", "child_of", att.company_id.id),
+                            ("company_id", "=", False),
+                        ]
+                    )
                 partners = partner_model.search(domain)
         commercial_partner_id = False
         if len(partners) > 1:
