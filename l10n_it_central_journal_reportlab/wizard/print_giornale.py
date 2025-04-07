@@ -77,7 +77,7 @@ class WizardGiornaleReportlab(models.TransientModel):
     report_giornale = fields.Binary()
     report_giornale_name = fields.Char(compute="_compute_report_giornale_name")
     group_by_account = fields.Boolean(default=False)
-
+    
     @api.depends("report_giornale", "daterange_id")
     def _compute_report_giornale_name(self):
         for wizard in self:
@@ -163,6 +163,10 @@ class WizardGiornaleReportlab(models.TransientModel):
         }
         self.env.cr.execute(sql, params)
         list_grupped_line = self.env.cr.dictfetchall()
+        # Drop lines with no account_name (e.g., section line or note line)
+        list_grupped_line = [
+            line for line in list_grupped_line if line.get('account_name')
+        ]
         return list_grupped_line
 
     def get_line_reportlab_ids(self):
