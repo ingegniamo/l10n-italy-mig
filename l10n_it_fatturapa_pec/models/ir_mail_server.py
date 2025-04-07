@@ -11,11 +11,11 @@ class IrMailServer(models.Model):
     is_fatturapa_pec = fields.Boolean("E-invoice PEC server")
     email_from_for_fatturaPA = fields.Char("Sender Email Address")
 
-    def _get_test_email_addresses(self):
-        email_from, email_to = super()._get_test_email_addresses()
+    def _get_test_email_from(self):
+        email_from= super()._get_test_email_from()
         if self.is_fatturapa_pec:
             email_from = self.email_from_for_fatturaPA
-        return email_from, email_to
+        return email_from
 
     @api.model
     def _search(
