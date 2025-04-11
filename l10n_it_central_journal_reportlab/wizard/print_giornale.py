@@ -13,6 +13,7 @@ from reportlab.lib.units import cm
 from reportlab.pdfgen import canvas
 from reportlab.platypus import Table
 from reportlab.platypus.paragraph import Paragraph
+import json 
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
@@ -126,13 +127,18 @@ class WizardGiornaleReportlab(models.TransientModel):
             target_type = ["posted", "draft"]
         else:
             target_type = [wizard.target_move]
+
         sql = """
             SELECT
                 am.date,
                 am.name AS move_name,
                 aa.code AS account_code,
-                aa.name AS account_name,
-                COALESCE(aml.name, COALESCE(partner.name, '')) AS name,  -- Use aml.name or partner.name
+                aa.name::text AS account_name,  -- Cast aa.name to text
+                CASE
+                    WHEN aa.account_type IN ('asset_receivable', 'liability_payable')
+                    THEN COALESCE(partner.name, '')  -- Use partner name for receivable/payable accounts
+                    ELSE COALESCE(aa.name::text, '')  -- Cast aa.name to text for other accounts
+                END AS name,  -- Dynamically determine the name field
                 COALESCE(aml.ref, '') AS ref,  -- Include aml.ref for consistency
                 SUM(aml.debit) AS debit,
                 SUM(aml.credit) AS credit
@@ -151,7 +157,7 @@ class WizardGiornaleReportlab(models.TransientModel):
                 am.name,
                 aa.code,
                 aa.name,
-                aml.name,
+                aa.account_type,  -- Include account_type in GROUP BY
                 aml.ref,
                 partner.name  -- Include partner.name in GROUP BY
             ORDER BY
@@ -167,6 +173,7 @@ class WizardGiornaleReportlab(models.TransientModel):
         }
         self.env.cr.execute(sql, params)
         list_grupped_line = self.env.cr.dictfetchall()
+
         # Drop lines with no account_name (e.g., section line or note line)
         list_grupped_line = [
             line for line in list_grupped_line if line.get('account_name')
@@ -341,29 +348,54 @@ class WizardGiornaleReportlab(models.TransientModel):
             start_row += 1
             row = Paragraph(str(start_row), style_name)
             date = Paragraph(format_date(self.env, line["date"]), style_name)
-            ref = Paragraph(line['ref'], style_name)
+            ref = Paragraph("", style_name)
             move = Paragraph(line["move_name"], style_name)
-            account_name = (
-                line["account_code"] + " - " + line["account_name"].get(self.env.lang,list(line["account_name"].values())[0]
-                                                                        )
+
+            # Handle account_name as a JSON-like string or plain string
+            account_name_raw = line["account_name"]
+            try:
+                # Try to parse account_name as JSON
+                account_name_dict = json.loads(account_name_raw)
+                # Get the value for the current language or fallback to the first value
+                account_name = account_name_dict.get(
+                    self.env.lang, list(account_name_dict.values())[0]
+                )
+            except (json.JSONDecodeError, AttributeError):
+                # If parsing fails, treat account_name as a plain string
+                account_name = account_name_raw
+
+            # Combine account_code and account_name
+            account_name_combined = (
+                line["account_code"] + " - " + account_name
                 if line["account_code"]
-                else line["account_name"].get(self.env.lang,list(line["account_name"].values())[0])
+                else account_name
             )
-            account = Paragraph(account_name, style_name)
-            name = Paragraph(line["name"], style_name)
-            # dato che nel SQL ho la somma dei crediti e debiti potrei avere
-            # che un conto ha sia debito che credito
+            account = Paragraph(account_name_combined, style_name)
+
+            # Handle name as a JSON-like string or plain string
+            name_raw = line["name"]
+            try:
+                # Try to parse name as JSON
+                name_dict = json.loads(name_raw)
+                # Get the value for the current language or fallback to the first value
+                name = name_dict.get(self.env.lang, list(name_dict.values())[0])
+            except (json.JSONDecodeError, AttributeError):
+                # If parsing fails, treat name as a plain string
+                name = name_raw
+
+            name_paragraph = Paragraph(name, style_name)
+
             lines_data = []
             if line["debit"] > 0:
                 debit = Paragraph(formatLang(self.env, line["debit"]), style_number)
                 credit = Paragraph(formatLang(self.env, 0), style_number)
                 list_balance.append((line["debit"], 0))
-                lines_data.append([[row, date, ref, move, account, name, debit, credit]])
+                lines_data.append([[row, date, ref, move, account, name_paragraph, debit, credit]])
             if line["credit"] > 0:
                 debit = Paragraph(formatLang(self.env, 0), style_number)
                 credit = Paragraph(formatLang(self.env, line["credit"]), style_number)
                 list_balance.append((0, line["credit"]))
-                lines_data.append([[row, date, ref, move, account, name, debit, credit]])
+                lines_data.append([[row, date, ref, move, account, name_paragraph, debit, credit]])
             for line_data in lines_data:
                 if previous_move_name != line["move_name"]:
                     previous_move_name = line["move_name"]
