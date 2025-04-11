@@ -132,13 +132,15 @@ class WizardGiornaleReportlab(models.TransientModel):
                 am.name AS move_name,
                 aa.code AS account_code,
                 aa.name AS account_name,
-                COALESCE(am.ref, '') AS name,
+                COALESCE(aml.name, COALESCE(partner.name, '')) AS name,  -- Use aml.name or partner.name
+                COALESCE(aml.ref, '') AS ref,  -- Include aml.ref for consistency
                 SUM(aml.debit) AS debit,
                 SUM(aml.credit) AS credit
             FROM
                 account_move_line aml
                 LEFT JOIN account_move am ON (am.id = aml.move_id)
                 LEFT JOIN account_account aa ON (aa.id = aml.account_id)
+                LEFT JOIN res_partner partner ON (partner.id = aml.partner_id)  -- Join with partner table
             WHERE
                 aml.date >= %(date_from)s
                 AND aml.date <= %(date_to)s
@@ -149,7 +151,9 @@ class WizardGiornaleReportlab(models.TransientModel):
                 am.name,
                 aa.code,
                 aa.name,
-                am.ref
+                aml.name,
+                aml.ref,
+                partner.name  -- Include partner.name in GROUP BY
             ORDER BY
                 am.date,
                 am.name,
@@ -337,6 +341,7 @@ class WizardGiornaleReportlab(models.TransientModel):
             start_row += 1
             row = Paragraph(str(start_row), style_name)
             date = Paragraph(format_date(self.env, line["date"]), style_name)
+            ref = Paragraph(line['ref'], style_name)
             move = Paragraph(line["move_name"], style_name)
             account_name = (
                 line["account_code"] + " - " + line["account_name"].get(self.env.lang,list(line["account_name"].values())[0]
@@ -353,12 +358,12 @@ class WizardGiornaleReportlab(models.TransientModel):
                 debit = Paragraph(formatLang(self.env, line["debit"]), style_number)
                 credit = Paragraph(formatLang(self.env, 0), style_number)
                 list_balance.append((line["debit"], 0))
-                lines_data.append([[row, date, move, account, name, debit, credit]])
+                lines_data.append([[row, date, ref, move, account, name, debit, credit]])
             if line["credit"] > 0:
                 debit = Paragraph(formatLang(self.env, 0), style_number)
                 credit = Paragraph(formatLang(self.env, line["credit"]), style_number)
                 list_balance.append((0, line["credit"]))
-                lines_data.append([[row, date, move, account, name, debit, credit]])
+                lines_data.append([[row, date, ref, move, account, name, debit, credit]])
             for line_data in lines_data:
                 if previous_move_name != line["move_name"]:
                     previous_move_name = line["move_name"]
