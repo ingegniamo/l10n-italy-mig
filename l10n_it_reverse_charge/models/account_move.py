@@ -23,11 +23,7 @@ class AccountMoveLine(models.Model):
         for line in self:
             move = line.move_id
             # see invoice_line_ids field definition
-            is_invoice_line = line.display_type in (
-                "product",
-                "line_section",
-                "line_note",
-            )
+            is_invoice_line = line.display_type == "product"
             is_rc = (
                 move.is_purchase_document()
                 and move.fiscal_position_id.rc_type_id
