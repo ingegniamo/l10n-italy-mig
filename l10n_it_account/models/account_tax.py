@@ -18,6 +18,8 @@ class AccountTax(models.Model):
 
     deductible_balance = fields.Float(compute="_compute_deductible_balance")
     undeductible_balance = fields.Float(compute="_compute_undeductible_balance")
+    debit_balance = fields.Float(compute="_compute_debit_balance")
+    credit_balance = fields.Float(compute="_compute_credit_balance")
 
     @api.depends_context(
         "from_date",
@@ -63,12 +65,34 @@ class AccountTax(models.Model):
             )
             tax.undeductible_balance = balance_regular + balance_refund
 
+    def _compute_debit_balance(self):
+        for tax in self:
+            balance_regular = tax.compute_balance(
+                tax_or_base="tax", financial_type="regular", debit_only=True
+            )
+            balance_refund = tax.compute_balance(
+                tax_or_base="tax", financial_type="refund", debit_only=True
+            )
+            tax.debit_balance = balance_regular + balance_refund
+
+    def _compute_credit_balance(self):
+        for tax in self:
+            balance_regular = tax.compute_balance(
+                tax_or_base="tax", financial_type="regular", credit_only=True
+            )
+            balance_refund = tax.compute_balance(
+                tax_or_base="tax", financial_type="refund", credit_only=True
+            )
+            tax.credit_balance = balance_regular + balance_refund
+
     def compute_balance(
         self,
         tax_or_base="tax",
         financial_type=None,
         account_ids=None,
         exclude_account_ids=None,
+        debit_only=None,
+        credit_only=None,
     ):
         balance = super().compute_balance(
             tax_or_base=tax_or_base,
@@ -94,6 +118,26 @@ class AccountTax(models.Model):
                 0
             ]["balance"]
             balance = balance and -balance or 0
+        if debit_only is True:
+            domain = self.get_move_lines_domain(
+                tax_or_base=tax_or_base,
+                financial_type=financial_type,
+                debit_only=debit_only,
+            )
+            balance = self.env["account.move.line"].read_group(domain, ["balance"], [])[
+                0
+            ]["balance"]
+            balance = balance and -balance or 0
+        elif credit_only is True:
+            domain = self.get_move_lines_domain(
+                tax_or_base=tax_or_base,
+                financial_type=financial_type,
+                credit_only=credit_only,
+            )
+            balance = self.env["account.move.line"].read_group(domain, ["balance"], [])[
+                0
+            ]["balance"]
+            balance = balance and -balance or 0
         return balance
 
     def get_move_lines_domain(
@@ -102,6 +146,8 @@ class AccountTax(models.Model):
         financial_type=None,
         account_ids=None,
         exclude_account_ids=None,
+        debit_only=None,
+        credit_only=None,
     ):
         domain = super().get_move_lines_domain(
             tax_or_base=tax_or_base,
@@ -121,6 +167,22 @@ class AccountTax(models.Model):
                     "account_id",
                     "not in",
                     exclude_account_ids,
+                )
+            )
+        if debit_only is True:
+            domain.append(
+                (
+                    "debit",
+                    "!=",
+                    0,
+                )
+            )
+        elif credit_only is True:
+            domain.append(
+                (
+                    "credit",
+                    "!=",
+                    0,
                 )
             )
         return domain
@@ -158,6 +220,8 @@ class AccountTax(models.Model):
         registry_type = data.get("registry_type", "customer")
         if data.get("journal_ids"):
             context["vat_registry_journal_ids"] = data["journal_ids"]
+            if data.get("rc_journal_ids"):
+                context["vat_registry_journal_ids"] += data["rc_journal_ids"]
 
         tax = self.env["account.tax"].with_context(**context).browse(self.id)
         tax_name = tax._get_tax_name()
@@ -165,15 +229,23 @@ class AccountTax(models.Model):
         balance = tax.balance
         deductible_balance = tax.deductible_balance
         undeductible_balance = tax.undeductible_balance
+        debit_balance = tax.debit_balance
+        credit_balance = tax.credit_balance
         if registry_type == "supplier":
             base_balance = -base_balance
             balance = -balance
             deductible_balance = -deductible_balance
             undeductible_balance = -undeductible_balance
+            debit_balance = -debit_balance
+        if registry_type == "customer" and tax.type_tax_use == "purchase":
+            # caso reverse charge
+            base_balance = -base_balance
         return (
             tax_name,
             base_balance,
             balance,
             deductible_balance,
             undeductible_balance,
+            debit_balance,
+            credit_balance,
         )
