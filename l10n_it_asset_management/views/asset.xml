@@ -54,27 +54,27 @@
                     </div>
                     <group>
                         <group>
-                            <field name="category_id" readonly="state != &quot;non_depreciated&quot;" />
+                            <field name="category_id" force_save="1" readonly="state != &quot;non_depreciated&quot;" />
                             <field name="code" />
                             <field name="used" readonly="state != &quot;non_depreciated&quot;" />
                         </group>
                         <group>
-                            <field name="company_id" groups="base.group_multi_company" readonly="state != &quot;non_depreciated&quot;" />
+                            <field name="company_id" force_save="1" groups="base.group_multi_company" readonly="state != &quot;non_depreciated&quot;" />
                             <field name="company_id" invisible="True" groups="!base.group_multi_company" />
-                            <field name="currency_id" groups="base.group_multi_currency" readonly="state != &quot;non_depreciated&quot;" />
+                            <field name="currency_id" force_save="1" groups="base.group_multi_currency" readonly="state != &quot;non_depreciated&quot;" />
                             <field name="currency_id" invisible="True" groups="!base.group_multi_currency" />
                         </group>
                     </group>
                     <group name="sale_purchase_info">
                         <group name="purchase_info" string="Purchase Info">
-                            <field name="purchase_move_id" invisible="purchase_move_id == False" readonly="purchase_move_id != False" />
+                            <field name="purchase_move_id" force_save="1" invisible="purchase_move_id == False" readonly="purchase_move_id != False" />
                             <field name="supplier_id" />
                             <field name="purchase_date" />
                             <field name="purchase_amount" />
                             <field name="supplier_ref" />
                         </group>
                         <group name="purchase_info" string="Sale Info">
-                            <field name="sale_move_id" invisible="sale_move_id == False" readonly="sale_move_id != False" />
+                            <field name="sale_move_id" force_save="1" invisible="sale_move_id == False" readonly="sale_move_id != False" />
                             <field name="customer_id" />
                             <field name="sale_date" />
                             <field name="sale_amount" />
