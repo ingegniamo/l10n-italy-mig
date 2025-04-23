@@ -287,18 +287,18 @@
                                                 <th
                                                     class="right_without_line_bold"
                                                 >Non-Deductible</th>
-                                                <t t-if="registry_type == 'supplier'">
-                                                    <!-- Il credito IVA è in dare -->
+                                                <!-- <t t-if="registry_type == 'supplier'">
+                                                    Il credito IVA è in dare
                                                     <th
                                                         class="right_without_line_bold"
                                                     >Credit</th>
                                                 </t>
                                                 <t t-if="registry_type == 'customer'">
-                                                    <!-- Il debito IVA è in avere -->
+                                                    Il debito IVA è in avere
                                                     <th
                                                         class="right_without_line_bold"
                                                     >Debit</th>
-                                                </t>
+                                                </t> -->
                                             </tr>
                                         </thead>
                                         <t
@@ -330,10 +330,10 @@
                                                 t-set="tot_deb"
                                                 t-value="tot_deb + (tax_code_tuple[5] - tax_code_tuple[4])"
                                             />
-                                            <t
+                                            <!-- <t
                                                 t-set="tot_cre"
                                                 t-value="tot_cre + tax_code_tuple[6]"
-                                            />
+                                            /> -->
                                             <tr>
                                                 <td
                                                     class="left_without_line"
@@ -355,7 +355,7 @@
                                                     class="right_without_line"
                                                     t-esc="formatLang(env, tax_code_tuple[4])"
                                                 />
-                                                <t t-if="registry_type == 'supplier'">
+                                                <!-- <t t-if="registry_type == 'supplier'">
                                                     <td
                                                         class="right_without_line"
                                                         t-esc="formatLang(env, (tax_code_tuple[5] - tax_code_tuple[4]))"
@@ -366,7 +366,7 @@
                                                         class="right_without_line"
                                                         t-esc="formatLang(env, tax_code_tuple[6])"
                                                     />
-                                                </t>
+                                                </t> -->
                                             </tr>
                                         </t>
                                         <tr>
@@ -389,7 +389,7 @@
                                                 class="right_without_line_bold"
                                                 t-esc="formatLang(env, tot_unded)"
                                             />
-                                            <t t-if="registry_type == 'supplier'">
+                                            <!-- <t t-if="registry_type == 'supplier'">
                                                 <td
                                                     class="right_without_line_bold"
                                                     t-esc="formatLang(env, tot_deb)"
@@ -400,7 +400,7 @@
                                                     class="right_without_line_bold"
                                                     t-esc="formatLang(env, tot_cre)"
                                                 />
-                                            </t>
+                                            </t> -->
                                         </tr>
                                     </table>
                                 </td>
