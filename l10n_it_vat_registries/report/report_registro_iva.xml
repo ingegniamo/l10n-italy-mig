@@ -326,10 +326,10 @@
                                                 t-value="tot_unded + tax_code_tuple[4]"
                                             />
                                             <!-- rimuovo dal credito la parte indetraibile -->
-                                            <t
+                                            <!-- <t
                                                 t-set="tot_deb"
                                                 t-value="tot_deb + (tax_code_tuple[5] - tax_code_tuple[4])"
-                                            />
+                                            /> -->
                                             <!-- <t
                                                 t-set="tot_cre"
                                                 t-value="tot_cre + tax_code_tuple[6]"
