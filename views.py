@@ -39,10 +39,10 @@ def _tree_as_domain(tree):
 def _tree_from_domain(domain):
     """ Return the domain as a tree, with the following structure::
 
-        <tree> ::= ('?', <boolean>)
-                |  ('!', <tree>)
-                |  ('&', <tree>, <tree>, ...)
-                |  ('|', <tree>, <tree>, ...)
+        <list> ::= ('?', <boolean>)
+                |  ('!', <list>)
+                |  ('&', <tree>, <list>, ...)
+                |  ('|', <tree>, <list>, ...)
                 |  (<comparator>, <fname>, <value>)
 
     By construction, AND (``&``) and OR (``|``) nodes are n-ary and have at
