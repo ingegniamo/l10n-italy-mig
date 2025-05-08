@@ -64,6 +64,7 @@ class ReportFinancialStatementsWizard(models.TransientModel):
         if self.financial_statements_report_type not in REPORT_TYPES:
             return super()._print_report(report_type)
         report_data = self.prepare_report_vals()
-        return self.env[
+        res = self.env[
             "report.l10n_it_financial_statements_report.report"
         ].print_report(self, report_data, report_type=report_type)
+        return res 
