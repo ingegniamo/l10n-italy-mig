@@ -553,7 +553,7 @@ export class EpsonEposPrint {
         this.fiscalPrinter.send(this.url, xml);
     }
     
-    printFiscalXZReport: function (f_op) {
+    printFiscalXZReport (f_op) {
             var xml = "<printerFiscalReport>";
             xml +=
                 '<displayText operator="' +
@@ -562,16 +562,16 @@ export class EpsonEposPrint {
             xml += '<printXZReport operator="' + f_op + '" timeout="" />';
             xml += "</printerFiscalReport>";
             this.fiscalPrinter.send(this.url, xml);
-        }
+    }
 
-    printFiscalXReport: function (f_op) {
+    printFiscalXReport (f_op) {
             var xml = "<printerFiscalReport>";
             xml += '<printXReport operator="' + f_op + '"/>';
             xml += "</printerFiscalReport>";
             this.fiscalPrinter.send(this.url, xml);
         }
 
-    getStatusOfFilesForADE: function () {
+    getStatusOfFilesForADE() {
             var xml = "<printerCommand>";
             xml += '<directIO command="1138" data="01" />';
             xml += "</printerCommand>";
