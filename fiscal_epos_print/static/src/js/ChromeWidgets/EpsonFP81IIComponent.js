@@ -102,8 +102,8 @@ export class EpsonFP81IIComponent extends Component {
         const printer_options = this.getPrinterOptions();
         const fp90 = new EpsonEposPrint(printer_options, this);
         const { confirmed } = await this.popup.add(ConfirmPopup, {
-            title: this.env._t("Confirm Printer Daily Financial Report (Report X)?"),
-            body: this.env._t("Please confirm to execute the Printer Daily Financial Report"),
+            title: _t("Confirm Printer Daily Financial Report (Report X)?"),
+            body: _t("Please confirm to execute the Printer Daily Financial Report"),
         });
         if (confirmed) {
             fp90.printFiscalXReport(this.pos.cashier.fiscal_operator_number || "1");
