@@ -8,7 +8,7 @@
             </div>
 
             <div class="content">
-                <!-- <p class="category">Operations</p>
+                <p class="category">Operations</p>
                 <ul name="epos_operations">
                     <li>
                         <div
@@ -46,11 +46,10 @@
                             </span>
                         </div>
                     </li>
-                </ul> -->
+                </ul>
                 <p class="category">Reports</p>
                 <ul name="epos_reports">
-                    <!-- TODO: Port 16.0 methods to 17.0 -->
-                    <!-- <li>
+                    <li>
                         <div
                             class="button show_ade_status"
                             style="padding-top:5px"
@@ -67,7 +66,7 @@
                                 IRA status
                             </span>
                         </div>
-                    </li> -->
+                    </li>
                     <li>
                         <div
                             class="button fiscal_closing"
@@ -86,8 +85,7 @@
                             </span>
                         </div>
                     </li>
-                    <!-- TODO: Port 16.0 methods to 17.0 -->
-                    <!-- <li>
+                    <li>
                         <div
                             class="button fiscal_xreport"
                             style="padding-top:5px"
@@ -104,7 +102,7 @@
                                 Financial Report X
                             </span>
                         </div>
-                    </li> -->
+                    </li>
                 </ul>
             </div>
         </div>

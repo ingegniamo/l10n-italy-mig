@@ -35,53 +35,53 @@ export class EpsonFP81IIComponent extends Component {
         return { url: printer_url };
     }
 
-    // async openCashDrawer() {
-    //     this.do_hide();
-    //     const printer_options = this.getPrinterOptions();
-    //     const fp90 = new EpsonEposPrint(printer_options, this);
-    //     fp90.printOpenCashDrawer();
-    //     const { confirmed } = await this.popup.add(ConfirmPopup, {
-    //         title: _t("CashDrawer Opened"),
-    //         body: _t("Close"),
-    //     });
-    //     if (confirmed) {
-    //         fp90.resetPrinter();
-    //     }
-    // }
+    async openCashDrawer() {
+        this.do_hide();
+        const printer_options = this.getPrinterOptions();
+        const fp90 = new EpsonEposPrint(printer_options, this);
+        fp90.printOpenCashDrawer();
+        const { confirmed } = await this.popup.add(ConfirmPopup, {
+            title: _t("CashDrawer Opened"),
+            body: _t("Close"),
+        });
+        if (confirmed) {
+            fp90.resetPrinter();
+        }
+    }
 
-    // async reprintLastReceipt() {
-    //     this.do_hide();
-    //     const printer_options = this.getPrinterOptions();
-    //     const fp90 = new EpsonEposPrint(printer_options, this);
-    //     const { confirmed } = await this.popup.add(ConfirmPopup, {
-    //         title: _t("Reprint Last Receipt?"),
-    //         body: _t("Please confirm to reprint the last receipt"),
-    //     });
-    //     var cashier = this.pos.get_cashier();
-    //     if (confirmed) {
-    //         fp90.printFiscalReprintLast(cashier || "1");
-    //     }
-    // }
+    async reprintLastReceipt() {
+        this.do_hide();
+        const printer_options = this.getPrinterOptions();
+        const fp90 = new EpsonEposPrint(printer_options, this);
+        const { confirmed } = await this.popup.add(ConfirmPopup, {
+            title: _t("Reprint Last Receipt?"),
+            body: _t("Please confirm to reprint the last receipt"),
+        });
+        var cashier = this.pos.get_cashier();
+        if (confirmed) {
+            fp90.printFiscalReprintLast(cashier || "1");
+        }
+    }
 
-    // showAdeStatus() {
-    //     this.do_hide();
-    //     const printer_options = this.getPrinterOptions();
-        // const fp90 = new EpsonEposPrint(printer_options, this);
-        // fp90.getStatusOfFilesForADE();
-    // }
+    showAdeStatus() {
+        this.do_hide();
+        const printer_options = this.getPrinterOptions();
+        const fp90 = new EpsonEposPrint(printer_options, this);
+        fp90.getStatusOfFilesForADE();
+    }
 
-    // async deleteOrders() {
-    //     const { confirmed } = await this.popup.add(ConfirmPopup, {
-    //         title: _t("Delete Paid Orders?"),
-    //         body: _t(
-    //             "This operation will permanently destroy all paid orders from the local storage. You will lose all the data. This operation cannot be undone."
-    //         ),
-    //     });
-    //     if (confirmed) {
-    //         this.pos.db.remove_all_orders();
-    //         this.pos.set_synch("connected", 0);
-    //     }
-    // }
+    async deleteOrders() {
+        const { confirmed } = await this.popup.add(ConfirmPopup, {
+            title: _t("Delete Paid Orders?"),
+            body: _t(
+                "This operation will permanently destroy all paid orders from the local storage. You will lose all the data. This operation cannot be undone."
+            ),
+        });
+        if (confirmed) {
+            this.pos.db.remove_all_orders();
+            this.pos.set_synch("connected", 0);
+        }
+    }
 
     async zClosure() {
         this.do_hide();
@@ -97,18 +97,18 @@ export class EpsonFP81IIComponent extends Component {
         }
     }
 
-    // async fiscalXreport() {
-    //     this.do_hide();
-    //     const printer_options = this.getPrinterOptions();
-        // const fp90 = new EpsonEposPrint(printer_options, this);
-        // const { confirmed } = await Gui.showPopup("ConfirmPopup", {
-        //     title: this.env._t("Confirm Printer Daily Financial Report (Report X)?"),
-        //     body: this.env._t("Please confirm to execute the Printer Daily Financial Report"),
-        // });
-        // if (confirmed) {
-        //     fp90.printFiscalXReport(this.pos.cashier.fiscal_operator_number || "1");
-        // }
-    // }
+    async fiscalXreport() {
+        this.do_hide();
+        const printer_options = this.getPrinterOptions();
+        const fp90 = new EpsonEposPrint(printer_options, this);
+        const { confirmed } = await Gui.showPopup("ConfirmPopup", {
+            title: this.env._t("Confirm Printer Daily Financial Report (Report X)?"),
+            body: this.env._t("Please confirm to execute the Printer Daily Financial Report"),
+        });
+        if (confirmed) {
+            fp90.printFiscalXReport(this.pos.cashier.fiscal_operator_number || "1");
+        }
+    }
 }
 
 EpsonFP81IIComponent.template = "fiscal_epos_print.EpsonFP81IIComponent";
