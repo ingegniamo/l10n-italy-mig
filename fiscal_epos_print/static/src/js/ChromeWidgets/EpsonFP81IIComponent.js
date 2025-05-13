@@ -105,8 +105,9 @@ export class EpsonFP81IIComponent extends Component {
             title: _t("Confirm Printer Daily Financial Report (Report X)?"),
             body: _t("Please confirm to execute the Printer Daily Financial Report"),
         });
+        var cashier = this.pos.get_cashier();
         if (confirmed) {
-            fp90.printFiscalXReport(this.pos.cashier.fiscal_operator_number || "1");
+            fp90.printFiscalXReport(cashier || "1");
         }
     }
 }
