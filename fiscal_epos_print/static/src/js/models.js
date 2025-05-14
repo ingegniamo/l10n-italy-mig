@@ -148,9 +148,12 @@ patch(Orderline.prototype, {
             } else {
                 // This strategy was used because JavaScript's Math.round rounds to the nearest integer
                 const rounding = this.pos.currency.rounding;
-                line.price_unit_incl = round_pr(
+                const price_unit_incl = round_pr(
                     this.price * (1 + line.tax_department.tax_amount / 100), rounding
                 );
+                
+                const rounding_factor = Math.pow(10, rounding);
+                line.price_unit_incl = Math.trunc(price_unit_incl * rounding_factor) / rounding_factor;
             }
         }
         return line;
