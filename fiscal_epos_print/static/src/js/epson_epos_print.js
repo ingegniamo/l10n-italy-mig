@@ -266,8 +266,8 @@ export class EpsonEposPrint {
         //     }
         // }
 
-        receipt.paymentlines.forEach((st) => {
-            let l = st[2];
+        this.order.paymentlines.forEach((st) => {
+            let l = st;
             // vedi modulo fiscal_epos_print_meal_voucher
             //receipt.ticket += l.ticket;  // Append ticket to receipt
 
