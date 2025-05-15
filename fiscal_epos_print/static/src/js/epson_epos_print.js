@@ -181,7 +181,7 @@ export class EpsonEposPrint {
                   });
         }
 
-        xml += `<beginFiscalReceipt operator="${fiscalOperator}" />`;
+        xml +="<beginFiscalReceipt/>";
 
         // Iterate through each order line
         receipt.lines.forEach((l_tup) => {
@@ -266,7 +266,7 @@ export class EpsonEposPrint {
         //     }
         // }
 
-        receipt.statement_ids.forEach((st) => {
+        receipt.paymentlines.forEach((st) => {
             let l = st[2];
             // vedi modulo fiscal_epos_print_meal_voucher
             //receipt.ticket += l.ticket;  // Append ticket to receipt
@@ -278,7 +278,6 @@ export class EpsonEposPrint {
                 paymentType: l.fiscalprinter_payment_type,
                 paymentIndex: l.fiscalprinter_payment_index,
                 description: l.payment_method_name,
-                operator: fiscalOperator,
             });
         });
 
