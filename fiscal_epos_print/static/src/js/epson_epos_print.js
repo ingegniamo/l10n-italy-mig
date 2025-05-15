@@ -187,7 +187,7 @@ export class EpsonEposPrint {
         receipt.lines.forEach((l_tup) => {
             let l = l_tup[2];
             if (l.price_unit_incl >= 0) {
-                if (l.qty >= 0 && l.discount < 100) {
+                if (l.qty >= 0) {
                     xml += this.printRecItem({
                         description: l.full_product_name,
                         quantity: l.qty,
