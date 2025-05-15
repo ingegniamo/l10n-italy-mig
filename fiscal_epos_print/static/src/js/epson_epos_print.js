@@ -251,20 +251,20 @@ export class EpsonEposPrint {
 
         //Gestione arrotondamento pagamenti
         //Viene aggiunta una riga di pagamento con payment method type a 6
-        if (receipt.amount_total != receipt.amount_paid) {
-            let payment_round = 0;
-            if (receipt.amount_paid  < receipt.amount_total) {
-                const rounding = this.pos.currency.rounding;
-                payment_round = round_pr(
-                    (receipt.amount_total  - receipt.amount_paid), rounding
-                );
-                xml += this.printRecTotal({
-                    payment: Math.abs(payment_round),
-                    paymentType: "6",
-                    operator: fiscalOperator,
-                });
-            }
-        }
+        // if (receipt.amount_total != receipt.amount_paid) {
+        //     let payment_round = 0;
+        //     if (receipt.amount_paid  < receipt.amount_total) {
+        //         const rounding = this.pos.currency.rounding;
+        //         payment_round = round_pr(
+        //             (receipt.amount_total  - receipt.amount_paid), rounding
+        //         );
+        //         xml += this.printRecTotal({
+        //             payment: Math.abs(payment_round),
+        //             paymentType: "6",
+        //             operator: fiscalOperator,
+        //         });
+        //     }
+        // }
 
         receipt.statement_ids.forEach((st) => {
             let l = st[2];
@@ -288,7 +288,7 @@ export class EpsonEposPrint {
         //     xml += this.printInfoPaymentCustomer(receipt);
         // }
 
-        xml += `<endFiscalReceipt operator="${fiscalOperator}" /></printerFiscalReceipt>`;
+        xml += "<endFiscalReceipt /></printerFiscalReceipt>";
 
         this.order.fp_xml = xml;
         this.fiscalPrinter.send(this.url, xml, 0, "sync");
@@ -439,6 +439,11 @@ export class EpsonEposPrint {
             (args.paymentIndex || "0") +
             '"' +
             " />";
+        return tag;
+    }
+
+    printRecTotalRefund(args) {
+        var tag = '<printRecTotal operator="' + (args.operator || "1") + '" />';
         return tag;
     }
     /*
