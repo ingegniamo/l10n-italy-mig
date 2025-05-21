@@ -4,7 +4,7 @@
 import base64
 import io
 from datetime import timedelta
-
+import logging
 from reportlab.lib import colors
 from reportlab.lib.enums import TA_RIGHT
 from reportlab.lib.pagesizes import A4
@@ -24,7 +24,7 @@ gap_text = 0.5 * cm  # gap between text
 margin_left = 0.5 * cm  # layout margin left
 margin_bottom = 0.5 * cm  # layout margin bottom
 footer_height = 2 * gap_text + 12  # layout footer height
-
+_logger = logging.getLogger(__name__)
 
 class WizardGiornaleReportlab(models.TransientModel):
     @api.model
@@ -139,7 +139,7 @@ class WizardGiornaleReportlab(models.TransientModel):
                     THEN COALESCE(partner.name, '')  -- Use partner name for receivable/payable accounts
                     ELSE COALESCE(aa.name::text, '')  -- Cast aa.name to text for other accounts
                 END AS name,  -- Dynamically determine the name field
-                COALESCE(aml.ref, '') AS ref,  -- Include aml.ref for consistency
+                COALESCE(am.ref, '') AS ref,  -- Include aml.ref for consistency
                 SUM(aml.debit) AS debit,
                 SUM(aml.credit) AS credit
             FROM
@@ -158,7 +158,7 @@ class WizardGiornaleReportlab(models.TransientModel):
                 aa.code,
                 aa.name,
                 aa.account_type,  -- Include account_type in GROUP BY
-                aml.ref,
+                am.ref,
                 partner.name  -- Include partner.name in GROUP BY
             ORDER BY
                 am.date,
@@ -171,6 +171,7 @@ class WizardGiornaleReportlab(models.TransientModel):
             "target_type": tuple(target_type),
             "journal_ids": tuple(self.journal_ids.ids),
         }
+
         self.env.cr.execute(sql, params)
         list_grupped_line = self.env.cr.dictfetchall()
 
@@ -348,7 +349,7 @@ class WizardGiornaleReportlab(models.TransientModel):
             start_row += 1
             row = Paragraph(str(start_row), style_name)
             date = Paragraph(format_date(self.env, line["date"]), style_name)
-            ref = Paragraph("", style_name)
+            ref = Paragraph(line["ref"], style_name)
             move = Paragraph(line["move_name"], style_name)
 
             # Handle account_name as a JSON-like string or plain string
