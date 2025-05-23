@@ -4,17 +4,7 @@
 from odoo import _, api, models
 from odoo.exceptions import ValidationError
 from odoo.tools.float_utils import float_compare
-ACCOUNT_TYPES_NEGATIVE_SIGN = [
-    "equity_unaffected",
-    "equity",
-    "income",
-    "income_other",
-    "liability_payable",
-    "liability_credit_card",
-    "asset_prepayments",
-    "liability_current",
-    "liability_non_current",
-]
+
 
 def get_xmlid(id_str):
     id_str = id_str.replace(".", "")
@@ -118,7 +108,7 @@ class ReportFinancialStatementsReport(models.AbstractModel):
             if not (section and section in valid_sections):
                 continue
 
-            sign = -1 if account.account_type in ACCOUNT_TYPES_NEGATIVE_SIGN else 1
+            sign = self.get_balance_sign(account, account_group)
             trial_balance_line["ending_balance"] *= sign
             if show_partner_details:
                 partner_ids = list(
@@ -245,9 +235,9 @@ class ReportFinancialStatementsReport(models.AbstractModel):
     def get_balance_sign(self, account, account_group):
         sign = 1
         if account:
-            sign = account.account_balance_sign
+            sign = account.get_account_balance_sign()
         elif account_group:
-            sign = account_group.account_balance_sign
+            sign = account_group.get_account_balance_sign()
         return sign
 
     @api.model
