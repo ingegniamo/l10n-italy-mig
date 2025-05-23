@@ -1,20 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates id="template" xml:space="preserve">
 
-    <t
-        t-name="PartnerDetailsEdit"
-        t-inherit="point_of_sale.PartnerDetailsEdit"
-        t-inherit-mode="extension"
-        owl="1"
-    >
-        <xpath expr="//div[hasclass('partner-details-right')]" position="inside">
-            <div class="partner-detail">
-                <span class="label">F.C.</span>
+    <t t-name="PartnerDetailsEdit" t-inherit="point_of_sale.PartnerDetailsEdit" t-inherit-mode="extension">
+        <xpath expr="//div[hasclass('partner-details-box')]" position="inside">
+            <div class="partner-detail col">
+                <label class="label">F.C.</label>
                 <input
-                    class="detail fiscalcode"
+                    class="detail form-control"
                     name="fiscalcode"
-                    t-on-change="captureChange"
-                    t-att-value="props.partner.fiscalcode || ''"
+                    t-model="changes.fiscalcode"
                 />
             </div>
         </xpath>

@@ -19,8 +19,9 @@
         "l10n_it_fiscalcode",
     ],
     "assets": {
-        "point_of_sale.assets": [
-            "l10n_it_pos_fiscalcode/static/src/xml/pos.xml",
+        'point_of_sale._assets_pos': [
+            'l10n_it_pos_fiscalcode/static/src/**/*.xml',
+            'l10n_it_pos_fiscalcode/static/src/**/*.js'
         ],
     },
 }
