@@ -20,7 +20,7 @@
                 <t t-call="web.external_layout">
                     <t t-set="company" t-value="o.company_id" />
                     <link
-                        href="/account_financial_report/static/src/css/report.css"
+                        href="/l10n_it_financial_statements_report/static/src/css/report.css"
                         rel="stylesheet"
                     />
                     <t
