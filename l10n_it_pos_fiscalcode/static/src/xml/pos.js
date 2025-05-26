@@ -5,7 +5,8 @@ import { PartnerDetailsEdit } from "@point_of_sale/app/screens/partner_list/part
 
 patch(PartnerDetailsEdit.prototype, {
     setup() {
-        super.setup();
+        super.setup(...arguments);
+        
         const partner = this.props.partner;
         this.changes.fiscalcode = partner.fiscalcode || '';
     },
