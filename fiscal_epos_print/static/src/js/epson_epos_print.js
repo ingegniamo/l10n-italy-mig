@@ -527,7 +527,7 @@ export class EpsonEposPrint {
             '<displayText operator="' +
             fiscal_op +
             '" data="Stampa chiusura giornaliera" />';
-        xml += '<printZReport operator="' + fiscal_op + '" timeout="" />';
+        xml += '<printXZReport operator="' + fiscal_op + '" timeout="" />';
         xml += "</printerFiscalReport>";
         this.fiscalPrinter.send(this.url, xml);
     }
