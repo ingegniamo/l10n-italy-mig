@@ -117,7 +117,7 @@ class FatturaPAAttachmentIn(models.Model):
         self.ensure_one()
         invoice_obj = False
         try:
-            xml_string = self.get_xml_string()
+            xml_string = self.with_context(bin_size=False).get_xml_string()
             invoice_obj = efattura.CreateFromDocument(xml_string)
         except Exception as e:
             error_msg = _("Impossible to parse XML for {att_name}: {error_msg}").format(
