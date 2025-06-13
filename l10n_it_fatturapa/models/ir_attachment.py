@@ -10,7 +10,6 @@ from odoo import api, fields, models
 from odoo.exceptions import UserError, ValidationError
 from odoo.tools.translate import _
 from odoo.tools.misc import file_path
-from odoo.modules import get_module_resource
 _logger = logging.getLogger(__name__)
 
 try:
@@ -160,7 +159,7 @@ class FatturaPAAttachment(models.Model):
         else:
             raise ValidationError(_("Unexpected root element: %s", root_tag))
 
-        xsl_path = get_module_resource("l10n_it_fatturapa", "data", preview_style)
+        xsl_path = file_path(os.path.join("l10n_it_fatturapa", "data", preview_style))
         xslt = ET.parse(xsl_path)
         transform = ET.XSLT(xslt)
         newdom = transform(dom)
