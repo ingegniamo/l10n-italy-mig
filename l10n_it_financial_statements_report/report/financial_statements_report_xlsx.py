@@ -598,8 +598,8 @@ class FinancialStatementsReportXslx(models.AbstractModel):
         """Mimics `res.lang` model's `format` method"""
         percent = f"%.{decimals or 2}f"
         value = value or 0
-        
-        lang = self.env["res.lang"].sudo().browse(lang.get('id'))
+
+        lang = self.env["res.lang"].sudo().browse(lang.get("id"))
         return lang.format(percent, value, grouping=True)
 
     def get_indent_data(self, line=None, col_dict=None):

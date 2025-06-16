@@ -212,8 +212,8 @@ class ReportFinancialStatementsReport(models.AbstractModel):
 
     def get_report_section(self, account=None, group=None):
         section = ""
-        if not account and group and group.account_ids:
-            account = group.account_ids[0]
+        if not account and group and group.current_account_ids:
+            account = group.current_account_ids[0]
         if account:
             section = account.financial_statements_report_section
         return section
@@ -235,9 +235,9 @@ class ReportFinancialStatementsReport(models.AbstractModel):
     def get_balance_sign(self, account, account_group):
         sign = 1
         if account:
-            sign = account.get_account_balance_sign()
+            sign = account.account_balance_sign
         elif account_group:
-            sign = account_group.get_account_balance_sign()
+            sign = account_group.account_balance_sign
         return sign
 
     @api.model
