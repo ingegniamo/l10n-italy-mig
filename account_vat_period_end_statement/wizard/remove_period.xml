@@ -12,7 +12,7 @@
             <form string="Remove period">
                 <group>
                     <group>
-                        <field name="period_id" />
+                        <field name="period_id" domain="[('id','in', parent.date_range_ids)]"/>
                     </group>
                 </group>
                 <footer>
