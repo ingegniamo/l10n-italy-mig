@@ -30,7 +30,7 @@
                         <div>
                             <button type="action" name="%(action_add_period)d" string="Add period" colspan="2" icon="fa-plus" invisible="state in ('confirmed', 'paid')" />
                             <span>&amp;nbsp;</span>
-                            <button type="action" name="%(action_remove_period)d" string="Remove period" colspan="2" icon="fa-minus" invisible="state in ('confirmed', 'paid')" />
+                            <button type="action" name="%(action_remove_period)d" string="Remove period" colspan="2" icon="fa-minus" invisible="state in ('confirmed', 'paid')" context="{'active_id': id}"/>
                         </div>
                         <group>
                             <field name="date_range_ids" colspan="4" nolabel="1" readonly="1" />

@@ -11,8 +11,17 @@ from odoo.tools.translate import _
 class RemovePeriod(models.TransientModel):
     _name = "remove.period.from.vat.statement"
     _description = "Remove period from VAT Statement"
+    
+    def _default_date_range_ids(self):
+        statement = self.env["account.vat.period.end.statement"].browse(
+            self.env.context["active_id"]
+        )
+        if not statement:
+            raise UserError(_("No VAT Statement found in context."))
+        return statement.date_range_ids
 
     period_id = fields.Many2one("date.range", "Period", required=True)
+    date_range_ids = fields.Many2many("date.range", default=_default_date_range_ids)
 
     def remove_period(self):
         self.ensure_one()
