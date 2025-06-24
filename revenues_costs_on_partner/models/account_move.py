@@ -12,13 +12,13 @@ class AccountMoveLine(models.Model):
             partner_id = record._origin.move_id.partner_id or record.move_id.partner_id
             if record.display_type in ['product']:
                 if record.move_id.move_type in ['out_invoice'] and partner_id.allowed_revenues_account_ids:
-                    record.domain_account_ids = json.dumps(expression.AND([
-                        ast.literal_eval(record.domain_account_ids),
+                    record.domain_account_ids = json.dumps(expression.AND([ast.literal_eval(
+                        record.domain_account_ids),
                         [('id', 'in', partner_id.allowed_revenues_account_ids.ids)]
                     ]))
                 elif record.move_id.move_type in ['in_invoice'] and partner_id.allowed_costs_account_ids:
-                    record.domain_account_ids = json.dumps(expression.AND([
-                        ast.literal_eval(record.domain_account_ids),
+                    record.domain_account_ids = json.dumps(expression.AND([ast.literal_eval(
+                        record.domain_account_ids),
                         [('id', 'in', partner_id.allowed_costs_account_ids.ids)]
                     ]))
         

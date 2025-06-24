@@ -5,7 +5,7 @@
     'cathegory': 'Accounting',
     'website': 'https://www.stesi.srl',
     'depends': ['contacts', 'account'],
-    "version": "17.0.1.0.0",
+    "version": "17.0.1.0.1",
  "data": [
         "security/ir.model.access.csv",
         "views/account_move_views.xml",
