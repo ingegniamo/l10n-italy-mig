@@ -2,7 +2,7 @@
 <odoo>
     
     <!-- View account.move.line form -->
-    <record id="view_account_move_line_form" model="ir.ui.view">
+    <record id="view_account_move_line_form_domain" model="ir.ui.view">
         <field name="name">view.account.move.form</field>
         <field name="model">account.move</field>
         <field name="inherit_id" ref="account.view_move_form"/>
@@ -18,9 +18,9 @@
                 <field name="domain_account_ids"/>
             </xpath> -->
                         <xpath expr="//field[@name='invoice_line_ids']//tree" position="inside">
-                <field name="domain_account_ids"/>
+                <field name="domain_account_ids" column_invisible="1"/>
             </xpath>
-            <xpath expr="//field[@name='invoice_line_ids']//tree//field[@name='account_id']" position="attributes">
+            <xpath expr="//field[@name='invoice_line_ids']//tree//field[@name='account_id'][last()]" position="attributes">
                 <attribute name="domain">domain_account_ids</attribute>
             </xpath>
         </field>
