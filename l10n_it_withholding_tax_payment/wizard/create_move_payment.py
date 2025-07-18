@@ -28,7 +28,7 @@ class WizardWtMovePaymentCreate(models.TransientModel):
         view = self.env["ir.model.data"]._xmlid_lookup(
             "l10n_it_withholding_tax_payment.view_withholding_move_payment_form"
         )
-        view_id = view[2] or False
+        view_id = view[1] or False
 
         return {
             "name": _("Withholding Tax Payment"),
