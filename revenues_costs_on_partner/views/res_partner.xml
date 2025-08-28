@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="view_partner_property_form_inherit_accounts" model="ir.ui.view">
+        <field name="name">view.partner.property.form.inherit</field>
+        <field name="model">res.partner</field>
+        <field name="inherit_id" ref="account.view_partner_property_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='accounting_entries']" position="inside">
+                <field name="costs_account_id"/>
+                <field name="revenues_account_id"/>
+                <field name="additional_costs_account_id">
+                    <list  editable="bottom">
+                        <field name="account_id"/>
+                        <field name="type" column_invisible="1"/>
+                        <field name="domain_account_id" column_invisible="1"/>
+                        <field name="company_id" column_invisible="1"/>
+                    </list>
+                    </field>
+                <field name="additional_revenues_account_id">
+                    <list editable="bottom">
+                        <field name="account_id"/>
+                        <field name="type" column_invisible="1"/>
+                        <field name="domain_account_id"  column_invisible="1"/>
+                        <field name="company_id" column_invisible="1"/>
+                    </list>
+                    </field>
+            </xpath>
+        </field>
+    </record>
+</odoo>
