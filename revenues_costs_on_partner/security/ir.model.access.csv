@@ -1,2 +1,0 @@
-id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_res_partner_costs_revenues_account_id_rel,res_partner_costs_revenues_account_id_rel,model_res_partner_costs_revenues_account_id_rel,base.group_user,1,1,1,1
