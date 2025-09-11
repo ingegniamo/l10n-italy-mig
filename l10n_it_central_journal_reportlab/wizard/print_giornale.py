@@ -402,7 +402,7 @@ class WizardGiornaleReportlab(models.TransientModel):
             row = Paragraph(str(start_row), style_name)
             date = Paragraph(format_date(self.env, line["date"]), style_name)
             ref = Paragraph(str(line["ref"]), style_name)
-            move = Paragraph(line["move_name"], style_name)
+            move = Paragraph(line["move_name"]  or "", style_name)
             account = Paragraph(account_name, style_name)
             name = Paragraph(line["name"], style_name)
             # dato che nel SQL ho la somma dei crediti e debiti potrei avere
