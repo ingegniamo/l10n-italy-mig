@@ -153,8 +153,8 @@ class AccountPartialReconcile(models.Model):
                 untaxed_amount_currency=amount_wt,
                 sign=1,
             )
-            if payment_lines:
-                p_date_maturity = payment_lines["date"]
+            if payment_lines and payment_lines.get("line_ids", False):
+                p_date_maturity = payment_lines["line_ids"][0]["date"]
             wt_move_vals = {
                 "statement_id": wt_st.id,
                 "date": rec_line_payment.date,
