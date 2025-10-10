@@ -344,6 +344,7 @@ class WizardGiornaleReportlab(models.TransientModel):
             processed_count += 1
             if processed_count % 50000 == 0:  # Memory monitoring every 50000 records
                 gc.collect()  # pragma: no cover
+            account_name = line["account_name"]
             account_name = account_name and (account_name.get(self.env.lang) if self.env.lang and self.env.lang in account_name else account_name.get('en_US')) or ''
             account_name = (
                 line["account_code"] + " - " + account_name
