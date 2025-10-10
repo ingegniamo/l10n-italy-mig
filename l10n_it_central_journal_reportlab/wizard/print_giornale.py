@@ -1,10 +1,11 @@
 # Copyright 2018 Gianmarco Conte (gconte@dinamicheaziendali.it)
 # Copyright 2022 Giuseppe Borruso (gborruso@dinamicheaziendali.it)
+# Copyright 2024 Simone Rubino - Aion Tech
 
 import base64
 import io
 from datetime import timedelta
-import logging
+from xml.sax.saxutils import escape
 from reportlab.lib import colors
 from reportlab.lib.enums import TA_RIGHT
 from reportlab.lib.pagesizes import A4
@@ -13,8 +14,7 @@ from reportlab.lib.units import cm
 from reportlab.pdfgen import canvas
 from reportlab.platypus import Table
 from reportlab.platypus.paragraph import Paragraph
-import json 
-
+import logging
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 from odoo.tools.misc import flatten, format_date, formatLang
@@ -24,8 +24,8 @@ gap_text = 0.5 * cm  # gap between text
 margin_left = 0.5 * cm  # layout margin left
 margin_bottom = 0.5 * cm  # layout margin bottom
 footer_height = 2 * gap_text + 12  # layout footer height
-_logger = logging.getLogger(__name__)
 
+_logger = logging.getLogger(__name__)
 class WizardGiornaleReportlab(models.TransientModel):
     @api.model
     def _get_journal(self):
@@ -78,7 +78,7 @@ class WizardGiornaleReportlab(models.TransientModel):
     report_giornale = fields.Binary()
     report_giornale_name = fields.Char(compute="_compute_report_giornale_name")
     group_by_account = fields.Boolean(default=False)
-    
+
     @api.depends("report_giornale", "daterange_id")
     def _compute_report_giornale_name(self):
         for wizard in self:
@@ -127,26 +127,19 @@ class WizardGiornaleReportlab(models.TransientModel):
             target_type = ["posted", "draft"]
         else:
             target_type = [wizard.target_move]
-
         sql = """
             SELECT
                 am.date,
                 am.name AS move_name,
                 aa.code AS account_code,
-                aa.name::text AS account_name,  -- Cast aa.name to text
-                CASE
-                    WHEN aa.account_type IN ('asset_receivable', 'liability_payable')
-                    THEN COALESCE(partner.name, '')  -- Use partner name for receivable/payable accounts
-                    ELSE COALESCE(aa.name::text, '')  -- Cast aa.name to text for other accounts
-                END AS name,  -- Dynamically determine the name field
-                COALESCE(am.ref, '') AS ref,  -- Include aml.ref for consistency
+                aa.name AS account_name,
+                COALESCE(am.ref, '') AS name,
                 SUM(aml.debit) AS debit,
                 SUM(aml.credit) AS credit
             FROM
                 account_move_line aml
                 LEFT JOIN account_move am ON (am.id = aml.move_id)
                 LEFT JOIN account_account aa ON (aa.id = aml.account_id)
-                LEFT JOIN res_partner partner ON (partner.id = aml.partner_id)  -- Join with partner table
             WHERE
                 aml.date >= %(date_from)s
                 AND aml.date <= %(date_to)s
@@ -157,9 +150,7 @@ class WizardGiornaleReportlab(models.TransientModel):
                 am.name,
                 aa.code,
                 aa.name,
-                aa.account_type,  -- Include account_type in GROUP BY
-                am.ref,
-                partner.name  -- Include partner.name in GROUP BY
+                am.ref
             ORDER BY
                 am.date,
                 am.name,
@@ -171,14 +162,8 @@ class WizardGiornaleReportlab(models.TransientModel):
             "target_type": tuple(target_type),
             "journal_ids": tuple(self.journal_ids.ids),
         }
-
         self.env.cr.execute(sql, params)
         list_grupped_line = self.env.cr.dictfetchall()
-
-        # Drop lines with no account_name (e.g., section line or note line)
-        list_grupped_line = [
-            line for line in list_grupped_line if line.get('account_name')
-        ]
         return list_grupped_line
 
     def get_line_reportlab_ids(self):
@@ -217,20 +202,20 @@ class WizardGiornaleReportlab(models.TransientModel):
         report.drawString(
             margin_left,
             height_available,
-            self.env.user.company_id.name + _(" Account Central Journal"),
+            self.company_id.name + _(" - Account Central Journal"),
         )
         report.setFont("Helvetica", 10)
         text = ""
-        if self.env.user.company_id.street:
-            text += self.env.user.company_id.street
-        if self.env.user.company_id.zip:
-            text += " " + self.env.user.company_id.zip
-        if self.env.user.company_id.city:
-            text += " - " + self.env.user.company_id.city
-        if self.env.user.company_id.state_id.code:
-            text += " - " + self.env.user.company_id.state_id.code
-        if self.env.user.company_id.vat:
-            text += " IVA: " + self.env.user.company_id.vat
+        if self.company_id.street:
+            text += self.company_id.street
+        if self.company_id.zip:
+            text += " " + self.company_id.zip
+        if self.company_id.city:
+            text += " - " + self.company_id.city
+        if self.company_id.state_id.code:
+            text += " - " + self.company_id.state_id.code
+        if self.company_id.vat:
+            text += " IVA: " + self.company_id.vat
         height_available -= gap_text
         report.drawString(margin_left, height_available, text)
         return height_available
@@ -323,8 +308,12 @@ class WizardGiornaleReportlab(models.TransientModel):
                 "",
                 "",
                 Paragraph(_("Initial Balance"), style_name),
-                Paragraph(formatLang(self.env, self.progressive_debit2), style_number),
-                Paragraph(formatLang(self.env, self.progressive_credit), style_number),
+                Paragraph(
+                    escape(formatLang(self.env, self.progressive_debit2)), style_number
+                ),
+                Paragraph(
+                    escape(formatLang(self.env, self.progressive_credit)), style_number
+                ),
             ]
         ]
         return initial_balance_data
@@ -346,57 +335,32 @@ class WizardGiornaleReportlab(models.TransientModel):
             (self.progressive_debit2, self.progressive_credit),
         ]
         for line in list_grupped_line:
+            # _logger.warning(self.env.lang)
+            account_name = line.get('account_name',{})
+            account_name = account_name and (account_name.get(self.env.lang) if self.env.lang and self.env.lang in account_name else account_name.get('en_US')) or ''
             start_row += 1
-            row = Paragraph(str(start_row), style_name)
-            date = Paragraph(format_date(self.env, line["date"]), style_name)
-            ref = Paragraph(line["ref"], style_name)
-            move = Paragraph(line["move_name"], style_name)
-
-            # Handle account_name as a JSON-like string or plain string
-            account_name_raw = line["account_name"]
-            try:
-                # Try to parse account_name as JSON
-                account_name_dict = json.loads(account_name_raw)
-                # Get the value for the current language or fallback to the first value
-                account_name = account_name_dict.get(
-                    self.env.lang, list(account_name_dict.values())[0]
-                )
-            except (json.JSONDecodeError, AttributeError):
-                # If parsing fails, treat account_name as a plain string
-                account_name = account_name_raw
-
-            # Combine account_code and account_name
-            account_name_combined = (
-                line["account_code"] + " - " + account_name
-                if line["account_code"]
-                else account_name
-            )
-            account = Paragraph(account_name_combined, style_name)
-
-            # Handle name as a JSON-like string or plain string
-            name_raw = line["name"]
-            try:
-                # Try to parse name as JSON
-                name_dict = json.loads(name_raw)
-                # Get the value for the current language or fallback to the first value
-                name = name_dict.get(self.env.lang, list(name_dict.values())[0])
-            except (json.JSONDecodeError, AttributeError):
-                # If parsing fails, treat name as a plain string
-                name = name_raw
-
-            name_paragraph = Paragraph(name, style_name)
-
+            row = Paragraph(escape(str(start_row)), style_name)
+            date = Paragraph(escape(format_date(self.env, line["date"])), style_name)
+            move = Paragraph(escape(line["move_name"]), style_name)
+            account = Paragraph(escape(account_name), style_name)
+            name = Paragraph(escape(line["name"]), style_name)
+            # dato che nel SQL ho la somma dei crediti e debiti potrei avere
+            # che un conto ha sia debito che credito
             lines_data = []
             if line["debit"] > 0:
-                debit = Paragraph(formatLang(self.env, line["debit"]), style_number)
-                credit = Paragraph(formatLang(self.env, 0), style_number)
+                debit = Paragraph(
+                    escape(formatLang(self.env, line["debit"])), style_number
+                )
+                credit = Paragraph(escape(formatLang(self.env, 0)), style_number)
                 list_balance.append((line["debit"], 0))
-                lines_data.append([[row, date, ref, move, account, name_paragraph, debit, credit]])
+                lines_data.append([[row, date, move, account, name, debit, credit]])
             if line["credit"] > 0:
-                debit = Paragraph(formatLang(self.env, 0), style_number)
-                credit = Paragraph(formatLang(self.env, line["credit"]), style_number)
+                debit = Paragraph(escape(formatLang(self.env, 0)), style_number)
+                credit = Paragraph(
+                    escape(formatLang(self.env, line["credit"])), style_number
+                )
                 list_balance.append((0, line["credit"]))
-                lines_data.append([[row, date, ref, move, account, name_paragraph, debit, credit]])
+                lines_data.append([[row, date, move, account, name, debit, credit]])
             for line_data in lines_data:
                 if previous_move_name != line["move_name"]:
                     previous_move_name = line["move_name"]
@@ -430,22 +394,24 @@ class WizardGiornaleReportlab(models.TransientModel):
 
         for line in self.env["account.move.line"].browse(move_line_ids):
             start_row += 1
-            row = Paragraph(str(start_row), style_name)
-            date = Paragraph(format_date(self.env, line.date), style_name)
-            ref = Paragraph(str(line.ref or ""), style_name)
+            row = Paragraph(escape(str(start_row)), style_name)
+            date = Paragraph(escape(format_date(self.env, line.date)), style_name)
+            ref = Paragraph(escape(str(line.ref or "")), style_name)
             move_name = line.move_id.name or ""
-            move = Paragraph(move_name, style_name)
+            move = Paragraph(escape(move_name), style_name)
             account_name = self._get_account_name_reportlab(line)
-            account = Paragraph(account_name, style_name)
+            # evitiamo che i caratteri < o > vengano interpretato come tag html
+            # dalla libreria reportlab
+            account = Paragraph(escape(account_name), style_name)
             if line.account_id.account_type in [
                 "asset_receivable",
                 "liability_payable",
             ]:
-                name = Paragraph(str(line.partner_id.name or ""), style_name)
+                name = Paragraph(escape(str(line.partner_id.name or "")), style_name)
             else:
-                name = Paragraph(str(line.name or ""), style_name)
-            debit = Paragraph(formatLang(self.env, line.debit), style_number)
-            credit = Paragraph(formatLang(self.env, line.credit), style_number)
+                name = Paragraph(escape(str(line.name or "")), style_name)
+            debit = Paragraph(escape(formatLang(self.env, line.debit)), style_number)
+            credit = Paragraph(escape(formatLang(self.env, line.credit)), style_number)
             list_balance.append((line.debit, line.credit))
             line_data = [[row, date, ref, move, account, name, debit, credit]]
             if previous_move_name != move_name:
@@ -474,8 +440,8 @@ class WizardGiornaleReportlab(models.TransientModel):
                 "",
                 "",
                 name,
-                Paragraph(formatLang(self.env, tot_debit), style_number),
-                Paragraph(formatLang(self.env, tot_credit), style_number),
+                Paragraph(escape(formatLang(self.env, tot_debit)), style_number),
+                Paragraph(escape(formatLang(self.env, tot_credit)), style_number),
             ]
         ]
         return balance_data
