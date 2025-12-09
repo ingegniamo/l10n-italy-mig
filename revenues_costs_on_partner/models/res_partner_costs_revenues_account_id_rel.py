@@ -24,8 +24,8 @@ class Res_partner_costs_revenues_account_id_rel(models.Model):
     @api.depends('type')
     def _compute_domain_account_id(self):
         for record in self:
-            record.domain_account_id = "[('account_type', 'in', ['expense',])]" if record.type == 'costs' else \
-                                       "[('account_type', 'in', ['income', 'income_other'])]"
+            record.domain_account_id = "['expense', 'asset_receivable','asset_cash','asset_current','asset_non_current','asset_fixed','asset_prepayments',  'expense','expense_direct_cost','expense_depreciation','equity']" if record.type == 'costs' else \
+                                       "['income', 'income_other', 'asset_receivable','asset_cash','asset_current','asset_non_current','asset_fixed','asset_prepayments',  'expense','expense_direct_cost','expense_depreciation','equity']"
     type = fields.Selection([
         ('costs', 'Costs'),
         ('revenues', 'Revenues'),

@@ -5,10 +5,24 @@ class ResPartner(models.Model):
     _inherit = 'res.partner'
 
     def _domain_account_costs(self):
-        return [('account_type', 'in', ['expense',])]
+        return [('account_type', 'in', ['expense', "asset_receivable",
+        "asset_cash",
+        "asset_current",
+        "asset_non_current",
+        "asset_fixed",
+        "asset_prepayments",  "expense",
+        "expense_direct_cost",
+        "expense_depreciation","equity"])]
 
     def _domain_account_revenues(self):
-        return [('account_type', 'in', ['income', 'income_other'])]
+        return [('account_type', 'in', ['income', 'income_other', "asset_receivable",
+        "asset_cash",
+        "asset_current",
+        "asset_non_current",
+        "asset_fixed",
+        "asset_prepayments",  "expense",
+        "expense_direct_cost",
+        "expense_depreciation","equity"])]
     
     allowed_costs_account_ids = fields.One2many('account.account',compute='_compute_allowed_costs_revenues_account_ids', string="Allowed Costs Accounts")
     allowed_revenues_account_ids = fields.One2many('account.account',compute='_compute_allowed_costs_revenues_account_ids', string="Allowed Revenues Accounts")
