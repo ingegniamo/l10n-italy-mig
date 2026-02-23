@@ -229,7 +229,7 @@ class WizardImportFatturapa(models.TransientModel):
                 vat = "IT{}".format(id_codice.rjust(11, "0")[:11])
             # XXX maybe San Marino needs special formatting too?
             else:
-                vat = id_codice
+                vat = f"{id_paese}{id_codice}"
         partners = partner_model
         res_partner_rule = self.sudo().env.ref(
             "base.res_partner_rule", raise_if_not_found=False
