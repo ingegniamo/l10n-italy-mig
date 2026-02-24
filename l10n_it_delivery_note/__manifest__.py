@@ -47,4 +47,5 @@
             "l10n_it_delivery_note/static/src/scss/stock_delivery_note.scss",
         ],
     },
+    'post_init_hook': 'post_init_hook',
 }
