@@ -305,7 +305,9 @@ class StockDeliveryNote(models.Model):
                 if all(
                     line.invoice_status == DOMAIN_INVOICE_STATUSES[2] for line in lines
                 ):
-                    note.state = DOMAIN_DELIVERY_NOTE_STATES[2]
+                    # Only set state to "invoiced" if not already done or cancelled
+                    if note.state not in (DOMAIN_DELIVERY_NOTE_STATES[3], DOMAIN_DELIVERY_NOTE_STATES[4]):
+                        note.state = DOMAIN_DELIVERY_NOTE_STATES[2]
                     invoice_status = DOMAIN_INVOICE_STATUSES[2]
                 elif any(
                     line.invoice_status == DOMAIN_INVOICE_STATUSES[1] for line in lines
