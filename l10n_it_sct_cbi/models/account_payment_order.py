@@ -493,7 +493,7 @@ class AccountPaymentOrder(models.Model):
         transactions_amount_node.text = "%.2f" % transactions_amount
         return payment_node, transactions_number, transactions_amount
 
-    def finalize_sepa_file_creation(self, xml_root, gen_args):
+    def finalize_pain_file_creation(self, xml_root, gen_args):
         if self.payment_method_id.code == "sepa_cbi_credit_transfer":
             # Children of pain node must be in PMRQ namespace
             pain_namespace = xml_root.nsmap["PMRQ"]
@@ -502,7 +502,7 @@ class AccountPaymentOrder(models.Model):
             for pain_root in pain_roots:
                 for pain_child in pain_root.iterdescendants():
                     pain_child.tag = etree.QName(pain_namespace, tag=pain_child.tag)
-        return super().finalize_sepa_file_creation(xml_root, gen_args)
+        return super().finalize_pain_file_creation(xml_root, gen_args)
 
     def generate_payment_file(self):
         """Creates the SEPA Credit Transfer file. That's the important code!"""
@@ -541,4 +541,4 @@ class AccountPaymentOrder(models.Model):
             transactions_number_node.text = str(transactions_number)
             transactions_amount_node.text = "%.2f" % transactions_amount
 
-        return self.finalize_sepa_file_creation(xml_root, gen_args)
+        return self.finalize_pain_file_creation(xml_root, gen_args)
