@@ -54,6 +54,7 @@ class AccountPaymentOrder(models.Model):
         partner_bank,
         gen_args,
         bank_line=None,
+        bank_name=None,
     ):
         res = super().generate_party_agent(
             parent_node,
@@ -62,6 +63,7 @@ class AccountPaymentOrder(models.Model):
             partner_bank,
             gen_args,
             bank_line=bank_line,
+            bank_name=bank_name,
         )
         pain_flavor = gen_args.get("pain_flavor")
         if pain_flavor == "CBIBdyPaymentRequest.00.04.01":
