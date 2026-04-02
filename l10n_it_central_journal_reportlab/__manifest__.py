@@ -6,7 +6,7 @@
     "version": "18.0.1.0.0",
     "development_status": "Beta",
     "category": "Localization/Italy",
-    "author": "Gianmarco Conte - Dinamiche Aziendali srl ,Odoo Community Association (OCA)",
+    "author": "Gianmarco Conte - Dinamiche Aziendali srl , Odoo Community Association (OCA)",
     "website": "https://github.com/OCA/l10n-italy",
     "license": "AGPL-3",
     "maintainers": ["MarcoCalcagni", "Borruso"],
