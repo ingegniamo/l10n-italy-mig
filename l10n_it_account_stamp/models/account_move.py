@@ -167,6 +167,11 @@ class AccountMove(models.Model):
                 line_model.with_context(check_move_validity=False).create(expense_vals)
                 if posted:
                     inv.state = "posted"
+                    # The draft→posted cycle via direct state assignment can leave
+                    # purchase.order.invoice_count stale. Force recompute.
+                    purchase_orders = inv.line_ids.purchase_line_id.order_id
+                    if purchase_orders:
+                        purchase_orders._compute_invoice()
         return res
 
     def button_draft(self):
