@@ -1,7 +1,7 @@
-table {
+.article table {
     border: 0px;
 }
-thead {
+.article thead {
     background: #f5f5f5;
 }
 
