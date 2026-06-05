@@ -1,5 +1,8 @@
 # Copyright 2023 Nextev Srl
 from odoo import SUPERUSER_ID, api
+import logging
+
+_logger = logging.getLogger(__name__)
 
 
 def post_init_hook(env):
