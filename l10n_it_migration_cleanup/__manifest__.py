@@ -1,9 +1,9 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 {
     "name": "ITA - Migration cleanup (orphan UI records)",
-    "version": "19.0.1.0.0",
+    "version": "19.0.1.1.0",
     "category": "Localization/Italy",
-    "summary": "Removes leftover views/actions/menus of codeless OCA l10n_it modules during the 17->19 migration",
+    "summary": "Purges orphan UI records and frees stale xmlids of legacy modules during the 17->19 migration",
     "author": "STeSI Consulting",
     "website": "https://github.com/ingegniamo/l10n-italy-mig",
     "license": "AGPL-3",

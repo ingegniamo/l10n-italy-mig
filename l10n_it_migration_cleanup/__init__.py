@@ -95,3 +95,20 @@ def pre_init_hook(env):
         _logger.info(
             "l10n_it_migration_cleanup: purged %s orphan %s record(s)", removed, model
         )
+
+    # Odoo 19 moved security-group categories from `ir.module.category` to the
+    # new `res.groups.privilege` model. Custom modules that re-declare their
+    # `module_category_*` xmlid as `res.groups.privilege` collide with the stale
+    # `ir.module.category` record carrying the same xmlid ("found record of a
+    # different model"). Free those group-category xmlids so the new records can
+    # be created. App-store categories (other naming) and core `base` records
+    # are intentionally left untouched.
+    cr.execute(
+        "DELETE FROM ir_model_data "
+        "WHERE model = 'ir.module.category' "
+        "AND name LIKE 'module_category_%%' AND module != 'base'"
+    )
+    _logger.info(
+        "l10n_it_migration_cleanup: freed %s stale group-category xmlid(s)",
+        cr.rowcount,
+    )
