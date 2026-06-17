@@ -14,7 +14,6 @@ _logger = logging.getLogger(__name__)
 ORPHAN_MODULES = [
     "account_commission",
     "commission",
-    "printer_zpl2",
     "studio_customization",
     "l10n_it_abicab",
     "l10n_it_account",
