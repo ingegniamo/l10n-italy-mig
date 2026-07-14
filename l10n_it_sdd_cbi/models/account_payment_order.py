@@ -3,7 +3,7 @@
 
 from lxml import etree
 
-from odoo import api, fields, models
+from odoo import _, api, fields, models
 from odoo.exceptions import UserError
 
 
@@ -37,7 +37,14 @@ class AccountPaymentOrderInherit(models.Model):
 
     @api.model
     def generate_party_agent(
-        self, parent_node, party_type, order, partner_bank, gen_args, bank_line=None
+        self,
+        parent_node,
+        party_type,
+        order,
+        partner_bank,
+        gen_args,
+        bank_line=None,
+        bank_name=None,
     ):
         if gen_args.get("pain_flavor").startswith("CBIBdySDDReq"):
             if party_type == "Cdtr":
@@ -73,7 +80,7 @@ class AccountPaymentOrderInherit(models.Model):
 
         if not pain_flavor.startswith("CBIBdySDDReq"):
             raise UserError(
-                self.env._(
+                _(
                     "Payment Type Code '%s' is not supported. "
                     "Only 'CBIBdySDDReq' is allowed for CBI SDD Italy.",
                     pain_flavor,
@@ -112,7 +119,7 @@ class AccountPaymentOrderInherit(models.Model):
         )
         if not initiating_party_issuer or initiating_party_issuer != "CBI":
             raise UserError(
-                self.env._(
+                _(
                     "Missing 'Initiating Party Issuer' must be set to 'CBI' "
                     "for the company '%s'.",
                     self.company_id.name,
@@ -120,7 +127,7 @@ class AccountPaymentOrderInherit(models.Model):
             )
         if not self.sepa:
             raise UserError(
-                self.env._(
+                _(
                     "Please check the IBAN of the company's and partner's bank account."
                     " To generate the SDD file, the account must be of type IBAN."
                 )
@@ -140,7 +147,7 @@ class AccountPaymentOrderInherit(models.Model):
             phyMsgTpCd.text = "INC-SDDB-01"
         else:
             raise UserError(
-                self.env._("Invalid CBI SDD Italy Order Scheme %s", self.scheme)
+                _("Invalid CBI SDD Italy Order Scheme %s", self.scheme)
             )
 
         numLogMsg = etree.SubElement(phyMsgInf, "NbOfLogMsg")
@@ -336,7 +343,7 @@ class AccountPaymentOrderInherit(models.Model):
         nb_of_transactions_a.text = str(transactions_count_a)
         control_sum_a.text = f"{amount_control_sum_a:.2f}"
 
-        return self.finalize_sepa_file_creation(xml_root, gen_args)
+        return self.finalize_pain_file_creation(xml_root, gen_args)
 
     def _grouping_payments(self):
         lines_per_group = {}
@@ -358,7 +365,7 @@ class AccountPaymentOrderInherit(models.Model):
                 seq_type = seq_type_map[seq_type_label]
             else:
                 raise UserError(
-                    self.env._(
+                    _(
                         "Invalid mandate type in '%s'. Valid ones are 'Recurrent' "
                         "or 'One-Off'",
                         payment_line.mandate_id.unique_mandate_reference,
