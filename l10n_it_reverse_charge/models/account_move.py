@@ -536,6 +536,22 @@ class AccountMove(models.Model):
                 inv.rc_self_purchase_invoice_id.button_cancel()
         return super(AccountMove, self).button_cancel()
 
+    def unlink(self):
+        # Deleting the supplier invoice must also delete the RC documents
+        # generated from it: without this they survive as orphans because
+        # their link back to the deleted invoice is set to null.
+        rc_invoices = (
+            self.mapped("rc_self_invoice_id")
+            | self.mapped("rc_self_purchase_invoice_id")
+        ) - self
+        res = super().unlink()
+        # Draft ones only: a posted RC document means the user posted it
+        # again on purpose, so keep its accounting entries.
+        rc_invoices = rc_invoices.exists().filtered(lambda m: m.state == "draft")
+        if rc_invoices:
+            rc_invoices.with_context(force_delete=True).unlink()
+        return res
+
     def button_draft(self):
         new_self = self.with_context(rc_set_to_draft=True)
         invoice_model = new_self.env["account.move"]
