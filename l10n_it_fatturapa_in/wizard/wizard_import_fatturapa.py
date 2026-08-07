@@ -1640,6 +1640,7 @@ class WizardImportFatturapa(models.TransientModel):
     def set_welfares_fund(self, FatturaBody, credit_account_id, invoice, wt_founds):
         invoice_line_model = self.env["account.move.line"]
         invoice_line_ids = []
+        welfare_lines_vals = []
         if self.e_invoice_detail_level == "2":
 
             Welfares = (
@@ -1685,13 +1686,10 @@ class WizardImportFatturapa(models.TransientModel):
                         self.adjust_accounting_data(
                             cassa_previdenziale_product, line_vals
                         )
-                    invoice_line_ids.append(line_vals)
-                if invoice_line_ids:
-                    # one batched create: see _set_invoice_lines
-                    invoice_line_ids = (
-                        invoice_line_model.with_context(check_move_validity=False)
-                        .create(invoice_line_ids)
-                        .ids
+                    welfare_lines_vals.append(line_vals)
+                if welfare_lines_vals:
+                    self.create_and_get_line_id(
+                        invoice_line_ids, invoice_line_model, welfare_lines_vals
                     )
         return invoice_line_ids
 
@@ -1771,9 +1769,8 @@ class WizardImportFatturapa(models.TransientModel):
         if product:
             invoice_line_data["product_id"] = product.id
             self.adjust_accounting_data(product, invoice_line_data)
-        # collect vals only: set_invoice_line_ids creates the whole batch in
-        # one create() call, so account.move syncs tax and payment term lines
-        # once instead of once per line (O(n^2) on invoices with many lines)
+        # collect vals only: set_invoice_line_ids creates the whole batch with
+        # one create_and_get_line_id call, see that method
         invoice_lines.append(invoice_line_data)
 
     # move_id
@@ -1806,13 +1803,12 @@ class WizardImportFatturapa(models.TransientModel):
                 self._set_invoice_lines(
                     product, invoice_line_data, invoice_lines, invoice_line_model
                 )
+        invoice_line_ids = []
         if invoice_lines:
-            invoice_lines = (
-                invoice_line_model.with_context(check_move_validity=False)
-                .create(invoice_lines)
-                .ids
+            self.create_and_get_line_id(
+                invoice_line_ids, invoice_line_model, invoice_lines
             )
-        return invoice_lines
+        return invoice_line_ids
 
     def check_invoice_amount(self, invoice, FatturaElettronicaBody):
         dgd = FatturaElettronicaBody.DatiGenerali.DatiGeneraliDocumento
@@ -1856,12 +1852,14 @@ class WizardImportFatturapa(models.TransientModel):
 
 
     def create_and_get_line_id(self, invoice_line_ids, invoice_line_model, upd_vals):
-        invoice_line_id = (
-            invoice_line_model.with_context(check_move_validity=False)
-            .create(upd_vals)
-            .id
+        # upd_vals: dict or list of dicts. Pass the whole list of an invoice
+        # in one call: a single create(vals_list) makes account.move sync tax
+        # and payment term lines once instead of once per line (O(n^2) on
+        # invoices with many lines).
+        lines = invoice_line_model.with_context(check_move_validity=False).create(
+            upd_vals
         )
-        invoice_line_ids.append(invoice_line_id)
+        invoice_line_ids.extend(lines.ids)
 
     def _set_decimal_precision(self, precision_name, field_name):
         precision = self.env["decimal.precision"].search(
