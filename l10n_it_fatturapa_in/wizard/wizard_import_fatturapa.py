@@ -1685,8 +1685,13 @@ class WizardImportFatturapa(models.TransientModel):
                         self.adjust_accounting_data(
                             cassa_previdenziale_product, line_vals
                         )
-                    self.create_and_get_line_id(
-                        invoice_line_ids, invoice_line_model, line_vals
+                    invoice_line_ids.append(line_vals)
+                if invoice_line_ids:
+                    # one batched create: see _set_invoice_lines
+                    invoice_line_ids = (
+                        invoice_line_model.with_context(check_move_validity=False)
+                        .create(invoice_line_ids)
+                        .ids
                     )
         return invoice_line_ids
 
@@ -1766,9 +1771,10 @@ class WizardImportFatturapa(models.TransientModel):
         if product:
             invoice_line_data["product_id"] = product.id
             self.adjust_accounting_data(product, invoice_line_data)
-        self.create_and_get_line_id(
-            invoice_lines, invoice_line_model, invoice_line_data
-        )
+        # collect vals only: set_invoice_line_ids creates the whole batch in
+        # one create() call, so account.move syncs tax and payment term lines
+        # once instead of once per line (O(n^2) on invoices with many lines)
+        invoice_lines.append(invoice_line_data)
 
     # move_id
     # account_id
@@ -1800,6 +1806,12 @@ class WizardImportFatturapa(models.TransientModel):
                 self._set_invoice_lines(
                     product, invoice_line_data, invoice_lines, invoice_line_model
                 )
+        if invoice_lines:
+            invoice_lines = (
+                invoice_line_model.with_context(check_move_validity=False)
+                .create(invoice_lines)
+                .ids
+            )
         return invoice_lines
 
     def check_invoice_amount(self, invoice, FatturaElettronicaBody):
