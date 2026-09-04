@@ -13,13 +13,6 @@ class AccountTaxRegistry(models.Model):
         required=True,
         default=lambda self: self.env.company,
     )
-    entry_order = fields.Selection(
-        [
-            ("date_name", "Date - Number"),
-            ("journal_date_name", "Journal - Date - Number"),
-        ],
-        default="date_name",
-    )
     journal_ids = fields.One2many(
         "account.journal", "tax_registry_id", "Journals", readonly=True
     )
@@ -32,4 +25,3 @@ class AccountTaxRegistry(models.Model):
         "Layout",
         required=True,
     )
-    show_full_contact_addess = fields.Boolean()
