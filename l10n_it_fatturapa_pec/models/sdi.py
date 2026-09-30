@@ -1,12 +1,19 @@
 # Copyright 2018 Sergio Corato (https://efatto.it)
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
+import logging
+import re
+
 from odoo import _, api, exceptions, fields, models
 
 from odoo.addons.base.models.ir_mail_server import extract_rfc2822_addresses
 
+_logger = logging.getLogger(__name__)
+
 # Address of the first PEC sending, when the parameter is not set
 SDI_PEC_FIRST_ADDRESS = "sdi01@pec.fatturapa.it"
+# Addresses the SdI sends its PEC messages from
+SDI_PEC_ADDRESS_REGEX = re.compile(r"sdi[0-9]+@pec\.fatturapa\.it", re.IGNORECASE)
 
 
 class SdiChannel(models.Model):
@@ -87,11 +94,24 @@ class SdiChannel(models.Model):
                     _("Email %s is not valid") % channel.email_exchange_system
                 )
 
-    def check_first_pec_sending(self):
-        sdi_address = self.env["ir.config_parameter"].get_param(
+    def _get_first_address(self):
+        return self.env["ir.config_parameter"].get_param(
             "sdi.pec.first.address", SDI_PEC_FIRST_ADDRESS
         )
+
+    def check_first_pec_sending(self, attachments_count=1):
+        sdi_address = self._get_first_address()
         if not self.first_invoice_sent:
+            if attachments_count > 1:
+                # After the first sending the address is reset, waiting for
+                # the one assigned by SdI: the others would have no recipient
+                raise exceptions.UserError(
+                    _(
+                        "This is the first sending to the Exchange System: "
+                        "send one e-invoice only. The Exchange System replies "
+                        "with the PEC address to use for the next ones."
+                    )
+                )
             if self.email_exchange_system != sdi_address:
                 raise exceptions.UserError(
                     _("This is a first sending but SDI address is different " "from %s")
@@ -101,10 +121,32 @@ class SdiChannel(models.Model):
             if not self.email_exchange_system:
                 raise exceptions.UserError(
                     _(
-                        "SDI PEC address not set. Please update it with the "
-                        "address indicated by SDI after the first sending"
+                        "SDI PEC address not set. It is set automatically when "
+                        "the Exchange System replies to the first sending; "
+                        "otherwise, set the address indicated by SDI in the "
+                        "channel."
                     )
                 )
+
+    def update_exchange_system_from_sdi(self, message):
+        """After the first sending, SdI replies from the PEC address to
+        use for the next ones: store it, if still waiting for it."""
+        self.ensure_one()
+        if not self.first_invoice_sent or self.email_exchange_system:
+            return False
+        first_address = self._get_first_address().lower()
+        for header in ("Reply-To", "From", "Return-Path"):
+            for address in SDI_PEC_ADDRESS_REGEX.findall(message.get(header) or ""):
+                address = address.lower()
+                if address != first_address:
+                    self.email_exchange_system = address
+                    _logger.info(
+                        "SDI channel %s: Exchange System address set to %s",
+                        self.name,
+                        address,
+                    )
+                    return address
+        return False
 
     def update_after_first_pec_sending(self):
         if not self.first_invoice_sent:

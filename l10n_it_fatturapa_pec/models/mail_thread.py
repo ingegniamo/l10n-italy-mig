@@ -130,6 +130,11 @@ class MailThread(models.AbstractModel):
         message_dict = self.env["fatturapa.attachment.out"].parse_pec_response(
             message_dict
         )
+        if message_dict.get("model") == "fatturapa.attachment.out" and message_dict.get(
+            "res_id"
+        ):
+            # A notification about one of our e-invoices
+            self._update_exchange_system_from_sdi(message, message_dict["res_id"])
         message_dict["record_name"] = message_dict["subject"]
         attachment_ids = self._process_attachments_for_post(
             message_dict["attachments"], [], message_dict
@@ -147,6 +152,24 @@ class MailThread(models.AbstractModel):
             )
         )
         return []
+
+    def _update_exchange_system_from_sdi(self, message, attachment_out_id):
+        """The first notification of our first sending comes from the SdI
+        address to use from now on. Supplier e-invoices are not used for this:
+        SdI can deliver them from other addresses."""
+        channel = self.env["sdi.channel"]
+        fetchmail_server_id = self.env.context.get("fetchmail_server_id")
+        if fetchmail_server_id:
+            channel = channel.search(
+                [("fetch_pec_server_id", "=", fetchmail_server_id)], limit=1
+            )
+        if not channel:
+            attachment_out = self.env["fatturapa.attachment.out"].browse(
+                attachment_out_id
+            )
+            channel = attachment_out.company_id.sdi_channel_id
+        if channel:
+            channel.update_exchange_system_from_sdi(message)
 
     def manage_pec_fe_attachments(self, message, message_dict, response_attachments):
         # this is an electronic invoice

@@ -42,7 +42,9 @@ class FatturaPAAttachmentOut(models.Model):
 
     def send_via_pec(self):
         self._check_fetchmail()
-        self.env.company.sdi_channel_id.check_first_pec_sending()
+        self.env.company.sdi_channel_id.check_first_pec_sending(
+            attachments_count=len(self)
+        )
         states = self.mapped("state")
         if set(states) != {"ready"}:
             raise UserError(_("You can only send files in 'Ready to Send' state."))
