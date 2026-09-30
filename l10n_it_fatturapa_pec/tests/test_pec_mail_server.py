@@ -95,7 +95,7 @@ class TestPecMailServer(TransactionCase):
         mail.send()
         self.assertEqual(mail.state, "sent")
 
-    def test_send_via_pec(self):
+    def _setup_pec_channel(self):
         fetch_server = self.env["fetchmail.server"].create(
             {
                 "name": "PEC in",
@@ -115,12 +115,19 @@ class TestPecMailServer(TransactionCase):
             }
         )
         self.env.company.sdi_channel_id = channel
-        attachment = self.env["fatturapa.attachment.out"].create(
+        return channel
+
+    def _attachment_out(self, name="IT01234567890_TEST1.xml"):
+        return self.env["fatturapa.attachment.out"].create(
             {
-                "name": "IT01234567890_TEST1.xml",
+                "name": name,
                 "datas": base64.b64encode(b"<FatturaElettronica/>"),
             }
         )
+
+    def test_send_via_pec(self):
+        channel = self._setup_pec_channel()
+        attachment = self._attachment_out()
         self.env["ir.config_parameter"].search(
             [("key", "=", "sdi.pec.first.address")]
         ).unlink()
@@ -140,4 +147,115 @@ class TestPecMailServer(TransactionCase):
         it must not fail because the server is reserved to e-invoices."""
         with self.assertRaises(UserError) as error:
             self.pec_server.test_smtp_connection()
+        self.assertNotIn("reserved", str(error.exception))
+
+    def _partner(self):
+        return self.env["res.partner"].create(
+            {"name": "Customer", "email": "customer@example.com"}
+        )
+
+    def test_chatter_notification_never_pec(self):
+        """A chatter message notified by email, with the PEC address as
+        author, goes out through the normal server."""
+        partner = self._partner()
+        author = self.env["res.partner"].create(
+            {"name": "PEC author", "email": PEC_ADDRESS}
+        )
+        message = partner.with_context(mail_notify_force_send=False).message_post(
+            body="Hello",
+            author_id=author.id,
+            partner_ids=partner.ids,
+            message_type="comment",
+            subtype_xmlid="mail.mt_comment",
+        )
+        mails = self.env["mail.mail"].search([("mail_message_id", "=", message.id)])
+        self.assertTrue(mails)
+        for mail_server_id, _alias, _smtp_from, _ids in (
+            mails._split_by_mail_configuration()
+        ):
+            self.assertEqual(mail_server_id, self.normal_server.id)
+        mails.send()
+        self.assertEqual(
+            message.notification_ids.mapped("notification_status"), ["sent"]
+        )
+
+    def test_chatter_message_with_pec_server_not_sent(self):
+        """A chatter message posted with the PEC server fails."""
+        partner = self._partner()
+        message = partner.message_post(
+            body="Hello",
+            partner_ids=partner.ids,
+            message_type="comment",
+            subtype_xmlid="mail.mt_comment",
+            mail_server_id=self.pec_server.id,
+        )
+        self.assertEqual(
+            message.notification_ids.mapped("notification_status"), ["exception"]
+        )
+
+    def test_template_with_pec_server_not_sent(self):
+        partner = self._partner()
+        template = self.env["mail.template"].create(
+            {
+                "name": "PEC template",
+                "model_id": self.env.ref("base.model_res_partner").id,
+                "subject": "Hello",
+                "body_html": "<p>Hello</p>",
+                "email_from": PEC_ADDRESS,
+                "email_to": "{{ object.email }}",
+                "mail_server_id": self.pec_server.id,
+                "auto_delete": False,
+            }
+        )
+        mail = self.env["mail.mail"].browse(
+            template.send_mail(partner.id, force_send=True)
+        )
+        self.assertEqual(mail.state, "exception")
+        template.mail_server_id = False
+        mail = self.env["mail.mail"].browse(
+            template.send_mail(partner.id, force_send=True)
+        )
+        self.assertEqual(mail.state, "sent")
+
+    def test_queue_never_pec(self):
+        """The mail queue (cron) does not send through the PEC server."""
+        pec_mail = self._mail(mail_server_id=self.pec_server.id)
+        normal_mail = self._mail()
+        self.env["mail.mail"].process_email_queue(ids=(pec_mail + normal_mail).ids)
+        self.assertEqual(pec_mail.state, "exception")
+        self.assertEqual(normal_mail.state, "sent")
+
+    def test_send_email_refused(self):
+        """Low level sending with the PEC server is refused too."""
+        message = self.MailServer.build_email(
+            PEC_ADDRESS, ["customer@example.com"], "Hello", "Hello"
+        )
+        with self.assertRaises(UserError):
+            self.MailServer.send_email(message, mail_server_id=self.pec_server.id)
+        self.MailServer.send_email(message, mail_server_id=self.normal_server.id)
+
+    def test_connect_positional_refused(self):
+        with self.assertRaises(UserError):
+            self.MailServer.connect(
+                None, None, None, None, None, None, None, None, False,
+                self.pec_server.id,
+            )
+
+    def test_send_via_pec_sends_only_the_e_invoice(self):
+        """The e-invoice sending does not let other emails through the PEC
+        server, neither queued ones nor the ones sent after it."""
+        self._setup_pec_channel()
+        queued_mail = self._mail(mail_server_id=self.pec_server.id)
+        self._attachment_out().send_via_pec()
+        self.assertEqual(queued_mail.state, "outgoing")
+        queued_mail.send()
+        self.assertEqual(queued_mail.state, "exception")
+        mail = self._mail()
+        mail.send()
+        self.assertEqual(mail.state, "sent")
+        self.assertEqual(mail.mail_server_id, self.env["ir.mail_server"])
+
+    def test_normal_server_connection_test_unchanged(self):
+        with self.assertRaises(UserError) as error:
+            self.normal_server.test_smtp_connection()
         self.assertNotIn("reserved", str(error.exception))
