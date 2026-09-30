@@ -5,6 +5,9 @@ from odoo import _, api, exceptions, fields, models
 
 from odoo.addons.base.models.ir_mail_server import extract_rfc2822_addresses
 
+# Address of the first PEC sending, when the parameter is not set
+SDI_PEC_FIRST_ADDRESS = "sdi01@pec.fatturapa.it"
+
 
 class SdiChannel(models.Model):
     _inherit = "sdi.channel"
@@ -34,7 +37,7 @@ class SdiChannel(models.Model):
         "or notification, communicates the PEC address to be used for "
         "future messages",
         default=lambda self: self.env["ir.config_parameter"].get_param(
-            "sdi.pec.first.address"
+            "sdi.pec.first.address", SDI_PEC_FIRST_ADDRESS
         ),
     )
     first_invoice_sent = fields.Boolean(
@@ -85,7 +88,9 @@ class SdiChannel(models.Model):
                 )
 
     def check_first_pec_sending(self):
-        sdi_address = self.env["ir.config_parameter"].get_param("sdi.pec.first.address")
+        sdi_address = self.env["ir.config_parameter"].get_param(
+            "sdi.pec.first.address", SDI_PEC_FIRST_ADDRESS
+        )
         if not self.first_invoice_sent:
             if self.email_exchange_system != sdi_address:
                 raise exceptions.UserError(

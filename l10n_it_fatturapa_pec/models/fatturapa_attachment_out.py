@@ -13,6 +13,8 @@ from odoo.exceptions import UserError
 
 from odoo.addons.base.models.ir_mail_server import MailDeliveryException
 
+from .ir_mail_server import PEC_SEND_CONTEXT_KEY
+
 _logger = logging.getLogger(__name__)
 
 RESPONSE_MAIL_REGEX = (
@@ -76,7 +78,9 @@ class FatturaPAAttachmentOut(models.Model):
 
             if mail:
                 try:
-                    mail.send(raise_exception=True)
+                    mail.with_context(**{PEC_SEND_CONTEXT_KEY: True}).send(
+                        raise_exception=True
+                    )
                     att.state = "sent"
                     att.sending_date = fields.Datetime.now()
                     att.sending_user = self.env.user.id
