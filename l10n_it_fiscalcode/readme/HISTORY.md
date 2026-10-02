@@ -8,6 +8,11 @@ This file may contain ONE level of section titles, underlined with the ~
 break the structure of the README.rst or other documents where this
 fragment is included. \]
 
+## 18.0.1.0.4
+
+- \[FIX\] Partner form: fiscal code shown on its own row after the VAT
+  container instead of inside it (`base_vat` wraps `vat` in v18).
+
 ## 16.0.1.0.0 (2022-11-11)
 
 - \[MIG\] Migration from Odoo 14.0 to 16.0
