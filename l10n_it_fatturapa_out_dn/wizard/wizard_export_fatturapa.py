@@ -27,6 +27,15 @@ class WizardExportFatturapa(models.TransientModel):
         "document associated with a deferred invoice is present",
     )
 
+    def _get_e_invoice_lines(self, invoice):
+        """Invoice lines in the order the XML template numbers them (NumeroLinea).
+
+        See l10n_it_fatturapa_out.account_invoice_it_fattura_elettronica_body.
+        """
+        return invoice.invoice_line_ids.sorted(
+            key=lambda l: (-l.sequence, l.date, l.move_name, -l.id), reverse=True
+        )
+
     def getDatiDDT(self, invoice):
         """
         Get the data for rendering DatiDDT.
@@ -54,7 +63,7 @@ class WizardExportFatturapa(models.TransientModel):
                 "NumeroDDT": delivery_note.name,
                 "DataDDT": delivery_note.date,
             }
-            e_invoice_lines = self.get_e_invoice_lines(invoice)
+            e_invoice_lines = self._get_e_invoice_lines(invoice)
 
             def _filterfn(li, delivery_note=delivery_note):
                 return li.delivery_note_id == delivery_note
