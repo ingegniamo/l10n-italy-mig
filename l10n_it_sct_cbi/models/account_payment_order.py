@@ -10,7 +10,6 @@ from lxml import etree
 
 from odoo import api, fields, models
 from odoo.exceptions import UserError
-from odoo.fields import first
 
 
 class AccountPaymentOrder(models.Model):
@@ -248,7 +247,7 @@ class AccountPaymentOrder(models.Model):
 
         key = (requested_date, priority)
         """
-        payment_line = first(line.payment_line_ids)
+        payment_line = line.payment_line_ids[:1]
 
         requested_date = fields.Date.to_string(line.date)
         priority = payment_line.priority
