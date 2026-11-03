@@ -202,10 +202,18 @@ class TestFatturaOutDN(TransactionCase):
         )
         return dict(rendered)
 
+    def _numbers(self, rendered, names):
+        """NumeroLinea of the rendered lines whose Descrizione is in `names`."""
+        names = {encode_for_export(name, 1000) for name in names}
+        return sorted(n for n, descr in rendered.items() if descr in names)
+
     def _check_dati_ddt(self, xml, invoice, wizard):
-        """DatiDDT of the invoice: one per delivery note of the invoice,
-        each one referring exactly to the XML lines
-        that carry the invoice lines linked to that delivery note.
+        """DatiDDT of the invoice: one per delivery note of the invoice.
+
+        With a single delivery note there is no RiferimentoNumeroLinea.
+        With more delivery notes each one refers exactly to the XML lines
+        of its product lines (through the sale order lines)
+        and of its own note lines.
 
         Return the DatiDDT as {NumeroDDT: (DataDDT, [RiferimentoNumeroLinea])}.
         """
@@ -222,27 +230,39 @@ class TestFatturaOutDN(TransactionCase):
             )
         self.assertEqual(set(dati_ddt), set(invoice.delivery_note_ids.mapped("name")))
 
+        single = len(invoice.delivery_note_ids) == 1
         for delivery_note in invoice.delivery_note_ids:
             date, refs = dati_ddt[delivery_note.name]
             self.assertEqual(date, fields.Date.to_string(delivery_note.date))
-            expected = {
-                encode_for_export(line.name, 1000)
+            if single:
+                self.assertEqual(refs, [])
+                continue
+            sale_lines = delivery_note.line_ids.sale_line_id
+            expected = [
+                line.name
                 for line in invoice.invoice_line_ids
                 if line.delivery_note_id == delivery_note
-            }
-            self.assertEqual(len(refs), len(set(refs)))
-            self.assertEqual({rendered[ref] for ref in refs}, expected)
-            self.assertEqual(
-                sorted(refs),
-                sorted(n for n, descr in rendered.items() if descr in expected),
-            )
+                or (line.display_type == "product" and line.sale_line_ids & sale_lines)
+            ]
+            self.assertEqual(refs, sorted(set(refs)))
+            self.assertEqual(refs, self._numbers(rendered, expected))
         return dati_ddt
+
+    def _rendered(self, xml, invoice):
+        """{NumeroLinea: Descrizione} of the invoice body."""
+        return {
+            int(line.findtext("NumeroLinea")): line.findtext("Descrizione")
+            for line in self._body(xml, invoice).findall(
+                "DatiBeniServizi/DettaglioLinee"
+            )
+        }
 
     # Tests
 
     def test_01_invoice_from_sale_order(self):
         """The delivery note validated before invoicing the sale order
-        is exported in DatiDDT, referring to its invoice line."""
+        is exported in DatiDDT; being the only one, it refers to the whole
+        invoice, so without RiferimentoNumeroLinea."""
         sales_order, delivery_note = self._create_so_dn()
 
         invoice = sales_order._create_invoices()
@@ -253,8 +273,7 @@ class TestFatturaOutDN(TransactionCase):
         wizard, xml = self._export(invoice)
         self.assertEqual(wizard.include_transport_data, "dati_dn")
         dati_ddt = self._check_dati_ddt(xml, invoice, wizard)
-        # The delivery note line comes before the product line
-        self.assertEqual(dati_ddt, {delivery_note.name: ("2019-08-07", [1])})
+        self.assertEqual(dati_ddt, {delivery_note.name: ("2019-08-07", [])})
 
     def test_02_draft_delivery_note(self):
         """A delivery note still in draft when the sale order is invoiced
@@ -288,7 +307,8 @@ class TestFatturaOutDN(TransactionCase):
 
     def test_04_sections_and_notes(self):
         """Sections and notes added to the invoice, before, between and
-        after the other lines, shift the delivery note line number."""
+        after the other lines, are numbered in the XML; with a single
+        delivery note there is still no RiferimentoNumeroLinea."""
         sales_order, delivery_note = self._create_so_dn(
             [(self.product, 1), (self.product_2, 1)]
         )
@@ -340,11 +360,8 @@ class TestFatturaOutDN(TransactionCase):
 
         wizard, xml = self._export(invoice)
         dati_ddt = self._check_dati_ddt(xml, invoice, wizard)
-        # The invoice lines of the order have sequence 0, 1 and each delivery
-        # note line the sequence of its product line - 1: top section,
-        # top note, delivery note A (-1), product A (0), delivery note B (0),
-        # product B (1), bottom section, bottom note
-        self.assertEqual(sorted(dati_ddt[delivery_note.name][1]), [3, 5])
+        self.assertEqual(len(self._rendered(xml, invoice)), 8)
+        self.assertEqual(dati_ddt, {delivery_note.name: ("2019-08-07", [])})
 
     def test_05_lines_reordered(self):
         """Lines moved after the invoice creation (sequence changed,
@@ -364,7 +381,7 @@ class TestFatturaOutDN(TransactionCase):
 
         wizard, xml = self._export(invoice)
         dati_ddt = self._check_dati_ddt(xml, invoice, wizard)
-        self.assertEqual(sorted(dati_ddt[delivery_note.name][1]), [3, 4])
+        self.assertEqual(dati_ddt[delivery_note.name][1], [])
 
     def test_06_same_sequence(self):
         """Lines with the same sequence are numbered by creation order,
@@ -388,8 +405,7 @@ class TestFatturaOutDN(TransactionCase):
 
         wizard, xml = self._export(invoice)
         dati_ddt = self._check_dati_ddt(xml, invoice, wizard)
-        # Creation order: product lines, then delivery note lines, then the note
-        self.assertEqual(sorted(dati_ddt[delivery_note.name][1]), [3, 4])
+        self.assertEqual(dati_ddt[delivery_note.name][1], [])
 
     def test_07_two_orders_in_one_invoice(self):
         """Two sale orders, each with its delivery note, invoiced together:
@@ -408,11 +424,35 @@ class TestFatturaOutDN(TransactionCase):
         dati_ddt = self._check_dati_ddt(xml, invoice, wizard)
         self.assertEqual(dati_ddt[delivery_note_1.name][0], "2019-08-07")
         self.assertEqual(dati_ddt[delivery_note_2.name][0], "2019-08-08")
+        # Sorted by date
+        self.assertEqual(
+            [ddt.findtext("NumeroDDT") for ddt in xml.iter("DatiDDT")],
+            [delivery_note_1.name, delivery_note_2.name],
+        )
+        # Every XML line belongs to exactly one delivery note:
+        # its product line and its own note line
+        rendered = self._rendered(xml, invoice)
+        self.assertEqual(len(rendered), 4)
+        dn_line_1 = invoice.invoice_line_ids.filtered(
+            lambda line: line.delivery_note_id == delivery_note_1
+        )
+        dn_line_2 = invoice.invoice_line_ids.filtered(
+            lambda line: line.delivery_note_id == delivery_note_2
+        )
+        refs_1 = dati_ddt[delivery_note_1.name][1]
+        refs_2 = dati_ddt[delivery_note_2.name][1]
+        self.assertEqual(
+            refs_1, self._numbers(rendered, [dn_line_1.name, self.product.name])
+        )
+        self.assertEqual(
+            refs_2, self._numbers(rendered, [dn_line_2.name, self.product_2.name])
+        )
+        self.assertEqual(sorted(refs_1 + refs_2), [1, 2, 3, 4])
 
     def test_08_partial_deliveries(self):
         """An order delivered in two pickings (backorder) has two delivery
-        notes on the same order line: both are exported, each one
-        referring to its own invoice line."""
+        notes on the same order line, invoiced together: both are exported,
+        and the product line shipped by both is referred by both."""
         sales_order = self._create_so([(self.product, 2), (self.product_2, 1)])
         delivery_note_1 = self._deliver(
             sales_order.picking_ids,
@@ -432,8 +472,20 @@ class TestFatturaOutDN(TransactionCase):
 
         wizard, xml = self._export(invoice)
         dati_ddt = self._check_dati_ddt(xml, invoice, wizard)
-        self.assertEqual(len(dati_ddt[delivery_note_1.name][1]), 2)
-        self.assertEqual(len(dati_ddt[delivery_note_2.name][1]), 1)
+        # Delivery note 1: its 2 note lines, product A and product B;
+        # delivery note 2: its note line and product A
+        refs_1 = dati_ddt[delivery_note_1.name][1]
+        refs_2 = dati_ddt[delivery_note_2.name][1]
+        self.assertEqual(len(refs_1), 4)
+        self.assertEqual(len(refs_2), 2)
+        rendered = self._rendered(xml, invoice)
+        (number_a,) = self._numbers(rendered, [self.product.name])
+        (number_b,) = self._numbers(rendered, [self.product_2.name])
+        self.assertIn(number_a, refs_1)
+        self.assertIn(number_a, refs_2)
+        self.assertIn(number_b, refs_1)
+        self.assertNotIn(number_b, refs_2)
+        self.assertEqual(set(refs_1 + refs_2), set(rendered))
 
     def test_09_more_invoices_in_one_file(self):
         """More invoices in the same XML file: each body numbers its own
@@ -468,10 +520,8 @@ class TestFatturaOutDN(TransactionCase):
         dati_ddt_2 = self._check_dati_ddt(xml, invoice_2, wizard)
         self.assertEqual(set(dati_ddt_1), {delivery_note_1.name})
         self.assertEqual(set(dati_ddt_2), {delivery_note_2.name})
-        self.assertEqual(dati_ddt_1[delivery_note_1.name][1], [1])
-        # Delivery note A (-1), section (-1), product A (0),
-        # delivery note B (0), product B (1)
-        self.assertEqual(sorted(dati_ddt_2[delivery_note_2.name][1]), [1, 4])
+        self.assertEqual(dati_ddt_1[delivery_note_1.name][1], [])
+        self.assertEqual(dati_ddt_2[delivery_note_2.name][1], [])
 
     def test_10_delivery_note_without_invoice_lines(self):
         """A delivery note linked to the invoice with no invoice line
@@ -549,4 +599,64 @@ class TestFatturaOutDN(TransactionCase):
         self.assertEqual(len(lines), len(invoice.invoice_line_ids) + 1)
         self.assertEqual(lines[-1].findtext("Descrizione"), "Altre lettere d'intento")
         dati_ddt = self._check_dati_ddt(xml, invoice, wizard)
-        self.assertEqual(sorted(dati_ddt[delivery_note.name][1]), [1, 3])
+        self.assertEqual(dati_ddt[delivery_note.name][1], [])
+
+    def test_13_single_delivery_note_two_products(self):
+        """Two products shipped by one delivery note (the case rejected
+        by GS): one DatiDDT, without RiferimentoNumeroLinea,
+        so it refers to all the lines of the invoice."""
+        sales_order, delivery_note = self._create_so_dn(
+            [(self.product, 1), (self.product_2, 1)]
+        )
+        invoice = sales_order._create_invoices()
+        self.assertEqual(len(invoice.invoice_line_ids.filtered("delivery_note_id")), 2)
+
+        wizard, xml = self._export(invoice)
+        dati_ddt = self._check_dati_ddt(xml, invoice, wizard)
+        self.assertEqual(dati_ddt, {delivery_note.name: ("2019-08-07", [])})
+        self.assertEqual(len(list(xml.iter("DatiDDT"))), 1)
+        self.assertFalse(list(xml.iter("RiferimentoNumeroLinea")))
+
+    def test_14_second_invoice_of_partial_delivery(self):
+        """An order delivered and invoiced twice: the second invoice only
+        has the second delivery note, without RiferimentoNumeroLinea."""
+        sales_order = self._create_so([(self.product, 2)])
+        delivery_note_1 = self._deliver(
+            sales_order.picking_ids, {self.product: 1}, date="2019-08-07"
+        )
+        invoice_1 = sales_order._create_invoices()
+        self.assertEqual(invoice_1.delivery_note_ids, delivery_note_1)
+        invoice_1.action_post()
+
+        backorder = sales_order.picking_ids - delivery_note_1.picking_ids
+        self.assertEqual(len(backorder), 1)
+        try:
+            with self.env.cr.savepoint():
+                delivery_note_2 = self._deliver(backorder, date="2019-08-09")
+        except UserError as error:
+            self.skipTest("Partial deliveries are not allowed here: %s" % error)
+
+        invoice_2 = sales_order._create_invoices()
+        self.assertEqual(invoice_2.delivery_note_ids, delivery_note_2)
+
+        wizard, xml = self._export(invoice_2)
+        dati_ddt = self._check_dati_ddt(xml, invoice_2, wizard)
+        self.assertEqual(dati_ddt, {delivery_note_2.name: ("2019-08-09", [])})
+
+    def test_15_delivery_note_without_number(self):
+        """A delivery note linked to the invoice without a number
+        is not exported: NumeroDDT is mandatory."""
+        order_1, delivery_note_1 = self._create_so_dn([(self.product, 1)])
+        order_2, delivery_note_2 = self._create_so_dn([(self.product_2, 1)])
+        invoice = (order_1 | order_2)._create_invoices()
+        self.assertEqual(invoice.delivery_note_ids, delivery_note_1 | delivery_note_2)
+        wizard = (
+            self.env["wizard.export.fatturapa"]
+            .with_context(active_ids=invoice.ids, active_model="account.move")
+            .create({})
+        )
+        delivery_note_2.date = False
+
+        dati_ddt = wizard.getDatiDDT(invoice)
+        self.assertEqual([d["NumeroDDT"] for d in dati_ddt], [delivery_note_1.name])
+        self.assertNotIn("RiferimentoNumeroLinea", dati_ddt[0])

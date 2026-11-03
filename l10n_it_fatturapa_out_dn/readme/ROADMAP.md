@@ -1,7 +1,6 @@
-There are a couple of minor issues since l10n_it_delivery_note only
-links a Note line of the invoice to the delivery note:
-
-- RiferimentoNumeroLinea refers to a descriptive line, but it should
-  enumerate (at least) the products lines
-- RiferimentoNumeroLinea is always populated, but it should only be
-  populated when the linked lines are not all the invoice lines
+- The note lines that l10n_it_delivery_note adds to the invoice
+  ('Delivery Note "X" of ...') are exported as descriptive DettaglioLinee
+  (quantity and price 0).
+- An invoice line shipped by more than one delivery note of the same
+  invoice (partial deliveries) is listed in the RiferimentoNumeroLinea
+  of all of them.

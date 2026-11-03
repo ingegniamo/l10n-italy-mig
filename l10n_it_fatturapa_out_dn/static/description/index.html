@@ -402,13 +402,13 @@ XML file version 1.6</p>
 </div>
 <div class="section" id="known-issues-roadmap">
 <h2><a class="toc-backref" href="#toc-entry-1">Known issues / Roadmap</a></h2>
-<p>There are a couple of minor issues since l10n_it_delivery_note only
-links a Note line of the invoice to the delivery note:</p>
 <ul class="simple">
-<li>RiferimentoNumeroLinea refers to a descriptive line, but it should
-enumerate (at least) the products lines</li>
-<li>RiferimentoNumeroLinea is always populated, but it should only be
-populated when the linked lines are not all the invoice lines</li>
+<li>The note lines that l10n_it_delivery_note adds to the invoice
+(‘Delivery Note “X” of …’) are exported as descriptive DettaglioLinee
+(quantity and price 0).</li>
+<li>An invoice line shipped by more than one delivery note of the same
+invoice (partial deliveries) is listed in the RiferimentoNumeroLinea
+of all of them.</li>
 </ul>
 </div>
 <div class="section" id="bug-tracker">

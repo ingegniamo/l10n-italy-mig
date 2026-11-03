@@ -36,9 +36,40 @@ class WizardExportFatturapa(models.TransientModel):
             key=lambda l: (-l.sequence, l.date, l.move_name, -l.id), reverse=True
         )
 
+    def _get_dati_ddt_delivery_notes(self, invoice):
+        """Delivery notes exported in DatiDDT, sorted by date.
+
+        NumeroDDT and DataDDT are mandatory, so only delivery notes
+        with a number and a date are exported.
+        """
+        return invoice.delivery_note_ids.filtered(
+            lambda dn: dn.name and dn.date
+        ).sorted(lambda dn: (dn.date, dn.id))
+
+    def _get_dati_ddt_invoice_lines(self, invoice, delivery_note):
+        """Invoice lines shipped by `delivery_note`.
+
+        Product lines are found through the sale order lines,
+        because `delivery_note_id` is only set on the note lines
+        ('Delivery Note "X" of ...') added by l10n_it_delivery_note,
+        and an invoice line can be shipped by more than one delivery note
+        (partial deliveries): such a line belongs to all of them.
+        The note lines of `delivery_note` are exported as DettaglioLinee too,
+        so they are referred as well.
+        """
+        sale_lines = delivery_note.line_ids.sale_line_id
+        return invoice.invoice_line_ids.filtered(
+            lambda line: line.delivery_note_id == delivery_note
+            or (line.display_type == "product" and line.sale_line_ids & sale_lines)
+        )
+
     def getDatiDDT(self, invoice):
         """
         Get the data for rendering DatiDDT.
+
+        RiferimentoNumeroLinea is only exported when the invoice has
+        more than one delivery note: a single delivery note refers
+        to the whole invoice, so its lines are not listed.
 
         :return: a list of dictionaries, with one dictionary per involved DdT.
         Each dictionary has shape:
@@ -52,41 +83,34 @@ class WizardExportFatturapa(models.TransientModel):
             '_invoice_lines': (optional)
                 <account.move.line records of invoice lines involved in the DdT>,
             'RiferimentoNumeroLinea': (optional)
-                <string containing numbers of the invoice lines involved in the DdT>,
+                <list of the numbers of the invoice lines involved in the DdT>,
         }
         """
         self.ensure_one()
         dati_ddt_list = list()
-        for delivery_note in invoice.delivery_note_ids:
+        delivery_notes = self._get_dati_ddt_delivery_notes(invoice)
+        e_invoice_lines_list = list(self._get_e_invoice_lines(invoice))
+        for delivery_note in delivery_notes:
             ddt_data = {
                 "_delivery_note": delivery_note,
                 "NumeroDDT": delivery_note.name,
                 "DataDDT": delivery_note.date,
             }
-            e_invoice_lines = self._get_e_invoice_lines(invoice)
-
-            def _filterfn(li, delivery_note=delivery_note):
-                return li.delivery_note_id == delivery_note
-
-            e_invoice_delivery_note_lines = e_invoice_lines.filtered(_filterfn)
-            if e_invoice_delivery_note_lines:
-                # RiferimentoNumeroLinea should not be populated
-                # if all the lines of the invoice
-                # are linked to this delivery_note,
-                # but we can't verify this condition
-                # because only note lines (not product lines)
-                # are linked to a delivery note.
-                e_invoice_lines_list = list(e_invoice_lines)
-                lines_refs_list = [
-                    e_invoice_lines_list.index(line) + 1  # NumeroLinea is 1-based
-                    for line in e_invoice_delivery_note_lines
-                ]
-                ddt_data.update(
-                    {
-                        "_invoice_lines": e_invoice_delivery_note_lines,
-                        "RiferimentoNumeroLinea": lines_refs_list,
-                    }
+            if len(delivery_notes) > 1:
+                invoice_lines = self._get_dati_ddt_invoice_lines(
+                    invoice, delivery_note
                 )
+                if invoice_lines:
+                    ddt_data.update(
+                        {
+                            "_invoice_lines": invoice_lines,
+                            "RiferimentoNumeroLinea": sorted(
+                                # NumeroLinea is 1-based
+                                e_invoice_lines_list.index(line) + 1
+                                for line in invoice_lines
+                            ),
+                        }
+                    )
 
             dati_ddt_list.append(ddt_data)
         return dati_ddt_list
